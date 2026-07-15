@@ -1,1 +1,5 @@
-task: review fix blocking ESLint pre-commit; model: senior after Composer 2.5 review
+Task: Fix ESLint pre-commit for web/
+Summary: Run ESLint from web/ context so pre-commit loads web/eslint.config; scope prettier away from web/; move shadcn CLI to devDependencies after PR review.
+Docs: .pre-commit-config.yaml, web/package.json
+TODO: Phase 0 / pre-commit acceptance criterion
+Validation: bash -c 'cd web && npx eslint --fix .'; npm run lint, typecheck, test, build
