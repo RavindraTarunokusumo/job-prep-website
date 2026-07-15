@@ -1,151 +1,48 @@
 # TODO — MVP Implementation Plan
 
-**Synced / planned:** 15 July 2026  
+**Last updated:** 15 July 2026 (post-PR #1)  
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
-**Status:** Planned · High priority · Target window Jul–Oct 2026  
-**Product promise:** Upload your CV, choose a target role, get a personalized job-preparation plan.
+**Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.
 
 | Source | Link / path |
 |--------|-------------|
 | Linear project | https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e |
 | Business ideation | https://docs.google.com/spreadsheets/d/1YxbmFESdd0LmI9zHTcMNC0yvs9s0VBfUYeX_7EoZ8Zk |
 | Landing reference design | [`RoleReady Landing.dc.html`](RoleReady%20Landing.dc.html) |
-| Active accepted specs | `docs/specs/2026-07-15-mvp-phase-0-1-foundation-landing.md` |
-| Active Autopilot cycle | **Phase 0 → 1 only** (foundation + RoleReady landing / JOB-18). Branch: `feat/phase-0-1-foundation-landing` |
+| Last accepted cycle spec | `docs/specs/2026-07-15-mvp-phase-0-1-foundation-landing.md` |
+| Phase 0–1 archive | [`docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md`](docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md) |
+| Merged PR | https://github.com/RavindraTarunokusumo/job-prep-website/pull/1 (`7b265f8`) |
 | Subagent model | **Composer 2.5** via `grok-composer-2.5-fast` |
 | Out of agent scope | **JOB-79** (owned by another person — ignore) |
-| Repo state | Phase 0–1 implemented · **PR:** https://github.com/RavindraTarunokusumo/job-prep-website/pull/1 |
+| Git notes | Use [`.github/git_notes_template.md`](.github/git_notes_template.md) on every commit |
 
-### Linear milestones (source of truth for delivery)
+### Linear milestones
 
 | # | Milestone | Target | Progress |
 |---|-----------|--------|----------|
-| 1 | Profile & document intake | 2026-07-31 | 0% |
+| 1 | Profile & document intake | 2026-07-31 | Partial (JOB-18 done; JOB-5/6 open) |
 | 2 | Application readiness tools | 2026-08-31 | 0% |
 | 3 | Interview practice & assessment | 2026-09-30 | 0% |
 | 4 | Report, launch polish & validation | 2026-10-31 | 0% |
 
-### Issue snapshot (Linear, 15 Jul 2026)
+### Phase status
 
-- **75 issues** total · **14 parents** · **61 children**
-- **Todo:** 16 · **Backlog:** 59 · **In Progress / Done:** 0
-- Active pipeline parents: **JOB-18** (Urgent), **JOB-5**, **JOB-6**
-- **JOB-79** ATS research is assigned elsewhere — **not** in this Autopilot cycle
+| Phase | Status | Notes |
+|-------|--------|-------|
+| **0** Spec & foundation | **Done** | Merged PR #1 |
+| **1** IA & RoleReady landing (JOB-18) | **Done** | Merged PR #1 |
+| **2** Auth & onboarding (JOB-5) | **Next** | Needs Supabase keys |
+| **3** CV upload & parsing (JOB-6) | Pending | Needs Blob after Phase 2 |
+| **4–8** | Pending | See below |
 
----
-
-## How this plan is phased
-
-Phases are sized so each can be completed in **one or two focused agent sessions** without overflowing context. Do **not** start a later phase until the prior phase’s exit criteria pass.
-
-| Phase | Session budget | Linear map | Outcome |
-|-------|----------------|------------|---------|
-| **0** Spec & app foundation | 1 session | Prerequisite (no issue yet) | Accepted specs + runnable Next.js shell |
-| **1** IA, design system & landing | 1 session | **JOB-18** + UI from design | Marketing site + route map + tokens |
-| **2** Auth & onboarding | 1–2 sessions | **JOB-5** (JOB-19…24) | Signed-in user with career profile |
-| **3** CV upload & parsing | 1–2 sessions | **JOB-6** (JOB-25…31) | Upload → parse → review/correct |
-| **4** Application readiness core | 2–3 sessions | **JOB-7, 8, 10** (exclude JOB-79) | Checker, JD match, prep plan (core loop) |
-| **5** Cover letters & messages | 1 session | **JOB-9** | Drafts tied to role/JD |
-| **6** Mock interview + feedback | 2 sessions | **JOB-11, 12** | Text practice + scores |
-| **7** Assessments & video library | 1–2 sessions | **JOB-13, 14** | Practice sets + curated videos |
-| **8** Report, privacy, analytics | 2 sessions | **JOB-15, 16, 17** | Report + consent + validation |
-
-**This Autopilot cycle:** Phase 0 → 1 only (specs, `web/` scaffold, RoleReady landing, route placeholders).  
-**Next cycles:** Phase 2 → 3 (needs Supabase / Blob keys — ask user before starting).  
-**Later cycles:** Phase 4+ (promote Linear parents from Backlog → Todo when starting).
-
-**Workflow reminder (AGENTS.md):** each phase needs an accepted spec under `docs/specs/`, tasks logged here before edits, junior handoffs for implementation sub-items, per-sub-item commits, full lint/typecheck/tests before commit.
+**Next Autopilot cycle candidate:** Phase 2 (JOB-5). Ask for Supabase/Postgres secrets before starting.
 
 ---
 
-## Phase 0 — Spec & application foundation
+## Completed (archived)
 
-**Goal:** Unblock all feature work. Repo today has agent docs only; create the product app skeleton and accepted specs.
-
-**Why first:** Linear issues assume Next.js, Prisma, Supabase Auth, Vercel Blob, Vercel AI SDK, shadcn/ui — none of that exists in-tree yet.
-
-### Tasks
-
-- [x] **0.1** Write accepted product/architecture specs under `docs/specs/` — `1738f30`
-  - MVP product scope (core loop, out-of-scope list from Linear project description)
-  - Tech stack & repo layout (`web/` app, Prisma, env vars)
-  - Information architecture / route map (feeds Phase 1 / JOB-18)
-  - Design system notes extracted from landing reference (see Phase 1)
-- [x] **0.2** Scaffold Next.js (App Router) + TypeScript in `web/` — `9d2e17b`
-  - Tailwind CSS, ESLint, Prettier (align with `.pre-commit-config.yaml`)
-  - shadcn/ui init + base components used by landing (Button, Card, Dialog, Input, etc.)
-- [x] **0.3** Add Prisma + PostgreSQL project config (schema stub, migrate workflow) — `9d2e17b`
-- [x] **0.4** Env / secrets template (`.env.example`): Supabase, Blob, AI provider, DB URL — `9d2e17b`
-- [x] **0.5** Minimal CI scripts: `lint`, `typecheck`, `test` (even if empty suite) — `9d2e17b`
-- [x] **0.6** Update `README.md` with run instructions once scaffold lands — `43cdad1`
-
-### Exit criteria
-
-- `web/` boots locally (`npm run dev`)
-- Specs accepted under `docs/specs/` (no blocking open questions for Phases 1–3)
-- Pre-commit / lint / typecheck paths are defined for frontend work
-
-### Out of scope for Phase 0
-
-Feature UIs, auth product flows, AI calls, real uploads.
-
----
-
-## Phase 1 — Information architecture, design system & RoleReady landing
-
-**Linear:** [JOB-18](https://linear.app/job-prep-website/issue/JOB-18/create-a-wireframe-for-the-website) — *Create a wireframe for the website* · **Urgent** · Milestone 1  
-**UI source of truth:** [`RoleReady Landing.dc.html`](RoleReady%20Landing.dc.html)
-
-### Design tokens to implement (from reference)
-
-| Token | Value / note |
-|-------|----------------|
-| Fonts | **Plus Jakarta Sans** (UI), **IBM Plex Mono** (labels/meta) |
-| Brand gradient | `#2E5BF0` → `#7B3FE4` |
-| Text | `#14161F` primary, `#565E73` / `#616984` muted |
-| Surfaces | Page `#F5F6FB`, cards white, soft borders `rgba(24,30,54,.08)` |
-| Accents | Success `#16A374`, warn `#E0902B`, danger `#E5484D` |
-| Radius | ~12–24px cards; pills 999px; CTA ~13–14px |
-| Motion | rise / fade / float keyframes; sticky blurred nav |
-
-### Landing sections to ship (1:1 structure with design)
-
-| Section | Anchor / notes |
-|---------|----------------|
-| Sticky nav | Logo Role**Ready**, Features, How it works, Pricing, Sign in, Start free trial |
-| Hero | Headline + dual CTA + trust chips + product preview card (readiness ring, CV/match bars, strengths/gaps, next actions) |
-| Trust bar | “Trusted by applicants at …” logos |
-| How it works `#how` | 4 steps: Upload → Target → Plan → Track |
-| Features bento `#features` | CV checker, JD match, mock interview, assessments, cover letter, prep plan cards |
-| Dashboard preview `#resources` | One-workspace mock (readiness, plan, strengths, practice, recent results) |
-| Why RoleReady | Dark differentiation band (grounded, editable AI, private, practice-not-tests) |
-| Pricing / CTA `#pricing` | Final CTA (trial copy; billing can stay mock for MVP) |
-| Footer | Product / Resources / Company / Legal |
-| Trial modal | 7-day free trial dialog (wire CTAs to auth in Phase 2) |
-
-### Tasks
-
-- [x] **1.1 JOB-18** Document IA: map every MVP feature → route/section + primary user stories — accepted in Phase 0–1 spec; shells in `62a7f54`
-  - Public routes: `/`, `/login`, `/signup`, `/privacy`, `/terms`, `/ai-use`
-  - App routes (placeholders): `/onboarding`, `/dashboard`, `/resume`, `/resume/review`, `/jobs/match`, `/plan`, `/cover-letter`, `/interview`, `/assessments`, `/videos`, `/report`, `/settings`
-- [x] **1.2** Extract shared design tokens into Tailwind theme / CSS variables — `62a7f54`
-- [x] **1.3** Implement landing page in Next.js matching reference layout and visual language — `62a7f54`
-  - Prefer composable React sections over pasting the whole HTML file
-  - Modal, sticky nav scroll state, hover affordances as in design
-- [x] **1.4** Placeholder authenticated shells (empty states + nav) for app routes from 1.1 — `62a7f54`
-- [x] **1.5** Wire primary CTAs: “Start free trial” / “Build my plan” → signup (or modal → signup) — `62a7f54`
-- [x] **1.6** Responsive pass + basic a11y (focus rings already in design; keyboard modal close) — `62a7f54`
-
-### Exit criteria
-
-- `/` matches RoleReady reference at a high visual fidelity on desktop + mobile
-- Route map + user stories documented (satisfies JOB-18 intent)
-- Placeholder pages exist so later features have a home
-
-### Out of scope for Phase 1
-
-Real auth, data, AI, or dashboard live data (static mock content OK).
+- Phase 0–1 foundation + RoleReady landing — see archive linked above (merge `7b265f8`, PR #1).
 
 ---
 
@@ -378,15 +275,13 @@ Live coaching · job referrals · job-fair partnerships · LGD/FGD · packaged c
 
 ---
 
-## Suggested first session checklist (start here)
+## Suggested next session checklist
 
-When implementation begins (after this plan is accepted):
-
-1. Create feature branch / worktree; read `docs/insights.md` if present.  
-2. **Phase 0.1** — land accepted specs under `docs/specs/` (product + IA + stack).  
-3. **Phase 0.2–0.5** — scaffold `web/` + tooling.  
-4. **Phase 1** — RoleReady landing + route placeholders (**JOB-18**).  
-5. Only then promote Phase 2 Linear issues to In Progress.
+1. Confirm Supabase + Postgres credentials (and later Blob) with the user.  
+2. Create accepted Phase 2 spec under `docs/specs/` (or extend active specs).  
+3. Branch from latest `main`; log Phase 2 tasks before edits.  
+4. Implement **JOB-5** (onboarding) via Composer 2.5 juniors; git notes per `.github/git_notes_template.md`.  
+5. Promote Linear children JOB-19…24 as work starts.
 
 ---
 
@@ -398,7 +293,7 @@ _Use this as a lookup; phased sections above are the working plan._
 
 | ID | Title | Status | Priority |
 |----|-------|--------|----------|
-| JOB-18 | Create a wireframe for the website | Todo | Urgent |
+| JOB-18 | Create a wireframe for the website | Done (PR #1) | Urgent |
 | JOB-5 | Build user onboarding and career goal intake | Todo | High |
 | JOB-19…24 | Onboarding children | Todo | High/Med |
 | JOB-6 | Implement CV/resume upload and parsing | Todo | High |

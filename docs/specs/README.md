@@ -21,4 +21,4 @@ Example: `2026-07-15-mvp-phase-0-1-foundation-landing.md`
 
 | Spec | Status | Scope |
 |------|--------|-------|
-| [2026-07-15-mvp-phase-0-1-foundation-landing.md](./2026-07-15-mvp-phase-0-1-foundation-landing.md) | **Accepted** | Phase 0 foundation + Phase 1 RoleReady landing (JOB-18) |
+| [2026-07-15-mvp-phase-0-1-foundation-landing.md](./2026-07-15-mvp-phase-0-1-foundation-landing.md) | **Accepted (merged PR #1)** | Phase 0 foundation + Phase 1 RoleReady landing (JOB-18) |
