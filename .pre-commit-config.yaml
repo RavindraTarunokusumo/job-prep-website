@@ -15,33 +15,34 @@ repos:
         args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
 
-  - repo: https://github.com/pre-commit/mirrors-eslint
-    rev: v9.6.0
-    hooks:
-      - id: eslint
-        files: \.(ts|tsx|js|jsx)$
-        args: [--fix]
-
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v3.3.3
     hooks:
       - id: prettier
-        files: \.(ts|tsx|js|jsx|json|md|css|scss)$
+        # web/ uses Next/shadcn formatting; format via web/ package when added
+        files: ^(?!web/).*\.(ts|tsx|js|jsx|json|md|css|scss)$
 
   - repo: local
     hooks:
+      - id: eslint-web
+        name: ESLint (web)
+        entry: bash -c 'cd web && npx eslint --fix .'
+        language: system
+        files: ^web/.*\.(ts|tsx|js|jsx)$
+        pass_filenames: false
+
       - id: prisma-format
         name: Prisma Format
-        entry: npx prisma format
+        entry: bash -c 'cd web && npx prisma format'
         language: system
-        files: prisma/schema.prisma
+        files: web/prisma/schema\.prisma
         pass_filenames: false
 
       - id: typecheck
         name: TypeScript Type Check
-        entry: npx tsc --noEmit
+        entry: bash -c 'cd web && npx tsc --noEmit'
         language: system
-        files: \.(ts|tsx)$
+        files: web/.*\.(ts|tsx)$
         pass_filenames: false
         stages: [push]
 
