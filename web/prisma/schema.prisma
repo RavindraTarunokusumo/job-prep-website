@@ -8,11 +8,31 @@ datasource db {
 }
 
 model User {
-  id        String   @id @db.Uuid
-  email     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  profile   Profile?
+  id               String           @id @db.Uuid
+  email            String           @unique
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  profile          Profile?
+  resumeDocuments  ResumeDocument[]
+}
+
+model ResumeDocument {
+  id               String   @id @default(cuid())
+  userId           String   @db.Uuid
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  originalFilename String
+  mimeType         String
+  byteSize         Int
+  storageProvider  String   @default("supabase")
+  storagePath      String
+  status           String
+  rawText          String?  @db.Text
+  parseError       String?
+  parsedData       Json?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model Profile {

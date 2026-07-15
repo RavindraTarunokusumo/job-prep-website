@@ -9,7 +9,8 @@
 |--------|-------------|
 | Linear project | https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e |
 | Landing reference design | [`RoleReady Landing.dc.html`](RoleReady%20Landing.dc.html) |
-| Active cycle spec | `docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md` (create in cycle) |
+| Active cycle spec | `docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md` |
+| Active Autopilot cycle | **Phase 3** CV upload · branch `feat/phase-3-cv-upload-parse` |
 | Phase 0–1 archive | [`docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md`](docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md) |
 | Phase 2 archive | [`docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md`](docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md) |
 | Merged PRs | [#1](https://github.com/RavindraTarunokusumo/job-prep-website/pull/1), [#2](https://github.com/RavindraTarunokusumo/job-prep-website/pull/2) (`8ec6bae`) |
@@ -32,7 +33,7 @@
 |-------|--------|-------|
 | **0–1** Foundation + landing | **Done** | PR #1 |
 | **2** Auth & onboarding (JOB-5) | **Done** | PR #2 `8ec6bae` |
-| **3** CV upload & parsing (JOB-6) | **Next** | Active cycle |
+| **3** CV upload & parsing (JOB-6) | **In progress** | Branch `feat/phase-3-cv-upload-parse` |
 | **4–8** | Pending | See below |
 
 ---
@@ -51,13 +52,14 @@
 
 ### Tasks
 
-- [ ] **3.1 JOB-25** Resume document model + upload metadata schema
-- [ ] **3.2 JOB-26** Upload UI + client file validation (PDF/DOCX, size limits)
-- [ ] **3.3 JOB-27** Vercel Blob upload flow
-- [ ] **3.4 JOB-28** Extract text from PDF and DOCX
-- [ ] **3.5 JOB-29** Parse sections into editable structured data *(currently Backlog — promote when starting)*
-- [ ] **3.6 JOB-30** Parsed resume review & correction screen
-- [ ] **3.7 JOB-31** Upload/parsing tests + failure handling
+- [x] **3.0** Accepted Phase 3 spec — `abe7620` (Supabase Storage instead of Vercel Blob — no token)
+- [x] **3.1 JOB-25** Resume document model — `fe206a6` + upload metadata schema
+- [x] **3.2 JOB-26** Upload UI — `848b28a`/`b60dfc5` + client file validation (PDF/DOCX, size limits)
+- [x] **3.3 JOB-27** Private file storage — `848b28a` upload flow (**Supabase Storage** `resumes` bucket)
+- [x] **3.4 JOB-28** Extract text — `848b28a` from PDF and DOCX
+- [x] **3.5 JOB-29** Parse sections — `848b28a` into editable structured data
+- [x] **3.6 JOB-30** Parsed resume review — `b60dfc5` & correction screen
+- [x] **3.7 JOB-31** Upload/parsing tests — `b60dfc5` + failure handling
 
 ### Exit criteria
 

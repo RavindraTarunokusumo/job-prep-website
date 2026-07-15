@@ -18,3 +18,7 @@ npm-debug.log*
 
 # Optional local tooling
 .worktree/
+.venv-gliner/
+.venv*/
+**/__pycache__/
+*.pyc
