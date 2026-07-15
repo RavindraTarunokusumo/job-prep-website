@@ -15,7 +15,7 @@
 | Active Autopilot cycle | **Phase 0 → 1 only** (foundation + RoleReady landing / JOB-18). Branch: `feat/phase-0-1-foundation-landing` |
 | Subagent model | **Composer 2.5** via `grok-composer-2.5-fast` |
 | Out of agent scope | **JOB-79** (owned by another person — ignore) |
-| Repo state | Phase 0–1 implemented on `feat/phase-0-1-foundation-landing` (pending merge) |
+| Repo state | Phase 0–1 implemented · **PR:** https://github.com/RavindraTarunokusumo/job-prep-website/pull/1 |
 
 ### Linear milestones (source of truth for delivery)
 
