@@ -1,1 +1,5 @@
-task: Phase 1 / JOB-18 landing + placeholders; model: grok-composer-2.5-fast; session: 019f66d6-a5ca-7290-b3ac-e27c4e237686
+Task: RoleReady landing and app route shells (JOB-18)
+Summary: Implement design tokens, marketing landing from RoleReady reference, trial modal, and placeholder pages for all MVP public/app routes.
+Docs: docs/specs/2026-07-15-mvp-phase-0-1-foundation-landing.md, RoleReady Landing.dc.html
+TODO: Phase 1 / 1.1–1.6 (JOB-18)
+Validation: npm run lint, npm run typecheck, npm test, npm run build (web/, 21 routes)
