@@ -1,10 +1,13 @@
-import { PlaceholderPage } from "@/components/placeholder-page";
+import { AuthShell } from "@/components/auth/auth-shell";
+import { SignupForm } from "@/components/auth/signup-form";
 
 export default function SignupPage() {
   return (
-    <PlaceholderPage
-      title="Start Free Trial"
+    <AuthShell
+      title="Start free trial"
       description="Create your account and start your 7-day free trial of the complete preparation workflow."
-    />
+    >
+      <SignupForm />
+    </AuthShell>
   );
 }
