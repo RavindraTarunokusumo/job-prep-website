@@ -32,16 +32,16 @@ repos:
     hooks:
       - id: prisma-format
         name: Prisma Format
-        entry: npx prisma format
+        entry: bash -c 'cd web && npx prisma format'
         language: system
-        files: prisma/schema.prisma
+        files: web/prisma/schema\.prisma
         pass_filenames: false
 
       - id: typecheck
         name: TypeScript Type Check
-        entry: npx tsc --noEmit
+        entry: bash -c 'cd web && npx tsc --noEmit'
         language: system
-        files: \.(ts|tsx)$
+        files: web/.*\.(ts|tsx)$
         pass_filenames: false
         stages: [push]
 
