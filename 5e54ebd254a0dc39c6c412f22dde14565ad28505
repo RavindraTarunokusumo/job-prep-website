@@ -1,0 +1,5 @@
+Task: Onboarding UI, actions, gates, tests (JOB-21–24)
+Summary: Implement onboarding form and save action, onboarding completion cookie gate, settings edit path, dashboard summary, and vitest coverage for validation.
+Docs: docs/specs/2026-07-15-mvp-phase-2-auth-onboarding.md
+TODO: Phase 2 / 2.4–2.7 JOB-21–24
+Validation: npm run lint, typecheck, test (7), build (web/)
