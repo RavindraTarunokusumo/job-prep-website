@@ -1,0 +1,5 @@
+Task: Resume UI and tests (JOB-30–31)
+Summary: Build upload/list and review/correction UIs plus vitest coverage for parse and validation.
+Docs: docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md
+TODO: Phase 3 / 3.6–3.7
+Validation: npm run lint, typecheck, test (18), build (web/)
