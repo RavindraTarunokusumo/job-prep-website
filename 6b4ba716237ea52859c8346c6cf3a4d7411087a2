@@ -1,1 +1,5 @@
-task: TODO PR link; model: senior
+Task: Link PR #1 in TODO header
+Summary: Record open PR URL on the Autopilot cycle header in TODO.md for delivery tracking.
+Docs: TODO.md
+TODO: Phase 0–1 Autopilot cycle header
+Validation: N/A (docs only)
