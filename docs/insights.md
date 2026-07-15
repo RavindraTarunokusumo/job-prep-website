@@ -29,3 +29,13 @@ Workflow lessons only — no feature implementation details.
 - Add a shared Prettier config under `web/` so pre-commit prettier can re-enable on frontend files.
 - Optional: small script to attach notes from the template fields interactively.
 
+### Applied to harness (2026-07-15)
+
+Workflow lessons above were folded into `AGENTS.md` / `CLAUDE.md`:
+- Git notes procedure + `refs/notes/commits` push (Workflow Rule 11)
+- Prefer merge commits over squash when notes exist (Rule 12)
+- Composer 2.5 handoff defaults, long-running handoff wait, `web/` full suite
+- Linear full project-name filter
+- Monorepo pre-commit / `.env.example` / Prisma schema notes
+- Reflection must propose harness updates; apply when user requests
+
