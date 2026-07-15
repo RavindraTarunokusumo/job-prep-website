@@ -39,3 +39,22 @@ Workflow lessons above were folded into `AGENTS.md` / `CLAUDE.md`:
 - Monorepo pre-commit / `.env.example` / Prisma schema notes
 - Reflection must propose harness updates; apply when user requests
 
+## 2026-07-15 — Phase 2 Autopilot cycle
+
+### Tools & commands
+
+- Supabase env validation without printing secrets: JWT `role` claim check + Auth health + REST probe + `pg` connect.
+- Root `.gitignore` for `.env*` is required; Next.js also needs `web/.env.local` (separate from repo root).
+- `cookies().set` is illegal in Server Components — only Server Actions / Route Handlers (caught on onboarding page load).
+- Prisma Edge limitation: middleware cannot query DB; onboarding gate used an httpOnly cookie synced from actions.
+
+### Recurring failure modes
+
+- Service role key may be non-JWT "secret" format; do not assume JWT shape in code.
+- Freehand notes without `.github/git_notes_template.md` still a risk — template push of `refs/notes/commits` remains mandatory.
+
+### Applied to harness
+
+- No AGENTS.md change this cycle beyond existing cookie/notes rules; log cookie restriction more explicitly if it recurs.
+
+

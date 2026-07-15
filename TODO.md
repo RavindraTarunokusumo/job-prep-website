@@ -1,6 +1,6 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 15 July 2026 (post-PR #1)  
+**Last updated:** 15 July 2026 (post-PR #2)  
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.
@@ -8,12 +8,11 @@
 | Source | Link / path |
 |--------|-------------|
 | Linear project | https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e |
-| Business ideation | https://docs.google.com/spreadsheets/d/1YxbmFESdd0LmI9zHTcMNC0yvs9s0VBfUYeX_7EoZ8Zk |
 | Landing reference design | [`RoleReady Landing.dc.html`](RoleReady%20Landing.dc.html) |
-| Last accepted cycle spec | `docs/specs/2026-07-15-mvp-phase-2-auth-onboarding.md` |
+| Active cycle spec | `docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md` (create in cycle) |
 | Phase 0–1 archive | [`docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md`](docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md) |
-| Active Autopilot cycle | **Phase 2** auth + onboarding · branch `feat/phase-2-auth-onboarding` |
-| Prior merge | https://github.com/RavindraTarunokusumo/job-prep-website/pull/1 (`7b265f8`) |
+| Phase 2 archive | [`docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md`](docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md) |
+| Merged PRs | [#1](https://github.com/RavindraTarunokusumo/job-prep-website/pull/1), [#2](https://github.com/RavindraTarunokusumo/job-prep-website/pull/2) (`8ec6bae`) |
 | Subagent model | **Composer 2.5** via `grok-composer-2.5-fast` |
 | Out of agent scope | **JOB-79** (owned by another person — ignore) |
 | Git notes | Use [`.github/git_notes_template.md`](.github/git_notes_template.md) on every commit |
@@ -22,7 +21,7 @@
 
 | # | Milestone | Target | Progress |
 |---|-----------|--------|----------|
-| 1 | Profile & document intake | 2026-07-31 | Partial (JOB-18 done; JOB-5/6 open) |
+| 1 | Profile & document intake | 2026-07-31 | JOB-18 + JOB-5 done; JOB-6 next |
 | 2 | Application readiness tools | 2026-08-31 | 0% |
 | 3 | Interview practice & assessment | 2026-09-30 | 0% |
 | 4 | Report, launch polish & validation | 2026-10-31 | 0% |
@@ -31,47 +30,17 @@
 
 | Phase | Status | Notes |
 |-------|--------|-------|
-| **0** Spec & foundation | **Done** | Merged PR #1 |
-| **1** IA & RoleReady landing (JOB-18) | **Done** | Merged PR #1 |
-| **2** Auth & onboarding (JOB-5) | **In progress** | Branch `feat/phase-2-auth-onboarding` |
-| **3** CV upload & parsing (JOB-6) | Pending | Needs Blob after Phase 2 |
+| **0–1** Foundation + landing | **Done** | PR #1 |
+| **2** Auth & onboarding (JOB-5) | **Done** | PR #2 `8ec6bae` |
+| **3** CV upload & parsing (JOB-6) | **Next** | Active cycle |
 | **4–8** | Pending | See below |
-
-**Active cycle:** Phase 2 (JOB-5 / JOB-19…24). Secrets in gitignored `.env.local`.
 
 ---
 
 ## Completed (archived)
 
-- Phase 0–1 foundation + RoleReady landing — see archive linked above (merge `7b265f8`, PR #1).
-
----
-
-## Phase 2 — Auth & career goal onboarding
-
-**Linear parent:** [JOB-5](https://linear.app/job-prep-website/issue/JOB-5/build-user-onboarding-and-career-goal-intake) · Milestone 1 · High  
-**Depends on:** Phase 0–1
-
-### Capture fields (from JOB-5)
-
-Education · experience level · target role · target industry · preferred location/region · job-search status · career-switch intent · skills & certifications
-
-### Tasks
-
-- [x] **2.0** Root `.gitignore` for `.env` / `.env.local` (never commit secrets)
-- [x] **2.1** — `0033571` Accepted Phase 2 spec under `docs/specs/`
-- [x] **2.2 JOB-19** — `7d1b0c8` Design onboarding / profile data model in Prisma
-- [x] **2.3 JOB-20** — `7375ddb` Implement Supabase Auth session handling (middleware, client/server helpers)
-- [x] **2.4 JOB-21** — `5e54ebd` Build onboarding form UI (shadcn/ui; brand tokens from Phase 1)
-- [x] **2.5 JOB-22** — `5e54ebd` Create onboarding save/update server actions
-- [x] **2.6 JOB-23** — `5e54ebd` Onboarding completion gate + profile edit states
-- [x] **2.7 JOB-24** — `5e54ebd` Validation and tests
-
-### Exit criteria
-
-- New user can sign up/in, complete onboarding in one guided flow, land on dashboard
-- Profile is persisted and editable
-- Unauthenticated users cannot reach app routes
+- Phase 0–1 — `docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md`
+- Phase 2 auth & onboarding — `docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md` (PR #2)
 
 ---
 
@@ -297,7 +266,7 @@ _Use this as a lookup; phased sections above are the working plan._
 | ID | Title | Status | Priority |
 |----|-------|--------|----------|
 | JOB-18 | Create a wireframe for the website | Done (PR #1) | Urgent |
-| JOB-5 | Build user onboarding and career goal intake | Todo | High |
+| JOB-5 | Build user onboarding and career goal intake | Done (PR #2) | High |
 | JOB-19…24 | Onboarding children | Todo | High/Med |
 | JOB-6 | Implement CV/resume upload and parsing | Todo | High |
 | JOB-25…28, 30–31 | Resume children (most Todo) | Todo | High/Med |
