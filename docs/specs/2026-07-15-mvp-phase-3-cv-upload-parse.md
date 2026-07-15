@@ -24,6 +24,8 @@ Linear mentions **Vercel Blob**. This environment has **Supabase** credentials a
 - Files are private (not public bucket).
 - Document this deviation in PR body; Vercel Blob can replace the storage adapter later without changing Prisma model much (`storageKey` + `storageProvider`).
 
+**Canonical ADR:** [docs/architecture.md — ADR-001](../architecture.md#adr-001-resume-file-storage--supabase-storage-not-vercel-blob).
+
 ## 3. Scope
 
 ### In scope
