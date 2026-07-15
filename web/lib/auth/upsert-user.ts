@@ -22,6 +22,7 @@ export async function upsertUserFromAuth(user: SessionUser): Promise<void> {
   });
 }
 
+/** Set onboarding gate cookie. Call only from Server Actions or Route Handlers. */
 export async function syncOnboardingCookie(userId: string): Promise<void> {
   const complete = await hasCompletedOnboarding(userId);
   const cookieStore = await cookies();

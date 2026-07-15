@@ -12,7 +12,6 @@ import {
   getProfileForUser,
   requireUser,
 } from "@/lib/auth/session";
-import { syncOnboardingCookie } from "@/lib/auth/upsert-user";
 import type { ExperienceLevel, JobSearchStatus } from "@/lib/validation/onboarding";
 
 type OnboardingPageProps = {
@@ -20,8 +19,9 @@ type OnboardingPageProps = {
 };
 
 export default async function OnboardingPage({ searchParams }: OnboardingPageProps) {
+  // Cookie writes only happen in Server Actions (auth + saveProfile).
+  // Server Components cannot call cookies().set().
   const user = await requireUser();
-  await syncOnboardingCookie(user.id);
   const profile = await getProfileForUser(user.id);
   const { edit } = await searchParams;
   const isEdit = edit === "1";
