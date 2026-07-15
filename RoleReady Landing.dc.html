@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth;scroll-padding-top:88px}
+  body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:#14161F;background:#F5F6FB;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  a{color:#2E5BF0;text-decoration:none}
+  a:hover{color:#1E44D6}
+  ::selection{background:rgba(123,63,228,.18)}
+  :focus-visible{outline:2.5px solid #2E5BF0;outline-offset:2px;border-radius:6px}
+  @keyframes rr-rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes rr-modal{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes rr-fade{from{opacity:0}to{opacity:1}}
+  @keyframes rr-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+</style>
+</helmet>
+
+<div style="min-height:100vh;overflow:hidden;position:relative;background:
+  radial-gradient(1200px 520px at 82% -6%, rgba(123,63,228,.10), transparent 60%),
+  radial-gradient(1000px 480px at 6% 2%, rgba(46,91,240,.10), transparent 58%),
+  #F5F6FB;">
+
+  <!-- ============ NAV ============ -->
+  <header style="position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:{{ navBg }};border-bottom:1px solid rgba(24,30,54,.06);box-shadow:{{ navShadow }};transition:box-shadow .25s ease, background .25s ease;">
+    <nav style="max-width:1220px;margin:0 auto;padding:15px 32px;display:flex;align-items:center;gap:28px;">
+      <a href="#top" style="display:flex;align-items:center;gap:11px;color:#14161F;font-weight:800;">
+        <span style="width:38px;height:38px;border-radius:11px;background:linear-gradient(140deg,#2E5BF0,#7B3FE4);display:flex;align-items:flex-end;justify-content:center;gap:2.5px;padding:9px 8px;box-shadow:0 6px 16px -6px rgba(46,91,240,.7);">
+          <i style="width:4px;height:8px;background:rgba(255,255,255,.55);border-radius:2px;"></i>
+          <i style="width:4px;height:13px;background:rgba(255,255,255,.8);border-radius:2px;"></i>
+          <i style="width:4px;height:18px;background:#fff;border-radius:2px;"></i>
+        </span>
+        <span style="font-size:18px;letter-spacing:-.02em;">Role<span style="color:#2E5BF0;">Ready</span></span>
+      </a>
+
+      <div style="display:none;"></div>
+      <ul style="list-style:none;display:flex;gap:4px;margin:0;padding:0;flex-wrap:wrap;font-size:14.5px;font-weight:600;color:#4A5167;">
+        <li><a href="#how" style="color:inherit;display:block;padding:8px 13px;border-radius:9px;" style-hover="background:rgba(46,91,240,.08);color:#2E5BF0;">How It Works</a></li>
+        <li><a href="#features" style="color:inherit;display:block;padding:8px 13px;border-radius:9px;" style-hover="background:rgba(46,91,240,.08);color:#2E5BF0;">Features</a></li>
+        <li><a href="#resources" style="color:inherit;display:block;padding:8px 13px;border-radius:9px;" style-hover="background:rgba(46,91,240,.08);color:#2E5BF0;">Resources</a></li>
+        <li><a href="#pricing" style="color:inherit;display:block;padding:8px 13px;border-radius:9px;" style-hover="background:rgba(46,91,240,.08);color:#2E5BF0;">Pricing</a></li>
+      </ul>
+
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+        <a href="#top" style="font-size:14.5px;font-weight:700;color:#3A4159;padding:10px 16px;border-radius:10px;" style-hover="background:rgba(24,30,54,.05);color:#14161F;">Sign In</a>
+        <button type="button" onClick="{{ openModal }}" style="font:700 14.5px 'Plus Jakarta Sans',sans-serif;color:#fff;background:linear-gradient(135deg,#2E5BF0,#7B3FE4);border:none;padding:11px 20px;border-radius:11px;cursor:pointer;box-shadow:0 8px 20px -8px rgba(70,63,228,.75);transition:transform .16s ease, box-shadow .16s ease;" style-hover="transform:translateY(-1px);box-shadow:0 12px 26px -8px rgba(70,63,228,.85);" style-active="transform:translateY(0) scale(.98);">Start Free</button>
+      </div>
+    </nav>
+  </header>
+
+  <a id="top"></a>
+
+  <!-- ============ HERO ============ -->
+  <section style="max-width:1220px;margin:0 auto;padding:76px 32px 40px;display:flex;flex-wrap:wrap;gap:56px;align-items:center;">
+    <div style="flex:1 1 440px;min-width:340px;animation:rr-rise .6s ease both;">
+      <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 13px 6px 8px;border-radius:999px;background:rgba(255,255,255,.8);border:1px solid rgba(24,30,54,.08);font:600 12.5px 'Plus Jakarta Sans',sans-serif;color:#3A4159;box-shadow:0 2px 8px rgba(24,30,60,.05);">
+        <span style="display:inline-flex;font:600 10.5px 'IBM Plex Mono',monospace;color:#7B3FE4;background:rgba(123,63,228,.1);padding:3px 8px;border-radius:999px;">NEW</span>
+        Structured prep, not another chatbot
+      </span>
+      <h1 style="font-size:clamp(36px,5.2vw,60px);line-height:1.04;letter-spacing:-.03em;font-weight:800;margin:22px 0 0;">
+        Turn every application into a <span style="background:linear-gradient(120deg,#2E5BF0,#7B3FE4);-webkit-background-clip:text;background-clip:text;color:transparent;">personalized preparation plan.</span>
+      </h1>
+      <p style="font-size:clamp(16px,1.5vw,19px);line-height:1.6;color:#565E73;margin:22px 0 0;max-width:560px;">
+        Upload your CV, choose a target role, and analyze the job description. RoleReady turns it into a step-by-step plan — improve your materials, practise interviews, and get a clear readiness report before you apply.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:13px;margin-top:32px;">
+        <button type="button" onClick="{{ openModal }}" style="font:700 16px 'Plus Jakarta Sans',sans-serif;color:#fff;background:linear-gradient(135deg,#2E5BF0,#7B3FE4);border:none;padding:15px 26px;border-radius:13px;cursor:pointer;box-shadow:0 14px 30px -10px rgba(70,63,228,.75);transition:transform .16s ease, box-shadow .16s ease;" style-hover="transform:translateY(-2px);box-shadow:0 18px 36px -10px rgba(70,63,228,.85);" style-active="transform:translateY(0) scale(.985);">Start Your Free Trial</button>
+        <a href="#how" style="font:700 16px 'Plus Jakarta Sans',sans-serif;color:#28304A;background:#fff;border:1px solid rgba(24,30,54,.12);padding:15px 24px;border-radius:13px;display:inline-flex;align-items:center;gap:9px;box-shadow:0 2px 8px rgba(24,30,60,.05);transition:transform .16s ease, box-shadow .16s ease;" style-hover="transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(24,30,60,.25);">
+          See How It Works
+          <span style="display:inline-flex;width:22px;height:22px;border-radius:50%;background:rgba(46,91,240,.1);align-items:center;justify-content:center;color:#2E5BF0;font-weight:800;">↓</span>
+        </a>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:22px;margin-top:34px;font:600 13px 'Plus Jakarta Sans',sans-serif;color:#4A5167;">
+        <span style="display:flex;align-items:center;gap:8px;color:#4A5167;"><span style="width:7px;height:7px;border-radius:50%;background:#16A374;"></span>No card required to start</span>
+        <span style="display:flex;align-items:center;gap:8px;color:#4A5167;"><span style="width:7px;height:7px;border-radius:50%;background:#2E5BF0;"></span>Your documents stay private</span>
+        <span style="display:flex;align-items:center;gap:8px;color:#4A5167;"><span style="width:7px;height:7px;border-radius:50%;background:#7B3FE4;"></span>Grounded in your real CV</span>
+      </div>
+    </div>
+
+    <!-- Hero product preview -->
+    <div style="flex:1 1 440px;min-width:340px;position:relative;animation:rr-rise .75s ease both;">
+      <div style="position:absolute;inset:-14px;border-radius:32px;background:linear-gradient(140deg,rgba(46,91,240,.18),rgba(123,63,228,.16));filter:blur(30px);"></div>
+      <div style="position:relative;background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:24px;box-shadow:0 30px 70px -30px rgba(24,30,60,.4);padding:20px;">
+        <!-- preview header -->
+        <div style="display:flex;align-items:center;gap:12px;padding-bottom:16px;border-bottom:1px solid rgba(24,30,54,.07);">
+          <span style="width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#2E5BF0,#7B3FE4);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;">AR</span>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:15px;">Aisha Rahman</div>
+            <div style="font-size:12.5px;color:#7B8196;font-family:'IBM Plex Mono',monospace;">Target · Junior Product Manager</div>
+          </div>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;color:#16A374;background:rgba(22,163,116,.1);padding:5px 10px;border-radius:999px;">ON TRACK</span>
+        </div>
+
+        <!-- readiness + stats -->
+        <div style="display:flex;gap:16px;margin-top:18px;align-items:center;flex-wrap:wrap;">
+          <div style="width:112px;height:112px;border-radius:50%;background:conic-gradient(#2E5BF0 0turn, #7B3FE4 .78turn, rgba(24,30,54,.08) .78turn);display:flex;align-items:center;justify-content:center;flex:none;">
+            <div style="width:84px;height:84px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px rgba(24,30,54,.05);">
+              <span style="font-weight:800;font-size:26px;letter-spacing:-.02em;">78<span style="font-size:14px;color:#8A90A3;">%</span></span>
+              <span style="font:600 9px 'IBM Plex Mono',monospace;color:#8A90A3;letter-spacing:.06em;">READINESS</span>
+            </div>
+          </div>
+          <div style="flex:1;min-width:150px;display:flex;flex-direction:column;gap:9px;">
+            <div style="background:#F7F8FC;border:1px solid rgba(24,30,54,.06);border-radius:12px;padding:10px 12px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:#565E73;font-weight:600;"><span>CV score</span><span style="color:#14161F;">82 / 100</span></div>
+              <div style="height:6px;border-radius:999px;background:rgba(24,30,54,.08);margin-top:7px;overflow:hidden;"><div style="width:82%;height:100%;background:linear-gradient(90deg,#2E5BF0,#7B3FE4);border-radius:999px;"></div></div>
+            </div>
+            <div style="background:#F7F8FC;border:1px solid rgba(24,30,54,.06);border-radius:12px;padding:10px 12px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:#565E73;font-weight:600;"><span>Role match</span><span style="color:#14161F;">71%</span></div>
+              <div style="height:6px;border-radius:999px;background:rgba(24,30,54,.08);margin-top:7px;overflow:hidden;"><div style="width:71%;height:100%;background:linear-gradient(90deg,#2E5BF0,#7B3FE4);border-radius:999px;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- strengths / gaps -->
+        <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:150px;background:rgba(22,163,116,.06);border:1px solid rgba(22,163,116,.16);border-radius:12px;padding:11px 13px;">
+            <div style="font:600 10px 'IBM Plex Mono',monospace;color:#12855F;letter-spacing:.05em;">STRENGTHS</div>
+            <div style="font-size:12.5px;color:#28304A;margin-top:6px;line-height:1.5;">Stakeholder comms · User research · Roadmapping</div>
+          </div>
+          <div style="flex:1;min-width:150px;background:rgba(224,144,43,.07);border:1px solid rgba(224,144,43,.2);border-radius:12px;padding:11px 13px;">
+            <div style="font:600 10px 'IBM Plex Mono',monospace;color:#B26E14;letter-spacing:.05em;">PRIORITY GAPS</div>
+            <div style="font-size:12.5px;color:#28304A;margin-top:6px;line-height:1.5;">Metrics ownership · SQL · A/B testing</div>
+          </div>
+        </div>
+
+        <!-- next actions -->
+        <div style="margin-top:16px;">
+          <div style="font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;letter-spacing:.06em;margin-bottom:8px;">RECOMMENDED NEXT ACTIONS</div>
+          <div style="display:flex;flex-direction:column;gap:7px;">
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:10px;padding:9px 11px;font-size:12.5px;font-weight:600;color:#28304A;">
+              <span style="width:18px;height:18px;border-radius:6px;background:#2E5BF0;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;">✓</span>
+              Quantify impact on your 3 most recent roles
+              <span style="margin-left:auto;font:600 10px 'IBM Plex Mono',monospace;color:#2E5BF0;">CV</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:10px;padding:9px 11px;font-size:12.5px;font-weight:600;color:#28304A;">
+              <span style="width:18px;height:18px;border-radius:6px;background:rgba(24,30,54,.1);display:flex;"></span>
+              Practise 4 product-sense questions
+              <span style="margin-left:auto;font:600 10px 'IBM Plex Mono',monospace;color:#7B3FE4;">INTERVIEW</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:10px;padding:9px 11px;font-size:12.5px;font-weight:600;color:#28304A;">
+              <span style="width:18px;height:18px;border-radius:6px;background:rgba(24,30,54,.1);display:flex;"></span>
+              Complete numerical reasoning set 2
+              <span style="margin-left:auto;font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;">ASSESS</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- floating chip -->
+      <div style="position:absolute;right:-8px;bottom:-16px;background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:14px;box-shadow:0 16px 34px -16px rgba(24,30,60,.4);padding:11px 14px;display:flex;align-items:center;gap:10px;animation:rr-float 5s ease-in-out infinite;">
+        <span style="width:34px;height:34px;border-radius:10px;background:rgba(22,163,116,.12);color:#12855F;display:flex;align-items:center;justify-content:center;font-weight:800;">↑</span>
+        <div><div style="font-size:12.5px;font-weight:700;">+14 pts this week</div><div style="font-size:11px;color:#8A90A3;">Interview readiness</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- logos / trust bar -->
+  <div style="max-width:1220px;margin:0 auto;padding:26px 32px 8px;">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:18px 34px;justify-content:center;font:600 13px 'Plus Jakarta Sans',sans-serif;color:#9096A8;">
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;">TRUSTED BY APPLICANTS AT</span>
+      <span style="font-weight:800;color:#B4B9C7;letter-spacing:-.02em;font-size:17px;">Northgate</span>
+      <span style="font-weight:800;color:#B4B9C7;letter-spacing:-.02em;font-size:17px;">Vantic</span>
+      <span style="font-weight:800;color:#B4B9C7;letter-spacing:-.02em;font-size:17px;">Meridian</span>
+      <span style="font-weight:800;color:#B4B9C7;letter-spacing:-.02em;font-size:17px;">Kestrel Labs</span>
+      <span style="font-weight:800;color:#B4B9C7;letter-spacing:-.02em;font-size:17px;">Outfield</span>
+    </div>
+  </div>
+
+  <!-- ============ HOW IT WORKS ============ -->
+  <section id="how" style="max-width:1220px;margin:0 auto;padding:80px 32px 20px;">
+    <div style="text-align:center;max-width:640px;margin:0 auto;">
+      <span style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#2E5BF0;">HOW IT WORKS</span>
+      <h2 style="font-size:clamp(28px,3.6vw,42px);letter-spacing:-.025em;font-weight:800;margin:12px 0 0;line-height:1.08;">A clear path from CV to offer-ready</h2>
+      <p style="font-size:17px;color:#565E73;line-height:1.6;margin:16px 0 0;">Four steps that turn scattered job hunting into a structured, trackable preparation routine.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px;margin-top:44px;position:relative;">
+      <!-- step 1 -->
+      <div style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:20px;padding:24px;box-shadow:0 1px 3px rgba(24,30,60,.05);">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="width:44px;height:44px;border-radius:13px;background:rgba(46,91,240,.1);color:#2E5BF0;display:flex;align-items:center;justify-content:center;font:800 16px 'IBM Plex Mono',monospace;">01</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;color:#C3C7D4;">UPLOAD</span>
+        </div>
+        <h3 style="font-size:17px;font-weight:700;margin:18px 0 0;">Upload your CV &amp; build your profile</h3>
+        <p style="font-size:13.5px;color:#616984;line-height:1.55;margin:9px 0 0;">Drop in your CV and complete a short career profile — experience, education, and the direction you want to grow.</p>
+        <div style="margin-top:16px;background:#F7F8FC;border:1px dashed rgba(46,91,240,.3);border-radius:12px;padding:14px;display:flex;align-items:center;gap:11px;">
+          <span style="width:32px;height:40px;border-radius:6px;background:#fff;border:1px solid rgba(24,30,54,.12);position:relative;flex:none;"><i style="position:absolute;left:6px;right:6px;top:9px;height:2px;background:rgba(24,30,54,.15);box-shadow:0 5px 0 rgba(24,30,54,.12),0 10px 0 rgba(24,30,54,.09);border-radius:2px;"></i></span>
+          <div style="font-size:12px;"><div style="font-weight:700;">Aisha_Rahman_CV.pdf</div><div style="color:#8A90A3;font-family:'IBM Plex Mono',monospace;font-size:10.5px;">Parsed · 2 pages</div></div>
+        </div>
+      </div>
+      <!-- step 2 -->
+      <div style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:20px;padding:24px;box-shadow:0 1px 3px rgba(24,30,60,.05);">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="width:44px;height:44px;border-radius:13px;background:rgba(123,63,228,.1);color:#7B3FE4;display:flex;align-items:center;justify-content:center;font:800 16px 'IBM Plex Mono',monospace;">02</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;color:#C3C7D4;">TARGET</span>
+        </div>
+        <h3 style="font-size:17px;font-weight:700;margin:18px 0 0;">Choose a role or paste a job description</h3>
+        <p style="font-size:13.5px;color:#616984;line-height:1.55;margin:9px 0 0;">Select a target role or paste any job posting. We extract the real requirements, keywords, and success signals.</p>
+        <div style="margin-top:16px;background:#F7F8FC;border:1px solid rgba(24,30,54,.06);border-radius:12px;padding:12px;">
+          <div style="font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;">TARGET ROLE</div>
+          <div style="font-size:13px;font-weight:700;margin-top:4px;">Junior Product Manager</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:9px;">
+            <span style="font-size:11px;font-weight:600;background:rgba(46,91,240,.09);color:#2450D8;padding:3px 8px;border-radius:999px;">Roadmapping</span>
+            <span style="font-size:11px;font-weight:600;background:rgba(46,91,240,.09);color:#2450D8;padding:3px 8px;border-radius:999px;">Analytics</span>
+            <span style="font-size:11px;font-weight:600;background:rgba(123,63,228,.09);color:#6A2FD8;padding:3px 8px;border-radius:999px;">Stakeholders</span>
+          </div>
+        </div>
+      </div>
+      <!-- step 3 -->
+      <div style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:20px;padding:24px;box-shadow:0 1px 3px rgba(24,30,60,.05);">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="width:44px;height:44px;border-radius:13px;background:rgba(46,91,240,.1);color:#2E5BF0;display:flex;align-items:center;justify-content:center;font:800 16px 'IBM Plex Mono',monospace;">03</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;color:#C3C7D4;">PLAN</span>
+        </div>
+        <h3 style="font-size:17px;font-weight:700;margin:18px 0 0;">Receive a personalized plan</h3>
+        <p style="font-size:13.5px;color:#616984;line-height:1.55;margin:9px 0 0;">A prioritized plan tailored to the gap between your profile and the role — with clear, explainable reasons.</p>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:#28304A;"><span style="width:15px;height:15px;border-radius:5px;background:#2E5BF0;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;">✓</span>Strengthen CV metrics <span style="margin-left:auto;color:#E5484D;font:600 10px 'IBM Plex Mono',monospace;">HIGH</span></div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:#28304A;"><span style="width:15px;height:15px;border-radius:5px;background:rgba(24,30,54,.12);"></span>Draft tailored cover letter <span style="margin-left:auto;color:#E0902B;font:600 10px 'IBM Plex Mono',monospace;">MED</span></div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:#28304A;"><span style="width:15px;height:15px;border-radius:5px;background:rgba(24,30,54,.12);"></span>Interview: product sense <span style="margin-left:auto;color:#E0902B;font:600 10px 'IBM Plex Mono',monospace;">MED</span></div>
+        </div>
+      </div>
+      <!-- step 4 -->
+      <div style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:20px;padding:24px;box-shadow:0 1px 3px rgba(24,30,60,.05);">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="width:44px;height:44px;border-radius:13px;background:rgba(123,63,228,.1);color:#7B3FE4;display:flex;align-items:center;justify-content:center;font:800 16px 'IBM Plex Mono',monospace;">04</span>
+          <span style="font:600 11px 'IBM Plex Mono',monospace;color:#C3C7D4;">TRACK</span>
+        </div>
+        <h3 style="font-size:17px;font-weight:700;margin:18px 0 0;">Practise, improve &amp; track readiness</h3>
+        <p style="font-size:13.5px;color:#616984;line-height:1.55;margin:9px 0 0;">Run mock interviews and assessments, apply edits, and watch your readiness score climb over time.</p>
+        <div style="margin-top:16px;background:#F7F8FC;border:1px solid rgba(24,30,54,.06);border-radius:12px;padding:12px 13px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:#8A90A3;font-family:'IBM Plex Mono',monospace;"><span>W1</span><span>W2</span><span>W3</span><span>W4</span></div>
+          <div style="display:flex;align-items:flex-end;gap:9px;height:44px;margin-top:8px;">
+            <span style="flex:1;height:42%;background:rgba(46,91,240,.25);border-radius:5px 5px 0 0;"></span>
+            <span style="flex:1;height:58%;background:rgba(46,91,240,.4);border-radius:5px 5px 0 0;"></span>
+            <span style="flex:1;height:74%;background:rgba(46,91,240,.6);border-radius:5px 5px 0 0;"></span>
+            <span style="flex:1;height:92%;background:linear-gradient(180deg,#2E5BF0,#7B3FE4);border-radius:5px 5px 0 0;"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BENTO FEATURES ============ -->
+  <section id="features" style="max-width:1220px;margin:0 auto;padding:82px 32px 20px;">
+    <div style="text-align:center;max-width:660px;margin:0 auto;">
+      <span style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#7B3FE4;">FEATURES</span>
+      <h2 style="font-size:clamp(28px,3.6vw,42px);letter-spacing:-.025em;font-weight:800;margin:12px 0 0;line-height:1.08;">Everything the prep workflow needs</h2>
+      <p style="font-size:17px;color:#565E73;line-height:1.6;margin:16px 0 0;">Each tool is a working part of one connected plan — not a separate app. Hover any card to see more.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(268px,1fr));grid-auto-rows:minmax(20px,auto);gap:18px;margin-top:44px;">
+
+      <!-- CV Checker (large) -->
+      <article tabindex="0" style="grid-column:span 2;grid-row:span 2;background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:22px;padding:24px;box-shadow:0 1px 3px rgba(24,30,60,.05);transition:transform .18s ease, box-shadow .18s ease;position:relative;overflow:hidden;" style-hover="transform:translateY(-3px);box-shadow:0 22px 44px -24px rgba(24,30,60,.4);">
+        <div style="display:flex;align-items:center;gap:11px;">
+          <span style="width:36px;height:36px;border-radius:10px;background:rgba(46,91,240,.1);color:#2E5BF0;display:flex;align-items:center;justify-content:center;font-weight:800;">✓</span>
+          <h3 style="font-size:17px;font-weight:700;margin:0;">CV / Resume Checker</h3>
+          <span style="margin-left:auto;font:600 10px 'IBM Plex Mono',monospace;color:#E5484D;background:rgba(229,72,77,.09);padding:4px 9px;border-radius:999px;">2 ATS RISKS</span>
+        </div>
+        <p style="font-size:13.5px;color:#616984;line-height:1.55;margin:12px 0 16px;">ATS-risk detection, structural feedback, visual highlighting, and editable rewrites grounded in what you actually did.</p>
+        <div style="background:#F7F8FC;border:1px solid rgba(24,30,54,.06);border-radius:14px;padding:15px;font-size:12.5px;line-height:1.7;color:#3A4159;">
+          <div style="font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;margin-bottom:8px;">EXPERIENCE · PRODUCT INTERN</div>
+          <p style="margin:0 0 7px;background:rgba(229,72,77,.12);border-radius:5px;padding:2px 5px;display:inline;">Worked on the mobile app and helped the team ship features.</p>
+          <div style="display:flex;align-items:center;gap:7px;margin:9px 0;font-size:11px;color:#B26E14;font-weight:600;"><span style="flex:none;">↳ suggested rewrite</span><span style="height:1px;flex:1;background:rgba(24,30,54,.1);"></span></div>
+          <p style="margin:0;background:rgba(22,163,116,.12);border-radius:5px;padding:2px 5px;display:inline;">Shipped 4 features to 40k users; cut onboarding drop-off 18% via 3 A/B tests.</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;">
+          <span style="font-size:11px;font-weight:600;color:#616984;background:#F1F2F8;padding:5px 10px;border-radius:999px;">Structure ✓</span>
+          <span style="font-size:11px;font-weight:600;color:#616984;background:#F1F2F8;padding:5px 10px;border-radius:999px;">Action verbs ✓</span>
+          <span style="font-size:11px;font-weight:600;color:#B26E14;background:rgba(224,144,43,.1);padding:5px 10px;border-radius:999px;">Add metrics ⚠</span>
+          <span style="font-size:11px;font-weight:600;color:#616984;background:#F1F2F8;padding:5px 10px;border-radius:999px;">Template ✓</span>
+        </div>
+      </article>
+
+      <!-- Job Description Match (wide) -->
+      <article tabindex="0" style="grid-column:span 2;background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:22px;padding:24px;box-shadow:0 1px 3px rgba(24,30,60,.05);transition:transform .18s ease, box-shadow .18s ease;" style-hover="transform:translateY(-3px);box-shadow:0 22px 44px -24px rgba(24,30,60,.4);">
+        <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap;">
+          <div style="width:78px;height:78px;border-radius:50%;background:conic-gradient(#7B3FE4 0turn,#2E5BF0 .71turn,rgba(24,30,54,.08) .71turn);display:flex;align-items:center;justify-content:center;flex:none;">
+            <div style="width:58px;height:58px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;">71<span style="font-size:11px;color:#8A90A3;">%</span></div>
+          </div>
+          <div style="flex:1;min-width:180px;">
+            <h3 style="font-size:16px;font-weight:700;margin:0;">Job Description Match</h3>
+            <p style="font-size:13px;color:#616984;line-height:1.5;margin:6px 0 0;">Your profile and CV, compared against the posting's requirements, keywords, and evidence.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:130px;background:rgba(22,163,116,.06);border:1px solid rgba(22,163,116,.16);border-radius:11px;padding:10px 12px;"><div style="font:600 10px 'IBM Plex Mono',monospace;color:#12855F;">MATCHED · 12</div><div style="font-size:12px;color:#28304A;margin-top:5px;line-height:1.4;">Roadmapping, user research, agile, comms</div></div>
+          <div style="flex:1;min-width:130px;background:rgba(229,72,77,.05);border:1px solid rgba(229,72,77,.16);border-radius:11px;padding:10px 12px;"><div style="font:600 10px 'IBM Plex Mono',monospace;color:#C93D42;">MISSING · 4</div><div style="font-size:12px;color:#28304A;margin-top:5px;line-height:1.4;">SQL, experimentation, metrics ownership</div></div>
+        </div>
+      </article>
+
+      <!-- Cover Letter (small) -->
+      <article tabindex="0" style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:22px;padding:22px;box-shadow:0 1px 3px rgba(24,30,60,.05);transition:transform .18s ease, box-shadow .18s ease;" style-hover="transform:translateY(-3px);box-shadow:0 22px 44px -24px rgba(24,30,60,.4);">
+        <span style="width:34px;height:34px;border-radius:10px;background:rgba(123,63,228,.1);color:#7B3FE4;display:flex;align-items:center;justify-content:center;font-weight:800;">✎</span>
+        <h3 style="font-size:16px;font-weight:700;margin:14px 0 0;">Cover Letter Assistant</h3>
+        <p style="font-size:13px;color:#616984;line-height:1.5;margin:7px 0 12px;">Tailored, editable drafts grounded in your real experience — never invented.</p>
+        <div style="background:#F7F8FC;border:1px solid rgba(24,30,54,.06);border-radius:11px;padding:11px;font-size:11.5px;color:#4A5167;line-height:1.6;">Dear Hiring Team,<br>My work redesigning onboarding for 40k users maps directly to your focus on activation…<span style="display:inline-block;width:2px;height:12px;background:#2E5BF0;vertical-align:middle;margin-left:2px;animation:rr-fade 1s steps(2) infinite;"></span></div>
+      </article>
+
+      <!-- Aptitude (small) -->
+      <article tabindex="0" style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:22px;padding:22px;box-shadow:0 1px 3px rgba(24,30,60,.05);transition:transform .18s ease, box-shadow .18s ease;" style-hover="transform:translateY(-3px);box-shadow:0 22px 44px -24px rgba(24,30,60,.4);">
+        <span style="width:34px;height:34px;border-radius:10px;background:rgba(46,91,240,.1);color:#2E5BF0;display:flex;align-items:center;justify-content:center;font-weight:800;">▦</span>
+        <h3 style="font-size:16px;font-weight:700;margin:14px 0 0;">Aptitude &amp; Assessment</h3>
+        <p style="font-size:13px;color:#616984;line-height:1.5;margin:7px 0 12px;">Practice with explanations — preparatory, never an official test.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <span style="font-size:11px;font-weight:600;color:#3A4159;background:#F1F2F8;padding:6px 9px;border-radius:8px;">Numerical</span>
+          <span style="font-size:11px;font-weight:600;color:#3A4159;background:#F1F2F8;padding:6px 9px;border-radius:8px;">Verbal</span>
+          <span style="font-size:11px;font-weight:600;color:#3A4159;background:#F1F2F8;padding:6px 9px;border-radius:8px;">Logical</span>
+          <span style="font-size:11px;font-weight:600;color:#3A4159;background:#F1F2F8;padding:6px 9px;border-radius:8px;">Situational</span>
+        </div>
+      </article>
+
+      <!-- Mock Interviews (wide) -->
+      <article tabindex="0" style="grid-column:span 2;background:linear-gradient(140deg,#1E2340,#2A2E52);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:24px;box-shadow:0 1px 3px rgba(24,30,60,.05);transition:transform .18s ease, box-shadow .18s ease;color:#EAECF6;" style-hover="transform:translateY(-3px);box-shadow:0 22px 44px -24px rgba(24,30,60,.5);">
+        <div style="display:flex;align-items:center;gap:11px;">
+          <span style="width:34px;height:34px;border-radius:10px;background:rgba(123,63,228,.28);color:#C9B6FF;display:flex;align-items:center;justify-content:center;font-weight:800;">◎</span>
+          <h3 style="font-size:16px;font-weight:700;margin:0;color:#fff;">Text-Based Mock Interviews</h3>
+          <span style="margin-left:auto;font:600 10px 'IBM Plex Mono',monospace;color:#C9B6FF;background:rgba(123,63,228,.25);padding:4px 9px;border-radius:999px;">STAR</span>
+        </div>
+        <div style="margin-top:16px;display:flex;flex-direction:column;gap:9px;">
+          <div style="background:rgba(255,255,255,.06);border-radius:11px 11px 11px 3px;padding:10px 13px;font-size:12.5px;line-height:1.5;max-width:88%;">Tell me about a time you influenced a decision without authority.</div>
+          <div style="align-self:flex-end;background:rgba(46,91,240,.28);border:1px solid rgba(120,150,255,.3);border-radius:11px 11px 3px 11px;padding:10px 13px;font-size:12.5px;line-height:1.5;max-width:88%;">During my internship I noticed onboarding drop-off, so I…</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;">
+            <span style="font-size:10.5px;font-weight:600;color:#8CF0C4;background:rgba(22,163,116,.2);padding:3px 8px;border-radius:999px;">✓ Clear Situation</span>
+            <span style="font-size:10.5px;font-weight:600;color:#FFD79A;background:rgba(224,144,43,.2);padding:3px 8px;border-radius:999px;">⚠ Quantify Result</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Prep Plan (small) -->
+      <article tabindex="0" style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:22px;padding:22px;box-shadow:0 1px 3px rgba(24,30,60,.05);transition:transform .18s ease, box-shadow .18s ease;" style-hover="transform:translateY(-3px);box-shadow:0 22px 44px -24px rgba(24,30,60,.4);">
+        <span style="width:34px;height:34px;border-radius:10px;background:rgba(123,63,228,.1);color:#7B3FE4;display:flex;align-items:center;justify-content:center;font-weight:800;">◈</span>
+        <h3 style="font-size:16px;font-weight:700;margin:14px 0 0;">Preparation Plan</h3>
+        <p style="font-size:13px;color:#616984;line-height:1.5;margin:7px 0 12px;">Prioritized actions across CV, materials, interviews, and skills gaps.</p>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;"><span style="width:14px;height:14px;border-radius:4px;background:#2E5BF0;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;">✓</span>CV metrics <span style="margin-left:auto;font:600 9px 'IBM Plex Mono',monospace;color:#16A374;">DONE</span></div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#3A4159;"><span style="width:14px;height:14px;border-radius:4px;background:rgba(24,30,54,.12);"></span>Product sense <span style="margin-left:auto;font:600 9px 'IBM Plex Mono',monospace;color:#8A90A3;">NEXT</span></div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#3A4159;"><span style="width:14px;height:14px;border-radius:4px;background:rgba(24,30,54,.12);"></span>SQL basics</div>
+        </div>
+      </article>
+
+      <!-- Performance Report (wide) -->
+      <article tabindex="0" style="grid-column:span 2;background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:22px;padding:24px;box-shadow:0 1px 3px rgba(24,30,60,.05);transition:transform .18s ease, box-shadow .18s ease;" style-hover="transform:translateY(-3px);box-shadow:0 22px 44px -24px rgba(24,30,60,.4);">
+        <div style="display:flex;align-items:center;gap:11px;">
+          <span style="width:34px;height:34px;border-radius:10px;background:rgba(46,91,240,.1);color:#2E5BF0;display:flex;align-items:center;justify-content:center;font-weight:800;">▲</span>
+          <h3 style="font-size:16px;font-weight:700;margin:0;">Performance Report</h3>
+          <span style="margin-left:auto;font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;">UPDATED TODAY</span>
+        </div>
+        <div style="display:flex;gap:22px;margin-top:16px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:110px;"><div style="font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;">CV READINESS</div><div style="font-size:22px;font-weight:800;margin-top:3px;">82<span style="font-size:12px;color:#8A90A3;">/100</span></div></div>
+          <div style="flex:1;min-width:110px;"><div style="font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;">INTERVIEW</div><div style="font-size:22px;font-weight:800;margin-top:3px;">76<span style="font-size:12px;color:#8A90A3;">/100</span></div></div>
+          <div style="flex:1;min-width:110px;"><div style="font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;">ASSESSMENTS</div><div style="font-size:22px;font-weight:800;margin-top:3px;">68<span style="font-size:12px;color:#8A90A3;">/100</span></div></div>
+          <div style="flex:2;min-width:150px;align-self:center;">
+            <div style="display:flex;align-items:flex-end;gap:6px;height:46px;">
+              <span style="flex:1;height:40%;background:rgba(46,91,240,.3);border-radius:4px 4px 0 0;"></span>
+              <span style="flex:1;height:55%;background:rgba(46,91,240,.45);border-radius:4px 4px 0 0;"></span>
+              <span style="flex:1;height:50%;background:rgba(46,91,240,.4);border-radius:4px 4px 0 0;"></span>
+              <span style="flex:1;height:72%;background:rgba(46,91,240,.6);border-radius:4px 4px 0 0;"></span>
+              <span style="flex:1;height:88%;background:linear-gradient(180deg,#2E5BF0,#7B3FE4);border-radius:4px 4px 0 0;"></span>
+            </div>
+            <div style="font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;margin-top:6px;text-align:right;">READINESS OVER 5 WEEKS</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- Privacy (small) -->
+      <article tabindex="0" style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:22px;padding:22px;box-shadow:0 1px 3px rgba(24,30,60,.05);transition:transform .18s ease, box-shadow .18s ease;" style-hover="transform:translateY(-3px);box-shadow:0 22px 44px -24px rgba(24,30,60,.4);">
+        <span style="width:34px;height:34px;border-radius:10px;background:rgba(22,163,116,.12);color:#12855F;display:flex;align-items:center;justify-content:center;font-weight:800;">⛨</span>
+        <h3 style="font-size:16px;font-weight:700;margin:14px 0 0;">Privacy &amp; Control</h3>
+        <p style="font-size:13px;color:#616984;line-height:1.5;margin:7px 0 12px;">Clear consent, protected documents, and export or deletion any time.</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:#28304A;">Share CV externally<span style="margin-left:auto;width:34px;height:19px;border-radius:999px;background:rgba(24,30,54,.15);position:relative;"><i style="position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:#fff;"></i></span></div>
+          <div style="display:flex;align-items:center;gap:9px;font-size:12px;font-weight:600;color:#28304A;">Store documents<span style="margin-left:auto;width:34px;height:19px;border-radius:999px;background:#16A374;position:relative;"><i style="position:absolute;top:2px;right:2px;width:15px;height:15px;border-radius:50%;background:#fff;"></i></span></div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ DASHBOARD PREVIEW ============ -->
+  <section id="resources" style="max-width:1220px;margin:0 auto;padding:82px 32px 20px;">
+    <div style="text-align:center;max-width:640px;margin:0 auto;">
+      <span style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#2E5BF0;">ONE DASHBOARD</span>
+      <h2 style="font-size:clamp(28px,3.6vw,42px);letter-spacing:-.025em;font-weight:800;margin:12px 0 0;line-height:1.08;">See it all come together</h2>
+      <p style="font-size:17px;color:#565E73;line-height:1.6;margin:16px 0 0;">Every tool feeds one workspace, so you always know exactly where you stand and what to do next.</p>
+    </div>
+
+    <div style="margin-top:40px;background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:24px;box-shadow:0 30px 70px -34px rgba(24,30,60,.35);overflow:hidden;">
+      <!-- top bar -->
+      <div style="display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid rgba(24,30,54,.07);background:#FBFBFE;flex-wrap:wrap;">
+        <span style="width:40px;height:40px;border-radius:11px;background:linear-gradient(135deg,#2E5BF0,#7B3FE4);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;">AR</span>
+        <div><div style="font-weight:700;font-size:15px;">Aisha Rahman</div><div style="font-size:12px;color:#8A90A3;font-family:'IBM Plex Mono',monospace;">Graduate · Target: Junior Product Manager</div></div>
+        <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap;">
+          <span style="font-size:12px;font-weight:600;color:#4A5167;background:#fff;border:1px solid rgba(24,30,54,.1);padding:7px 13px;border-radius:9px;">This week</span>
+          <span style="font-size:12px;font-weight:700;color:#fff;background:linear-gradient(135deg,#2E5BF0,#7B3FE4);padding:7px 13px;border-radius:9px;">+ New target role</span>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;padding:22px;">
+        <!-- readiness big -->
+        <div style="background:linear-gradient(150deg,#F3F5FE,#F6F1FD);border:1px solid rgba(24,30,54,.06);border-radius:18px;padding:20px;display:flex;gap:18px;align-items:center;">
+          <div style="width:104px;height:104px;border-radius:50%;background:conic-gradient(#2E5BF0 0turn,#7B3FE4 .78turn,rgba(24,30,54,.09) .78turn);display:flex;align-items:center;justify-content:center;flex:none;">
+            <div style="width:78px;height:78px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;"><span style="font-weight:800;font-size:25px;">78<span style="font-size:13px;color:#8A90A3;">%</span></span><span style="font:600 9px 'IBM Plex Mono',monospace;color:#8A90A3;">READY</span></div>
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:15px;">Overall readiness</div>
+            <div style="font-size:12.5px;color:#616984;line-height:1.5;margin-top:4px;">Up <b style="color:#12855F;">14 points</b> in 2 weeks. On track for applications in early August.</div>
+          </div>
+        </div>
+
+        <!-- prep plan -->
+        <div style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:18px;padding:18px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-weight:700;font-size:14px;">Current plan</span><span style="font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;">3 OF 7 DONE</span></div>
+          <div style="height:6px;border-radius:999px;background:rgba(24,30,54,.08);margin:11px 0 13px;overflow:hidden;"><div style="width:43%;height:100%;background:linear-gradient(90deg,#2E5BF0,#7B3FE4);"></div></div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:#8A90A3;text-decoration:line-through;"><span style="width:15px;height:15px;border-radius:5px;background:#16A374;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;">✓</span>Add CV metrics</div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:#28304A;"><span style="width:15px;height:15px;border-radius:5px;background:#2E5BF0;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;">→</span>Practise product sense <span style="margin-left:auto;font:600 9px 'IBM Plex Mono',monospace;color:#2E5BF0;">TODAY</span></div>
+            <div style="display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:#3A4159;"><span style="width:15px;height:15px;border-radius:5px;background:rgba(24,30,54,.12);"></span>Numerical set 2</div>
+          </div>
+        </div>
+
+        <!-- strengths/gaps -->
+        <div style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:18px;padding:18px;">
+          <span style="font-weight:700;font-size:14px;">Strengths &amp; gaps</span>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:9px;">
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;"><span style="color:#12855F;">Communication</span><span>Strong</span></div><div style="height:5px;border-radius:999px;background:rgba(24,30,54,.08);margin-top:5px;"><div style="width:88%;height:100%;background:#16A374;border-radius:999px;"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;"><span style="color:#28304A;">Product sense</span><span style="color:#8A90A3;">Building</span></div><div style="height:5px;border-radius:999px;background:rgba(24,30,54,.08);margin-top:5px;"><div style="width:62%;height:100%;background:#2E5BF0;border-radius:999px;"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;"><span style="color:#B26E14;">Data / SQL</span><span style="color:#B26E14;">Priority</span></div><div style="height:5px;border-radius:999px;background:rgba(24,30,54,.08);margin-top:5px;"><div style="width:34%;height:100%;background:#E0902B;border-radius:999px;"></div></div></div>
+          </div>
+        </div>
+
+        <!-- upcoming tasks -->
+        <div style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:18px;padding:18px;">
+          <span style="font-weight:700;font-size:14px;">Upcoming practice</span>
+          <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;background:#F7F8FC;border-radius:10px;padding:9px 11px;"><span style="width:30px;height:30px;border-radius:8px;background:rgba(123,63,228,.12);color:#7B3FE4;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;">◎</span><div style="font-size:12px;"><div style="font-weight:700;">Mock: Behavioural</div><div style="color:#8A90A3;font-family:'IBM Plex Mono',monospace;font-size:10px;">TODAY · 20 MIN</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px;background:#F7F8FC;border-radius:10px;padding:9px 11px;"><span style="width:30px;height:30px;border-radius:8px;background:rgba(46,91,240,.12);color:#2E5BF0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;">▦</span><div style="font-size:12px;"><div style="font-weight:700;">Numerical reasoning</div><div style="color:#8A90A3;font-family:'IBM Plex Mono',monospace;font-size:10px;">TOMORROW · 15 MIN</div></div></div>
+          </div>
+        </div>
+
+        <!-- recent results -->
+        <div style="background:#fff;border:1px solid rgba(24,30,54,.08);border-radius:18px;padding:18px;grid-column:span 2;">
+          <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-weight:700;font-size:14px;">Recent results</span><span style="font:600 10px 'IBM Plex Mono',monospace;color:#8A90A3;">LAST 7 DAYS</span></div>
+          <div style="display:flex;gap:10px;margin-top:13px;flex-wrap:wrap;">
+            <div style="flex:1;min-width:150px;border:1px solid rgba(24,30,54,.07);border-radius:12px;padding:12px;"><div style="font-size:12px;font-weight:700;">CV v3 review</div><div style="font-size:11px;color:#8A90A3;margin:3px 0 8px;">2 risks resolved</div><span style="font:700 12px 'IBM Plex Mono',monospace;color:#16A374;">82 / 100 ↑</span></div>
+            <div style="flex:1;min-width:150px;border:1px solid rgba(24,30,54,.07);border-radius:12px;padding:12px;"><div style="font-size:12px;font-weight:700;">Mock: Product sense</div><div style="font-size:11px;color:#8A90A3;margin:3px 0 8px;">STAR feedback given</div><span style="font:700 12px 'IBM Plex Mono',monospace;color:#2E5BF0;">76 / 100 ↑</span></div>
+            <div style="flex:1;min-width:150px;border:1px solid rgba(24,30,54,.07);border-radius:12px;padding:12px;"><div style="font-size:12px;font-weight:700;">Verbal reasoning</div><div style="font-size:11px;color:#8A90A3;margin:3px 0 8px;">14 / 18 correct</div><span style="font:700 12px 'IBM Plex Mono',monospace;color:#E0902B;">68 / 100</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRUST / DIFFERENTIATION ============ -->
+  <section style="max-width:1220px;margin:0 auto;padding:82px 32px 20px;">
+    <div style="background:linear-gradient(150deg,#1B2140,#2A2450);border-radius:26px;padding:clamp(32px,5vw,56px);color:#EAECF6;position:relative;overflow:hidden;">
+      <div style="position:absolute;right:-60px;top:-60px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(123,63,228,.4),transparent 70%);"></div>
+      <div style="position:relative;max-width:620px;">
+        <span style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#C9B6FF;">WHY ROLEREADY</span>
+        <h2 style="font-size:clamp(26px,3.4vw,38px);letter-spacing:-.025em;font-weight:800;margin:12px 0 0;line-height:1.1;color:#fff;">Structured, explainable guidance — not generic advice</h2>
+        <p style="font-size:16px;color:#B9BEDA;line-height:1.6;margin:16px 0 0;">Every recommendation is tied to your CV and target role, so you always know why it matters and what to change.</p>
+      </div>
+      <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:34px;">
+        <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:18px;"><span style="color:#8CF0C4;font-weight:800;">✓</span><div style="font-weight:700;font-size:14.5px;margin-top:9px;">Grounded in your CV</div><div style="font-size:12.5px;color:#A7ADCB;line-height:1.5;margin-top:5px;">Recommendations reference your real experience and the target role.</div></div>
+        <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:18px;"><span style="color:#8CF0C4;font-weight:800;">✓</span><div style="font-weight:700;font-size:14.5px;margin-top:9px;">Editable AI drafts</div><div style="font-size:12.5px;color:#A7ADCB;line-height:1.5;margin-top:5px;">You review and edit everything. No invented experience or qualifications.</div></div>
+        <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:18px;"><span style="color:#8CF0C4;font-weight:800;">✓</span><div style="font-weight:700;font-size:14.5px;margin-top:9px;">Private by design</div><div style="font-size:12.5px;color:#A7ADCB;line-height:1.5;margin-top:5px;">Your career documents are protected, with export and deletion in your control.</div></div>
+        <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:18px;"><span style="color:#8CF0C4;font-weight:800;">✓</span><div style="font-weight:700;font-size:14.5px;margin-top:9px;">Practice, not tests</div><div style="font-size:12.5px;color:#A7ADCB;line-height:1.5;margin-top:5px;">Assessments are preparatory — never clinical or official employer tests.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PRICING / FINAL CTA ============ -->
+  <section id="pricing" style="max-width:1000px;margin:0 auto;padding:84px 32px 30px;text-align:center;">
+    <span style="font:600 12px 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#7B3FE4;">GET STARTED</span>
+    <h2 style="font-size:clamp(32px,4.6vw,52px);letter-spacing:-.03em;font-weight:800;margin:14px 0 0;line-height:1.05;">Prepare for the role—<br>not just the interview.</h2>
+    <p style="font-size:18px;color:#565E73;line-height:1.6;margin:18px auto 0;max-width:560px;">Start free for 7 days. Build your first personalized preparation plan in minutes.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:13px;justify-content:center;margin-top:30px;">
+      <button type="button" onClick="{{ openModal }}" style="font:700 17px 'Plus Jakarta Sans',sans-serif;color:#fff;background:linear-gradient(135deg,#2E5BF0,#7B3FE4);border:none;padding:16px 30px;border-radius:14px;cursor:pointer;box-shadow:0 16px 34px -12px rgba(70,63,228,.8);transition:transform .16s ease, box-shadow .16s ease;" style-hover="transform:translateY(-2px);box-shadow:0 20px 40px -12px rgba(70,63,228,.9);" style-active="transform:translateY(0) scale(.985);">Build My Preparation Plan</button>
+      <a href="#how" style="font:700 17px 'Plus Jakarta Sans',sans-serif;color:#28304A;background:#fff;border:1px solid rgba(24,30,54,.12);padding:16px 28px;border-radius:14px;box-shadow:0 2px 8px rgba(24,30,60,.05);transition:transform .16s ease;" style-hover="transform:translateY(-2px);">See how it works</a>
+    </div>
+    <div style="font:600 12.5px 'Plus Jakarta Sans',sans-serif;color:#8A90A3;margin-top:18px;">No credit card required · Cancel anytime · Your documents stay private</div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer style="border-top:1px solid rgba(24,30,54,.08);background:#FBFBFE;">
+    <div style="max-width:1220px;margin:0 auto;padding:52px 32px 28px;display:flex;flex-wrap:wrap;gap:40px;">
+      <div style="flex:1 1 240px;min-width:220px;">
+        <a href="#top" style="display:flex;align-items:center;gap:10px;color:#14161F;font-weight:800;">
+          <span style="width:34px;height:34px;border-radius:10px;background:linear-gradient(140deg,#2E5BF0,#7B3FE4);display:flex;align-items:flex-end;justify-content:center;gap:2px;padding:8px 7px;">
+            <i style="width:3.5px;height:7px;background:rgba(255,255,255,.55);border-radius:2px;"></i><i style="width:3.5px;height:11px;background:rgba(255,255,255,.8);border-radius:2px;"></i><i style="width:3.5px;height:15px;background:#fff;border-radius:2px;"></i>
+          </span>
+          <span style="font-size:16px;">Role<span style="color:#2E5BF0;">Ready</span></span>
+        </a>
+        <p style="font-size:13px;color:#6B7288;line-height:1.6;margin:14px 0 0;max-width:260px;">The structured way to prepare for the role you actually want.</p>
+        <div style="display:flex;gap:8px;margin-top:16px;">
+          <a href="#top" aria-label="Twitter" style="width:34px;height:34px;border-radius:9px;border:1px solid rgba(24,30,54,.12);display:flex;align-items:center;justify-content:center;color:#6B7288;font-weight:700;" style-hover="background:rgba(46,91,240,.08);color:#2E5BF0;border-color:rgba(46,91,240,.3);">𝕏</a>
+          <a href="#top" aria-label="LinkedIn" style="width:34px;height:34px;border-radius:9px;border:1px solid rgba(24,30,54,.12);display:flex;align-items:center;justify-content:center;color:#6B7288;font-weight:700;font-size:12px;" style-hover="background:rgba(46,91,240,.08);color:#2E5BF0;border-color:rgba(46,91,240,.3);">in</a>
+          <a href="#top" aria-label="GitHub" style="width:34px;height:34px;border-radius:9px;border:1px solid rgba(24,30,54,.12);display:flex;align-items:center;justify-content:center;color:#6B7288;font-weight:700;" style-hover="background:rgba(46,91,240,.08);color:#2E5BF0;border-color:rgba(46,91,240,.3);">◐</a>
+        </div>
+      </div>
+      <div style="flex:1 1 140px;min-width:130px;">
+        <div style="font:600 11px 'IBM Plex Mono',monospace;color:#9096A8;letter-spacing:.06em;">PRODUCT</div>
+        <ul style="list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:10px;font-size:13.5px;font-weight:600;">
+          <li><a href="#features" style="color:#4A5167;" style-hover="color:#2E5BF0;">Features</a></li>
+          <li><a href="#how" style="color:#4A5167;" style-hover="color:#2E5BF0;">How It Works</a></li>
+          <li><a href="#pricing" style="color:#4A5167;" style-hover="color:#2E5BF0;">Pricing</a></li>
+        </ul>
+      </div>
+      <div style="flex:1 1 140px;min-width:130px;">
+        <div style="font:600 11px 'IBM Plex Mono',monospace;color:#9096A8;letter-spacing:.06em;">RESOURCES</div>
+        <ul style="list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:10px;font-size:13.5px;font-weight:600;">
+          <li><a href="#resources" style="color:#4A5167;" style-hover="color:#2E5BF0;">Career Guides</a></li>
+          <li><a href="#resources" style="color:#4A5167;" style-hover="color:#2E5BF0;">Interview Preparation</a></li>
+          <li><a href="#resources" style="color:#4A5167;" style-hover="color:#2E5BF0;">CV Guidance</a></li>
+        </ul>
+      </div>
+      <div style="flex:1 1 140px;min-width:130px;">
+        <div style="font:600 11px 'IBM Plex Mono',monospace;color:#9096A8;letter-spacing:.06em;">COMPANY</div>
+        <ul style="list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:10px;font-size:13.5px;font-weight:600;">
+          <li><a href="#top" style="color:#4A5167;" style-hover="color:#2E5BF0;">About Us</a></li>
+          <li><a href="#top" style="color:#4A5167;" style-hover="color:#2E5BF0;">Contact</a></li>
+          <li><a href="#top" style="color:#4A5167;" style-hover="color:#2E5BF0;">Careers</a></li>
+        </ul>
+      </div>
+      <div style="flex:1 1 140px;min-width:130px;">
+        <div style="font:600 11px 'IBM Plex Mono',monospace;color:#9096A8;letter-spacing:.06em;">LEGAL</div>
+        <ul style="list-style:none;padding:0;margin:14px 0 0;display:flex;flex-direction:column;gap:10px;font-size:13.5px;font-weight:600;">
+          <li><a href="#top" style="color:#4A5167;" style-hover="color:#2E5BF0;">Privacy</a></li>
+          <li><a href="#top" style="color:#4A5167;" style-hover="color:#2E5BF0;">Terms</a></li>
+          <li><a href="#top" style="color:#4A5167;" style-hover="color:#2E5BF0;">AI Use</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="max-width:1220px;margin:0 auto;padding:18px 32px 30px;border-top:1px solid rgba(24,30,54,.06);font-size:12.5px;color:#9096A8;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;">
+      <span>© 2026 RoleReady, Inc. All rights reserved.</span>
+      <span style="font-family:'IBM Plex Mono',monospace;">Built for candidates, not recruiters.</span>
+    </div>
+  </footer>
+
+  <!-- ============ TRIAL MODAL ============ -->
+  <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeModal }}" style="position:fixed;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(20,22,40,.42);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);animation:rr-fade .22s ease both;">
+      <div role="dialog" aria-modal="true" aria-labelledby="rr-modal-title" onClick="{{ stop }}" style="position:relative;width:100%;max-width:460px;background:#fff;border-radius:24px;box-shadow:0 40px 90px -30px rgba(20,22,50,.6);padding:32px;animation:rr-modal .3s cubic-bezier(.2,.8,.25,1) both;">
+        <button type="button" aria-label="Close" onClick="{{ closeModal }}" style="position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:10px;border:1px solid rgba(24,30,54,.1);background:#fff;color:#6B7288;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s ease;" style-hover="background:#F1F2F8;color:#14161F;">✕</button>
+
+        <span style="display:inline-flex;align-items:center;gap:7px;font:600 11px 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#7B3FE4;background:rgba(123,63,228,.1);padding:5px 11px;border-radius:999px;">7-DAY FREE TRIAL</span>
+        <h3 id="rr-modal-title" style="font-size:24px;letter-spacing:-.02em;font-weight:800;margin:16px 0 0;line-height:1.15;">Try the complete preparation workflow free for 7 days</h3>
+        <p style="font-size:14px;color:#616984;line-height:1.55;margin:11px 0 0;">Everything you need to go from CV to offer-ready — nothing locked behind a paywall during your trial.</p>
+
+        <div style="margin:20px 0;display:flex;flex-direction:column;gap:11px;">
+          <div style="display:flex;align-items:center;gap:11px;font-size:14px;font-weight:600;color:#28304A;"><span style="width:22px;height:22px;border-radius:7px;background:rgba(46,91,240,.12);color:#2E5BF0;display:flex;align-items:center;justify-content:center;font-size:12px;">✓</span>CV &amp; job-description analysis</div>
+          <div style="display:flex;align-items:center;gap:11px;font-size:14px;font-weight:600;color:#28304A;"><span style="width:22px;height:22px;border-radius:7px;background:rgba(46,91,240,.12);color:#2E5BF0;display:flex;align-items:center;justify-content:center;font-size:12px;">✓</span>Personalized preparation plan</div>
+          <div style="display:flex;align-items:center;gap:11px;font-size:14px;font-weight:600;color:#28304A;"><span style="width:22px;height:22px;border-radius:7px;background:rgba(46,91,240,.12);color:#2E5BF0;display:flex;align-items:center;justify-content:center;font-size:12px;">✓</span>Mock interview practice</div>
+          <div style="display:flex;align-items:center;gap:11px;font-size:14px;font-weight:600;color:#28304A;"><span style="width:22px;height:22px;border-radius:7px;background:rgba(46,91,240,.12);color:#2E5BF0;display:flex;align-items:center;justify-content:center;font-size:12px;">✓</span>Full readiness report</div>
+        </div>
+
+        <button type="button" autofocus onClick="{{ closeModal }}" style="width:100%;font:700 16px 'Plus Jakarta Sans',sans-serif;color:#fff;background:linear-gradient(135deg,#2E5BF0,#7B3FE4);border:none;padding:15px;border-radius:13px;cursor:pointer;box-shadow:0 14px 30px -10px rgba(70,63,228,.8);transition:transform .16s ease, box-shadow .16s ease;" style-hover="transform:translateY(-1px);box-shadow:0 18px 36px -10px rgba(70,63,228,.9);" style-active="transform:translateY(0) scale(.99);">Start 7-Day Free Trial</button>
+        <button type="button" onClick="{{ closeModal }}" style="width:100%;font:700 15px 'Plus Jakarta Sans',sans-serif;color:#4A5167;background:transparent;border:none;padding:13px;margin-top:6px;border-radius:12px;cursor:pointer;transition:background .15s ease;" style-hover="background:#F5F6FB;">Continue Exploring</button>
+
+        <div style="display:flex;align-items:center;gap:8px;justify-content:center;margin-top:12px;font-size:12px;color:#8A90A3;font-weight:600;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#16A374;"></span>
+          No payment details required to start your trial
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { modalOpen: true, scrolled: false };
+
+  componentDidMount() {
+    this._onScroll = () => {
+      const s = window.scrollY > 10;
+      if (s !== this.state.scrolled) this.setState({ scrolled: s });
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    this._onKey = (e) => {
+      if (e.key === 'Escape' && this.state.modalOpen) this.closeModal();
+    };
+    window.addEventListener('keydown', this._onKey);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    window.removeEventListener('keydown', this._onKey);
+  }
+
+  openModal = () => {
+    this._trigger = document.activeElement;
+    this.setState({ modalOpen: true });
+  };
+
+  closeModal = () => {
+    this.setState({ modalOpen: false });
+    const t = this._trigger;
+    if (t && typeof t.focus === 'function') {
+      setTimeout(() => t.focus(), 0);
+    }
+  };
+
+  stop = (e) => { e.stopPropagation(); };
+
+  renderVals() {
+    return {
+      modalOpen: this.state.modalOpen,
+      openModal: this.openModal,
+      closeModal: this.closeModal,
+      stop: this.stop,
+      navBg: this.state.scrolled ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.65)',
+      navShadow: this.state.scrolled ? '0 6px 26px -10px rgba(24,30,60,.22)' : 'none',
+    };
+  }
+}
+</script>
+</body>
+</html>
