@@ -10,9 +10,10 @@
 | Linear project | https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e |
 | Business ideation | https://docs.google.com/spreadsheets/d/1YxbmFESdd0LmI9zHTcMNC0yvs9s0VBfUYeX_7EoZ8Zk |
 | Landing reference design | [`RoleReady Landing.dc.html`](RoleReady%20Landing.dc.html) |
-| Last accepted cycle spec | `docs/specs/2026-07-15-mvp-phase-0-1-foundation-landing.md` |
+| Last accepted cycle spec | `docs/specs/2026-07-15-mvp-phase-2-auth-onboarding.md` |
 | Phase 0–1 archive | [`docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md`](docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md) |
-| Merged PR | https://github.com/RavindraTarunokusumo/job-prep-website/pull/1 (`7b265f8`) |
+| Active Autopilot cycle | **Phase 2** auth + onboarding · branch `feat/phase-2-auth-onboarding` |
+| Prior merge | https://github.com/RavindraTarunokusumo/job-prep-website/pull/1 (`7b265f8`) |
 | Subagent model | **Composer 2.5** via `grok-composer-2.5-fast` |
 | Out of agent scope | **JOB-79** (owned by another person — ignore) |
 | Git notes | Use [`.github/git_notes_template.md`](.github/git_notes_template.md) on every commit |
@@ -32,11 +33,11 @@
 |-------|--------|-------|
 | **0** Spec & foundation | **Done** | Merged PR #1 |
 | **1** IA & RoleReady landing (JOB-18) | **Done** | Merged PR #1 |
-| **2** Auth & onboarding (JOB-5) | **Next** | Needs Supabase keys |
+| **2** Auth & onboarding (JOB-5) | **In progress** | Branch `feat/phase-2-auth-onboarding` |
 | **3** CV upload & parsing (JOB-6) | Pending | Needs Blob after Phase 2 |
 | **4–8** | Pending | See below |
 
-**Next Autopilot cycle candidate:** Phase 2 (JOB-5). Ask for Supabase/Postgres secrets before starting.
+**Active cycle:** Phase 2 (JOB-5 / JOB-19…24). Secrets in gitignored `.env.local`.
 
 ---
 
@@ -57,12 +58,14 @@ Education · experience level · target role · target industry · preferred loc
 
 ### Tasks
 
-- [ ] **2.1 JOB-19** Design onboarding / profile data model in Prisma
-- [ ] **2.2 JOB-20** Implement Supabase Auth session handling (middleware, client/server helpers)
-- [ ] **2.3 JOB-21** Build onboarding form UI (shadcn/ui; brand tokens from Phase 1)
-- [ ] **2.4 JOB-22** Create onboarding save/update server actions
-- [ ] **2.5 JOB-23** Onboarding completion gate + profile edit states
-- [ ] **2.6 JOB-24** Validation and tests
+- [ ] **2.0** Root `.gitignore` for `.env` / `.env.local` (never commit secrets)
+- [ ] **2.1** Accepted Phase 2 spec under `docs/specs/`
+- [ ] **2.2 JOB-19** Design onboarding / profile data model in Prisma
+- [ ] **2.3 JOB-20** Implement Supabase Auth session handling (middleware, client/server helpers)
+- [ ] **2.4 JOB-21** Build onboarding form UI (shadcn/ui; brand tokens from Phase 1)
+- [ ] **2.5 JOB-22** Create onboarding save/update server actions
+- [ ] **2.6 JOB-23** Onboarding completion gate + profile edit states
+- [ ] **2.7 JOB-24** Validation and tests
 
 ### Exit criteria
 
