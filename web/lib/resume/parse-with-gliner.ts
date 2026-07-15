@@ -91,7 +91,8 @@ export async function parseResumeWithGliner(
         }
 
         // Drop meta before zod (form schema doesn't include meta)
-        const { meta: _meta, ...formFields } = parsedJson;
+        const formFields = { ...parsedJson };
+        delete formFields.meta;
         const data = parsedResumeSchema.parse({
           ...emptyParsedResume(),
           ...formFields,
