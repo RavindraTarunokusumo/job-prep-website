@@ -9,7 +9,8 @@
 |--------|-------------|
 | Linear project | https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e |
 | Landing reference design | [`RoleReady Landing.dc.html`](RoleReady%20Landing.dc.html) |
-| Active cycle spec | `docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md` (create in cycle) |
+| Active cycle spec | `docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md` |
+| Active Autopilot cycle | **Phase 3** CV upload · branch `feat/phase-3-cv-upload-parse` |
 | Phase 0–1 archive | [`docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md`](docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md) |
 | Phase 2 archive | [`docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md`](docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md) |
 | Merged PRs | [#1](https://github.com/RavindraTarunokusumo/job-prep-website/pull/1), [#2](https://github.com/RavindraTarunokusumo/job-prep-website/pull/2) (`8ec6bae`) |
