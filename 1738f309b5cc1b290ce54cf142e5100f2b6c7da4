@@ -1,1 +1,5 @@
-task: 0.1 accepted specs + TODO Autopilot notes; model: senior orchestrator
+Task: Accept Phase 0–1 foundation and landing spec
+Summary: Add accepted MVP Phase 0–1 spec, specs README, and TODO Autopilot plan so foundation/landing work has implementation authority.
+Docs: docs/specs/2026-07-15-mvp-phase-0-1-foundation-landing.md, docs/specs/README.md, TODO.md
+TODO: Phase 0 / 0.1
+Validation: N/A (docs only)
