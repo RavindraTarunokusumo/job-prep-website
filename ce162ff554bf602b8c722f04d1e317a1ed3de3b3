@@ -1,1 +1,5 @@
-task: lockfile sync after review fix; model: senior
+Task: Refresh package-lock after dependency move
+Summary: Sync package-lock.json after moving shadcn to devDependencies so installs stay reproducible.
+Docs: N/A
+TODO: Phase 0 / 0.2 follow-up
+Validation: npm install, npm run lint, typecheck, test, build (web/)
