@@ -1,1 +1,5 @@
-task: 0.2-0.5 scaffold; model: grok-composer-2.5-fast; session: 019f66cf-8109-79f1-a40c-f91676c77e7a
+Task: Scaffold Next.js web app foundation
+Summary: Create web/ App Router TypeScript app with Tailwind, shadcn/ui, Prisma stub, env example, Vitest smoke test, and pre-commit hooks pointed at web/.
+Docs: web/README.md, web/.env.example, .pre-commit-config.yaml
+TODO: Phase 0 / 0.2–0.5
+Validation: npm run lint, npm run typecheck, npm test, npm run build (web/)
