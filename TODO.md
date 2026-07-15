@@ -58,14 +58,14 @@ Education · experience level · target role · target industry · preferred loc
 
 ### Tasks
 
-- [ ] **2.0** Root `.gitignore` for `.env` / `.env.local` (never commit secrets)
-- [ ] **2.1** Accepted Phase 2 spec under `docs/specs/`
-- [ ] **2.2 JOB-19** Design onboarding / profile data model in Prisma
-- [ ] **2.3 JOB-20** Implement Supabase Auth session handling (middleware, client/server helpers)
-- [ ] **2.4 JOB-21** Build onboarding form UI (shadcn/ui; brand tokens from Phase 1)
-- [ ] **2.5 JOB-22** Create onboarding save/update server actions
-- [ ] **2.6 JOB-23** Onboarding completion gate + profile edit states
-- [ ] **2.7 JOB-24** Validation and tests
+- [x] **2.0** Root `.gitignore` for `.env` / `.env.local` (never commit secrets)
+- [x] **2.1** — `0033571` Accepted Phase 2 spec under `docs/specs/`
+- [x] **2.2 JOB-19** — `7d1b0c8` Design onboarding / profile data model in Prisma
+- [x] **2.3 JOB-20** — `7375ddb` Implement Supabase Auth session handling (middleware, client/server helpers)
+- [x] **2.4 JOB-21** — `5e54ebd` Build onboarding form UI (shadcn/ui; brand tokens from Phase 1)
+- [x] **2.5 JOB-22** — `5e54ebd` Create onboarding save/update server actions
+- [x] **2.6 JOB-23** — `5e54ebd` Onboarding completion gate + profile edit states
+- [x] **2.7 JOB-24** — `5e54ebd` Validation and tests
 
 ### Exit criteria
 
