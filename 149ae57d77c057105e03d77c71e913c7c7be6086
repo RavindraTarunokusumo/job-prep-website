@@ -1,1 +1,5 @@
-task: TODO progress for Phase 0-1; model: senior orchestrator
+Task: Mark Phase 0–1 TODO items complete
+Summary: Check off Phase 0–1 sub-items in TODO.md and tag them with landing commit hashes after Autopilot implementation.
+Docs: TODO.md
+TODO: Phase 0–1 progress tracking
+Validation: N/A (docs only)
