@@ -66,6 +66,43 @@ export function ReviewForm({
         </p>
       ) : null}
 
+      {status === "parsed" &&
+      !data.summary &&
+      data.experience.length === 0 &&
+      data.education.length === 0 &&
+      data.skills.length === 0 &&
+      rawText ? (
+        <p className="rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm text-muted-foreground">
+          Structured fields look sparse for this file. Expand{" "}
+          <span className="font-medium text-foreground">extracted raw text</span>{" "}
+          below and paste into the fields, or use{" "}
+          <span className="font-medium text-foreground">Retry processing</span>{" "}
+          after an update.
+        </p>
+      ) : null}
+
+      {rawText ? (
+        <details
+          open={
+            !data.summary &&
+            data.experience.length === 0 &&
+            data.skills.length === 0
+          }
+          className="rounded-lg border border-border bg-muted/20 px-4 py-3 text-sm"
+        >
+          <summary className="cursor-pointer font-medium text-foreground">
+            Extracted raw text ({rawText.length.toLocaleString()} characters)
+          </summary>
+          <pre className="mt-3 max-h-80 overflow-auto whitespace-pre-wrap text-xs text-muted-foreground">
+            {rawText}
+          </pre>
+        </details>
+      ) : (
+        <p className="text-sm text-muted-foreground">
+          No extracted text is stored for this document yet.
+        </p>
+      )}
+
       <section className="space-y-4">
         <div>
           <h2 className="text-base font-semibold text-foreground">Contact</h2>
@@ -230,17 +267,6 @@ export function ReviewForm({
           onChange={(event) => updateListField("languages", event.target.value)}
         />
       </section>
-
-      {rawText ? (
-        <details className="rounded-lg border border-border bg-muted/20 px-4 py-3 text-sm">
-          <summary className="cursor-pointer font-medium text-foreground">
-            View extracted raw text
-          </summary>
-          <pre className="mt-3 max-h-64 overflow-auto whitespace-pre-wrap text-xs text-muted-foreground">
-            {rawText}
-          </pre>
-        </details>
-      ) : null}
 
       {state.error ? (
         <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
