@@ -1,6 +1,6 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 15 July 2026 (post-PR #2)  
+**Last updated:** 15 July 2026 (post-PR #3)  
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.
@@ -8,22 +8,20 @@
 | Source | Link / path |
 |--------|-------------|
 | Linear project | https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e |
-| Landing reference design | [`RoleReady Landing.dc.html`](RoleReady%20Landing.dc.html) |
-| Active cycle spec | `docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md` |
-| Active Autopilot cycle | **Phase 3** CV upload · branch `feat/phase-3-cv-upload-parse` |
-| Phase 0–1 archive | [`docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md`](docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md) |
-| Phase 2 archive | [`docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md`](docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md) |
-| Merged PRs | [#1](https://github.com/RavindraTarunokusumo/job-prep-website/pull/1), [#2](https://github.com/RavindraTarunokusumo/job-prep-website/pull/2) (`8ec6bae`) |
+| Specs | `docs/specs/` |
+| Architecture ADRs | [`docs/architecture.md`](docs/architecture.md) |
+| Phase archives | [`docs/iterations/archive/`](docs/iterations/archive/) |
+| Merged PRs | [#1](https://github.com/RavindraTarunokusumo/job-prep-website/pull/1), [#2](https://github.com/RavindraTarunokusumo/job-prep-website/pull/2), [#3](https://github.com/RavindraTarunokusumo/job-prep-website/pull/3) (`208c3a6`) |
 | Subagent model | **Composer 2.5** via `grok-composer-2.5-fast` |
 | Out of agent scope | **JOB-79** (owned by another person — ignore) |
-| Git notes | Use [`.github/git_notes_template.md`](.github/git_notes_template.md) on every commit |
+| Git notes | [`.github/git_notes_template.md`](.github/git_notes_template.md) |
 
 ### Linear milestones
 
 | # | Milestone | Target | Progress |
 |---|-----------|--------|----------|
-| 1 | Profile & document intake | 2026-07-31 | JOB-18 + JOB-5 done; JOB-6 next |
-| 2 | Application readiness tools | 2026-08-31 | 0% |
+| 1 | Profile & document intake | 2026-07-31 | **JOB-18, JOB-5, JOB-6 done** |
+| 2 | Application readiness tools | 2026-08-31 | Next (JOB-7/8/10) |
 | 3 | Interview practice & assessment | 2026-09-30 | 0% |
 | 4 | Report, launch polish & validation | 2026-10-31 | 0% |
 
@@ -32,43 +30,20 @@
 | Phase | Status | Notes |
 |-------|--------|-------|
 | **0–1** Foundation + landing | **Done** | PR #1 |
-| **2** Auth & onboarding (JOB-5) | **Done** | PR #2 `8ec6bae` |
-| **3** CV upload & parsing (JOB-6) | **In progress** | Branch `feat/phase-3-cv-upload-parse` |
-| **4–8** | Pending | See below |
+| **2** Auth & onboarding (JOB-5) | **Done** | PR #2 |
+| **3** CV upload & parsing (JOB-6) | **Done** | PR #3 `208c3a6` |
+| **4** Application readiness | **Next** | Needs AI key for checker/match/plan |
+| **5–8** | Pending | See below |
+
+**Next cycle candidate:** Phase 4 (JOB-7 resume checker, JOB-8 JD match, JOB-10 prep plan). Provide AI provider key when ready. Optional: GLiNER Pioneer API key if preferring cloud GLiNER over local venv.
 
 ---
 
 ## Completed (archived)
 
 - Phase 0–1 — `docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md`
-- Phase 2 auth & onboarding — `docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md` (PR #2)
-
----
-
-## Phase 3 — CV / resume upload & parsing
-
-**Linear parent:** [JOB-6](https://linear.app/job-prep-website/issue/JOB-6/implement-cvresume-upload-and-parsing) · Milestone 1 · High  
-**Depends on:** Phase 2 (authenticated user + profile)
-
-### Tasks
-
-- [x] **3.0** Accepted Phase 3 spec — `abe7620` (Supabase Storage instead of Vercel Blob — no token)
-- [x] **3.1 JOB-25** Resume document model — `fe206a6` + upload metadata schema
-- [x] **3.2 JOB-26** Upload UI — `848b28a`/`b60dfc5` + client file validation (PDF/DOCX, size limits)
-- [x] **3.3 JOB-27** Private file storage — `848b28a` upload flow (**Supabase Storage** `resumes` bucket)
-- [x] **3.4 JOB-28** Extract text — `848b28a` from PDF and DOCX
-- [x] **3.5 JOB-29** Parse sections — `848b28a` into editable structured data
-- [x] **3.6 JOB-30** Parsed resume review — `b60dfc5` & correction screen
-- [x] **3.7 JOB-31** Upload/parsing tests — `b60dfc5` + failure handling
-
-### Exit criteria
-
-- User uploads CV → text extracted → structured sections shown → user can correct and save
-- Failures (bad type, corrupt file, parse fail) surface clear errors
-
-### Milestone 1 gate
-
-Phases 0–3 complete Linear Milestone **1. Profile & document intake** (JOB-18, JOB-5, JOB-6).
+- Phase 2 — `docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md`
+- Phase 3 — `docs/iterations/archive/2026-07-15-phase-3-cv-upload-parse.md` (PR #3)
 
 ---
 
@@ -270,7 +245,7 @@ _Use this as a lookup; phased sections above are the working plan._
 | JOB-18 | Create a wireframe for the website | Done (PR #1) | Urgent |
 | JOB-5 | Build user onboarding and career goal intake | Done (PR #2) | High |
 | JOB-19…24 | Onboarding children | Todo | High/Med |
-| JOB-6 | Implement CV/resume upload and parsing | Todo | High |
+| JOB-6 | Implement CV/resume upload and parsing | Done (PR #3) | High |
 | JOB-25…28, 30–31 | Resume children (most Todo) | Todo | High/Med |
 | JOB-29 | Parse resume sections into structured data | Backlog | High |
 

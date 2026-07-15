@@ -23,4 +23,4 @@ Example: `2026-07-15-mvp-phase-0-1-foundation-landing.md`
 |------|--------|-------|
 | [2026-07-15-mvp-phase-0-1-foundation-landing.md](./2026-07-15-mvp-phase-0-1-foundation-landing.md) | **Accepted (merged PR #1)** | Phase 0 foundation + Phase 1 RoleReady landing (JOB-18) |
 | [2026-07-15-mvp-phase-2-auth-onboarding.md](./2026-07-15-mvp-phase-2-auth-onboarding.md) | **Accepted (merged PR #2)** | Phase 2 Supabase Auth + career onboarding (JOB-5) |
-| [2026-07-15-mvp-phase-3-cv-upload-parse.md](./2026-07-15-mvp-phase-3-cv-upload-parse.md) | **Accepted** | Phase 3 CV upload/parse (JOB-6); Supabase Storage |
+| [2026-07-15-mvp-phase-3-cv-upload-parse.md](./2026-07-15-mvp-phase-3-cv-upload-parse.md) | **Accepted (merged PR #3)** | Phase 3 CV upload/parse (JOB-6); Supabase Storage + optional GLiNER |

@@ -57,4 +57,30 @@ Workflow lessons above were folded into `AGENTS.md` / `CLAUDE.md`:
 
 - No AGENTS.md change this cycle beyond existing cookie/notes rules; log cookie restriction more explicitly if it recurs.
 
+## 2026-07-15 — Phase 3 Autopilot cycle (session close)
+
+### Tools & commands
+
+- Resume pipeline: upload → Supabase Storage → PDF/DOCX text extract → structure (heuristic default) → review UI.
+- **GLiNER2** (https://github.com/fastino-ai/GLiNER2): install via venv with **CPU torch** only (`pip install torch --index-url …/cpu` then `gliner2`). Full `gliner2[local]` pulled CUDA wheels and **filled the disk**.
+- Sidecar pattern: Python script + Node `spawn` behind `RESUME_STRUCTURE_PARSER=gliner`; fall back to heuristics on failure.
+- Prisma dev footgun: `globalThis` PrismaClient stale after schema add → missing `resumeDocument`; fix with versioned client recreate + restart `npm run dev`.
+- SSH tunnel for preview: `next dev --hostname 127.0.0.1 --port 3000` + local `ssh -L 3000:127.0.0.1:3000 …`.
+
+### Product / architecture lessons (workflow-facing)
+
+- Document storage/parser ADRs in `docs/architecture.md` when diverging from Linear wording (Blob → Storage; heuristics → optional GLiNER).
+- Industry resume parse is multi-stage; MVP should not over-promise heuristic form fill. User edit remains required.
+- Disk/space is a real constraint for local ML experiments on small VMs.
+
+### Skills worth improving
+
+- Optional skill/script: “bootstrap ML sidecar venv (CPU-only)” checklist.
+- Consider documenting `PIONEER_API_KEY` / GLiNER cloud path when local torch is too heavy.
+
+### Applied this session
+
+- Post-PR #3 archive + Linear JOB-6 Done.
+- Session concluded pending user OK to delete feature branch `feat/phase-3-cv-upload-parse`.
+
 
