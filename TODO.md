@@ -15,7 +15,7 @@
 | Active Autopilot cycle | **Phase 0 → 1 only** (foundation + RoleReady landing / JOB-18). Branch: `feat/phase-0-1-foundation-landing` |
 | Subagent model | **Composer 2.5** via `grok-composer-2.5-fast` |
 | Out of agent scope | **JOB-79** (owned by another person — ignore) |
-| Repo state | Early scaffolding → app foundation + landing in this cycle |
+| Repo state | Phase 0–1 implemented on `feat/phase-0-1-foundation-landing` (pending merge) |
 
 ### Linear milestones (source of truth for delivery)
 
@@ -67,18 +67,18 @@ Phases are sized so each can be completed in **one or two focused agent sessions
 
 ### Tasks
 
-- [ ] **0.1** Write accepted product/architecture specs under `docs/specs/` *(in progress — this Autopilot cycle)*
+- [x] **0.1** Write accepted product/architecture specs under `docs/specs/` — `1738f30`
   - MVP product scope (core loop, out-of-scope list from Linear project description)
   - Tech stack & repo layout (`web/` app, Prisma, env vars)
   - Information architecture / route map (feeds Phase 1 / JOB-18)
   - Design system notes extracted from landing reference (see Phase 1)
-- [ ] **0.2** Scaffold Next.js (App Router) + TypeScript in `web/`
+- [x] **0.2** Scaffold Next.js (App Router) + TypeScript in `web/` — `9d2e17b`
   - Tailwind CSS, ESLint, Prettier (align with `.pre-commit-config.yaml`)
   - shadcn/ui init + base components used by landing (Button, Card, Dialog, Input, etc.)
-- [ ] **0.3** Add Prisma + PostgreSQL project config (schema stub, migrate workflow)
-- [ ] **0.4** Env / secrets template (`.env.example`): Supabase, Blob, AI provider, DB URL
-- [ ] **0.5** Minimal CI scripts: `lint`, `typecheck`, `test` (even if empty suite)
-- [ ] **0.6** Update `README.md` with run instructions once scaffold lands
+- [x] **0.3** Add Prisma + PostgreSQL project config (schema stub, migrate workflow) — `9d2e17b`
+- [x] **0.4** Env / secrets template (`.env.example`): Supabase, Blob, AI provider, DB URL — `9d2e17b`
+- [x] **0.5** Minimal CI scripts: `lint`, `typecheck`, `test` (even if empty suite) — `9d2e17b`
+- [x] **0.6** Update `README.md` with run instructions once scaffold lands — `43cdad1`
 
 ### Exit criteria
 
@@ -126,16 +126,16 @@ Feature UIs, auth product flows, AI calls, real uploads.
 
 ### Tasks
 
-- [ ] **1.1 JOB-18** Document IA: map every MVP feature → route/section + primary user stories
-  - Suggested public routes: `/`, `/privacy`, `/terms`, `/ai-use`
-  - Suggested app routes (placeholders OK): `/login`, `/signup`, `/onboarding`, `/dashboard`, `/resume`, `/resume/review`, `/jobs/match`, `/plan`, `/cover-letter`, `/interview`, `/assessments`, `/videos`, `/report`, `/settings`
-- [ ] **1.2** Extract shared design tokens into Tailwind theme / CSS variables
-- [ ] **1.3** Implement landing page in Next.js matching reference layout and visual language
+- [x] **1.1 JOB-18** Document IA: map every MVP feature → route/section + primary user stories — accepted in Phase 0–1 spec; shells in `62a7f54`
+  - Public routes: `/`, `/login`, `/signup`, `/privacy`, `/terms`, `/ai-use`
+  - App routes (placeholders): `/onboarding`, `/dashboard`, `/resume`, `/resume/review`, `/jobs/match`, `/plan`, `/cover-letter`, `/interview`, `/assessments`, `/videos`, `/report`, `/settings`
+- [x] **1.2** Extract shared design tokens into Tailwind theme / CSS variables — `62a7f54`
+- [x] **1.3** Implement landing page in Next.js matching reference layout and visual language — `62a7f54`
   - Prefer composable React sections over pasting the whole HTML file
   - Modal, sticky nav scroll state, hover affordances as in design
-- [ ] **1.4** Placeholder authenticated shells (empty states + nav) for app routes from 1.1
-- [ ] **1.5** Wire primary CTAs: “Start free trial” / “Build my plan” → signup (or modal → signup)
-- [ ] **1.6** Responsive pass + basic a11y (focus rings already in design; keyboard modal close)
+- [x] **1.4** Placeholder authenticated shells (empty states + nav) for app routes from 1.1 — `62a7f54`
+- [x] **1.5** Wire primary CTAs: “Start free trial” / “Build my plan” → signup (or modal → signup) — `62a7f54`
+- [x] **1.6** Responsive pass + basic a11y (focus rings already in design; keyboard modal close) — `62a7f54`
 
 ### Exit criteria
 
