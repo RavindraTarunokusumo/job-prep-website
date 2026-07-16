@@ -14,7 +14,7 @@ Upload your CV, choose a target role, get a personalized job-preparation plan.
 | Auth | Supabase Auth (`@supabase/ssr`) |
 | Database | PostgreSQL via Supabase + Prisma |
 | File storage (MVP) | **Supabase Storage** (see ADR below) |
-| AI | Vercel AI SDK via OpenRouter (ADR-003) |
+| AI | Vercel AI SDK + OpenRouter (`web/lib/ai/config.ts`, ADR-003) |
 | Deploy (planned) | Vercel |
 
 ## Auth and routing

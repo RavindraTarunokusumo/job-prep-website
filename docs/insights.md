@@ -83,4 +83,38 @@ Workflow lessons above were folded into `AGENTS.md` / `CLAUDE.md`:
 - Post-PR #3 archive + Linear JOB-6 Done.
 - Session concluded pending user OK to delete feature branch `feat/phase-3-cv-upload-parse`.
 
+## 2026-07-16 — Phase 4 Autopilot cycle (session close)
+
+### Tools & commands
+
+- OpenRouter via Vercel AI SDK (`ai` + `@ai-sdk/openai`); env must live in **`web/.env.local`** (root `.env.local` alone is not loaded by Next).
+- Long Composer handoffs: background shell wait; capture `sessionId` from `--output-format json`; always `find ~/.grok/sessions -type d -name $sessionId -prune -exec rm -rf {} +`.
+- PR merge: `gh pr merge N --merge` preserves per-commit SHAs/notes; push `refs/notes/commits` separately.
+- Manual preview: `npm run dev -- --hostname 127.0.0.1 --port 3000` + local `ssh -L 3000:127.0.0.1:3000 user@host`.
+- Base UI `Button` + `render={<Link />}` requires `nativeButton={false}` **or** prefer `Link` + `buttonVariants` (dashboard fix).
+
+### Recurring failure modes
+
+- **Config sprawl:** changing model defaults by rewriting every AI service/action is wrong. Single file `web/lib/ai/config.ts` + thin openrouter helper only.
+- Bundled review posts **PENDING** GitHub reviews; human must submit on GitHub. Threads do not auto-resolve when fixes land later.
+- Free OpenRouter models: rate limits / flakiness → primary + fallback in config is worthwhile; do not hardcode models in feature modules.
+- Prisma migrate from implementer subagent may fail without env; orchestrator should `source web/.env.local` and `prisma migrate deploy`.
+
+### Skills / review
+
+- Composer 2.5 bundled review caught real issues (server-action IDOR-shaped export, score Int vs float, plan status validation). Reception protocol: verify then fix, not performative agreement.
+- Do not treat GitHub Copilot quota failures as a review substitute.
+
+### Worth improving (harness proposals)
+
+1. **AI config rule** in AGENTS/CLAUDE: “All LLM model ids and fallbacks live only in `web/lib/ai/config.ts` (or documented env). Never scatter model strings across services.”
+2. **Post-review note:** after `/bundled:review`, record whether findings were addressed on branch before merge; optional re-review only if user asks.
+3. **Base UI link buttons:** document pattern `Link` + `buttonVariants` vs `nativeButton={false}` under monorepo UI conventions.
+4. **Env bootstrap:** when user adds keys at repo root, always sync to `web/.env.local` and mention in handoff prompts.
+
+### Applied this session
+
+- PR #4 merged (`3f324f5`); Post-PR archive Phase 4; Linear JOB-7/8/10 already Done.
+- Reflection written; harness proposals listed above for user approval before AGENTS/CLAUDE edit.
+
 
