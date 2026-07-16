@@ -1,0 +1,5 @@
+Task: JOB-37–41, JOB-46–49, dashboard
+Summary: JobDescription/Match/PreparationPlan models; OpenRouter extract+score+plan; /jobs/match and /plan UIs; dashboard readiness cards; schema tests.
+Docs: docs/database.md
+TODO: Phase 4 / 4.6-4.14 + T9
+Validation: migrate deploy, lint, typecheck, vitest 45, next build
