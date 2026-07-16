@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,6 +14,7 @@ import {
   requireUser,
 } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
+import { cn } from "@/lib/utils";
 import {
   experienceLevelLabels,
   jobSearchStatusLabels,
@@ -123,9 +124,12 @@ export default async function DashboardPage() {
               ) : (
                 <p className="text-sm text-muted-foreground">No review yet</p>
               )}
-              <Button variant="outline" size="sm" render={<Link href="/resume/check" />}>
+              <Link
+                href="/resume/check"
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              >
                 Run checker
-              </Button>
+              </Link>
             </CardContent>
           </Card>
 
@@ -149,9 +153,12 @@ export default async function DashboardPage() {
               ) : (
                 <p className="text-sm text-muted-foreground">No match yet</p>
               )}
-              <Button variant="outline" size="sm" render={<Link href="/jobs/match" />}>
+              <Link
+                href="/jobs/match"
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              >
                 Paste a JD
-              </Button>
+              </Link>
             </CardContent>
           </Card>
 
@@ -173,9 +180,12 @@ export default async function DashboardPage() {
               ) : (
                 <p className="text-sm text-muted-foreground">No plan yet</p>
               )}
-              <Button variant="outline" size="sm" render={<Link href="/plan" />}>
+              <Link
+                href="/plan"
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              >
                 View plan
-              </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>
