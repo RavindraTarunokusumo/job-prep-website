@@ -12,6 +12,11 @@ Migrations: `web/prisma/migrations/`
 | `User` | Mirrors Supabase `auth.users` id + email |
 | `Profile` | Career onboarding fields |
 | `ResumeDocument` | CV upload metadata, status, raw text, parsed JSON, storage key |
+| `ResumeReview` | AI resume review runs; `result` JSON validated by `resumeReviewResultSchema` in `web/lib/validation/resume-review.ts`; `overallScore` denormalized 0–100 for lists |
+| `JobDescription` | Pasted job postings; `extracted` JSON validated by `jobRequirementsSchema` in `web/lib/validation/job-match.ts` |
+| `JobMatchAnalysis` | Resume-to-JD match runs; `result` JSON validated by `jobMatchResultSchema`; `matchScore` denormalized 0–100 (fit score, not hire probability) |
+| `PreparationPlan` | Personalized prep plan with source snapshot IDs for staleness detection |
+| `PreparationPlanItem` | Checklist items (`category`, `status`, `priority`, optional `href` deep link) |
 
 ### Prisma client in Next.js dev
 
@@ -46,3 +51,7 @@ Never commit secrets. Use gitignored `.env.local` at repo root and/or `web/.env.
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Browser/server user session |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only admin (storage bucket ensure/upload helpers) |
 | `BLOB_READ_WRITE_TOKEN` | Optional future Vercel Blob adapter (not required for MVP storage) |
+| `OPENROUTER_API_KEY` | Server-only OpenRouter API key (see `web/lib/ai/config.ts`) |
+| `OPENROUTER_MODEL` | Optional primary model; default in config: `tencent/hy3:free` |
+| `OPENROUTER_FALLBACK_MODEL` | Optional fallback; default in config: `nvidia/nemotron-3-ultra-550b-a55b:free` |
+| `OPENROUTER_BASE_URL` | Optional API base; default `https://openrouter.ai/api/v1` |

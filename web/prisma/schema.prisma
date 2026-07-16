@@ -8,12 +8,16 @@ datasource db {
 }
 
 model User {
-  id               String           @id @db.Uuid
-  email            String           @unique
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  id               String              @id @db.Uuid
+  email            String              @unique
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
   profile          Profile?
   resumeDocuments  ResumeDocument[]
+  resumeReviews    ResumeReview[]
+  jobDescriptions  JobDescription[]
+  jobMatchAnalyses JobMatchAnalysis[]
+  preparationPlans PreparationPlan[]
 }
 
 model ResumeDocument {
@@ -31,8 +35,28 @@ model ResumeDocument {
   parsedData       Json?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  resumeReviews    ResumeReview[]
+  jobMatchAnalyses JobMatchAnalysis[]
 
   @@index([userId])
+}
+
+model ResumeReview {
+  id               String         @id @default(cuid())
+  userId           String         @db.Uuid
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resumeDocumentId String
+  resumeDocument   ResumeDocument @relation(fields: [resumeDocumentId], references: [id], onDelete: Cascade)
+  status           String
+  model            String?
+  errorMessage     String?
+  result           Json?
+  overallScore     Int?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([resumeDocumentId])
 }
 
 model Profile {
@@ -51,4 +75,77 @@ model Profile {
   onboardingCompletedAt DateTime?
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+}
+
+model JobDescription {
+  id            String             @id @default(cuid())
+  userId        String             @db.Uuid
+  user          User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title         String?
+  company       String?
+  sourceNote    String?
+  rawText       String             @db.Text
+  extracted     Json?
+  status        String
+  errorMessage  String?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  matchAnalyses JobMatchAnalysis[]
+
+  @@index([userId])
+}
+
+model JobMatchAnalysis {
+  id               String          @id @default(cuid())
+  userId           String          @db.Uuid
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescriptionId String
+  jobDescription   JobDescription  @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+  resumeDocumentId String?
+  resumeDocument   ResumeDocument? @relation(fields: [resumeDocumentId], references: [id], onDelete: SetNull)
+  status           String
+  model            String?
+  errorMessage     String?
+  result           Json?
+  matchScore       Int?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([userId])
+  @@index([jobDescriptionId])
+}
+
+model PreparationPlan {
+  id                     String                @id @default(cuid())
+  userId                 String                @db.Uuid
+  user                   User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title                  String                @default("My prep plan")
+  status                 String
+  sourceProfileUpdatedAt DateTime?
+  sourceResumeReviewId   String?
+  sourceJobMatchId       String?
+  model                  String?
+  summary                String?               @db.Text
+  createdAt              DateTime              @default(now())
+  updatedAt              DateTime              @updatedAt
+  items                  PreparationPlanItem[]
+
+  @@index([userId])
+}
+
+model PreparationPlanItem {
+  id          String          @id @default(cuid())
+  planId      String
+  plan        PreparationPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  category    String
+  title       String
+  description String?         @db.Text
+  reason      String?         @db.Text
+  priority    Int             @default(0)
+  status      String          @default("todo")
+  href        String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([planId])
 }

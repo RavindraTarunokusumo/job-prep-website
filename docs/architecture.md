@@ -14,7 +14,7 @@ Upload your CV, choose a target role, get a personalized job-preparation plan.
 | Auth | Supabase Auth (`@supabase/ssr`) |
 | Database | PostgreSQL via Supabase + Prisma |
 | File storage (MVP) | **Supabase Storage** (see ADR below) |
-| AI (planned) | Vercel AI SDK |
+| AI | Vercel AI SDK via OpenRouter (ADR-003) |
 | Deploy (planned) | Vercel |
 
 ## Auth and routing
@@ -142,3 +142,44 @@ CLI test:
 - `web/lib/resume/parse-with-gliner.ts`
 - `web/lib/resume/parse-structure.ts` (heuristic fallback)
 - `web/app/actions/resume.ts` (`processResumeDocument`)
+
+### ADR-003: AI provider — OpenRouter via Vercel AI SDK
+
+| Field | Value |
+|-------|--------|
+| **Status** | Accepted |
+| **Date** | 2026-07-16 |
+| **Phase / Linear** | Phase 4 / JOB-33+ |
+| **Spec** | [2026-07-16-mvp-phase-4-application-readiness.md](./specs/2026-07-16-mvp-phase-4-application-readiness.md) |
+
+#### Context
+
+Phase 4 features (resume checker, JD match, prep plan) need structured LLM output. The environment provides **`OPENROUTER_API_KEY`** (OpenAI-compatible Chat Completions API), not direct OpenAI/Anthropic/xAI credentials. The product spec standardizes on the **Vercel AI SDK**.
+
+#### Decision
+
+- Use **`ai`** + **`@ai-sdk/openai`** with `createOpenAI` pointed at OpenRouter (`baseURL` default `https://openrouter.ai/api/v1`).
+- Single config: `web/lib/ai/config.ts` (`aiConfig.openrouter`). Env: `OPENROUTER_API_KEY` (required), optional `OPENROUTER_MODEL` (default `tencent/hy3:free`), optional `OPENROUTER_FALLBACK_MODEL` (default `nvidia/nemotron-3-ultra-550b-a55b:free`), optional `OPENROUTER_BASE_URL`.
+- `generateObjectWithFallback` in `openrouter.ts` tries primary then fallback; feature services do not hardcode model ids.
+- All LLM calls are **server-only** (lib services + Server Actions). Never expose the key to the client.
+- Prefer **`generateObject`** with **zod** schemas; reject invalid AI payloads with safe user-facing errors.
+- Prompts forbid inventing experience, employers, dates, or metrics not present in user resume/profile text.
+
+#### Consequences
+
+**Positive**
+
+- One SDK surface for review, match, and prep-plan features
+- Model swappable via env without code changes
+- Structured output validated before persistence
+
+**Negative / trade-offs**
+
+- Depends on OpenRouter availability and routing for chosen model
+- CI/offline tests must mock the AI layer (schema + guard unit tests remain live)
+
+#### Related code
+
+- `web/lib/ai/openrouter.ts` — shared model factory
+- `web/lib/ai/resume-review.ts` — resume review + bullet rewrite
+- `web/app/actions/resume-review.ts` — server actions
