@@ -1,0 +1,5 @@
+Task: JOB-32 resume review schema
+Summary: Added resumeReviewResultSchema, ResumeReview Prisma model + migration, prisma client version bump, and schema unit tests.
+Docs: docs/database.md
+TODO: Phase 4 / 4.1 JOB-32
+Validation: prisma migrate deploy, lint, typecheck, vitest, next build
