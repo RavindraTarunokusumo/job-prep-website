@@ -1,6 +1,6 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 15 July 2026 (post-PR #3)  
+**Last updated:** 16 July 2026 (Phase 4 Autopilot)  
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.
@@ -8,11 +8,14 @@
 | Source | Link / path |
 |--------|-------------|
 | Linear project | https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e |
-| Specs | `docs/specs/` |
-| Architecture ADRs | [`docs/architecture.md`](docs/architecture.md) |
+| Specs | `docs/specs/` · Phase 4: [`docs/specs/2026-07-16-mvp-phase-4-application-readiness.md`](docs/specs/2026-07-16-mvp-phase-4-application-readiness.md) |
+| Plan | [`docs/superpowers/plans/2026-07-16-phase-4-application-readiness.md`](docs/superpowers/plans/2026-07-16-phase-4-application-readiness.md) |
+| Architecture ADRs | [`docs/architecture.md`](docs/architecture.md) (ADR-003 OpenRouter) |
 | Phase archives | [`docs/iterations/archive/`](docs/iterations/archive/) |
 | Merged PRs | [#1](https://github.com/RavindraTarunokusumo/job-prep-website/pull/1), [#2](https://github.com/RavindraTarunokusumo/job-prep-website/pull/2), [#3](https://github.com/RavindraTarunokusumo/job-prep-website/pull/3) (`208c3a6`) |
+| Branch / worktree | `feat/phase-4-application-readiness` @ `.worktree/phase-4-application-readiness` |
 | Subagent model | **Composer 2.5** via `grok-composer-2.5-fast` |
+| AI | `OPENROUTER_API_KEY` → Vercel AI SDK + OpenRouter (default model `openai/gpt-4o-mini`) |
 | Out of agent scope | **JOB-79** (owned by another person — ignore) |
 | Git notes | [`.github/git_notes_template.md`](.github/git_notes_template.md) |
 
@@ -21,7 +24,7 @@
 | # | Milestone | Target | Progress |
 |---|-----------|--------|----------|
 | 1 | Profile & document intake | 2026-07-31 | **JOB-18, JOB-5, JOB-6 done** |
-| 2 | Application readiness tools | 2026-08-31 | Next (JOB-7/8/10) |
+| 2 | Application readiness tools | 2026-08-31 | **In progress** (JOB-7/8/10) |
 | 3 | Interview practice & assessment | 2026-09-30 | 0% |
 | 4 | Report, launch polish & validation | 2026-10-31 | 0% |
 
@@ -32,10 +35,10 @@
 | **0–1** Foundation + landing | **Done** | PR #1 |
 | **2** Auth & onboarding (JOB-5) | **Done** | PR #2 |
 | **3** CV upload & parsing (JOB-6) | **Done** | PR #3 `208c3a6` |
-| **4** Application readiness | **Next** | Needs AI key for checker/match/plan |
+| **4** Application readiness | **In progress** | OpenRouter key available; Autopilot |
 | **5–8** | Pending | See below |
 
-**Next cycle candidate:** Phase 4 (JOB-7 resume checker, JOB-8 JD match, JOB-10 prep plan). Provide AI provider key when ready. Optional: GLiNER Pioneer API key if preferring cloud GLiNER over local venv.
+**Active Autopilot:** Phase 4 (JOB-7 resume checker, JOB-8 JD match, JOB-10 prep plan). Skip JOB-79.
 
 ---
 
