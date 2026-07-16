@@ -13,6 +13,10 @@ Migrations: `web/prisma/migrations/`
 | `Profile` | Career onboarding fields |
 | `ResumeDocument` | CV upload metadata, status, raw text, parsed JSON, storage key |
 | `ResumeReview` | AI resume review runs; `result` JSON validated by `resumeReviewResultSchema` in `web/lib/validation/resume-review.ts`; `overallScore` denormalized 0–100 for lists |
+| `JobDescription` | Pasted job postings; `extracted` JSON validated by `jobRequirementsSchema` in `web/lib/validation/job-match.ts` |
+| `JobMatchAnalysis` | Resume-to-JD match runs; `result` JSON validated by `jobMatchResultSchema`; `matchScore` denormalized 0–100 (fit score, not hire probability) |
+| `PreparationPlan` | Personalized prep plan with source snapshot IDs for staleness detection |
+| `PreparationPlanItem` | Checklist items (`category`, `status`, `priority`, optional `href` deep link) |
 
 ### Prisma client in Next.js dev
 
