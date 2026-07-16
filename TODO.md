@@ -24,7 +24,7 @@
 | # | Milestone | Target | Progress |
 |---|-----------|--------|----------|
 | 1 | Profile & document intake | 2026-07-31 | **JOB-18, JOB-5, JOB-6 done** |
-| 2 | Application readiness tools | 2026-08-31 | **In progress** (JOB-7/8/10) |
+| 2 | Application readiness tools | 2026-08-31 | **JOB-7 done; JOB-8/10 Done on branch** |
 | 3 | Interview practice & assessment | 2026-09-30 | 0% |
 | 4 | Report, launch polish & validation | 2026-10-31 | 0% |
 
@@ -35,10 +35,10 @@
 | **0–1** Foundation + landing | **Done** | PR #1 |
 | **2** Auth & onboarding (JOB-5) | **Done** | PR #2 |
 | **3** CV upload & parsing (JOB-6) | **Done** | PR #3 `208c3a6` |
-| **4** Application readiness | **In progress** | OpenRouter key available; Autopilot |
+| **4** Application readiness | **Done (branch)** | feat/phase-4-application-readiness pending PR |
 | **5–8** | Pending | See below |
 
-**Active Autopilot:** Phase 4 (JOB-7 resume checker, JOB-8 JD match, JOB-10 prep plan). Skip JOB-79.
+**Phase 4 Autopilot complete on branch** — open PR. Skip JOB-79. Next: Phase 5 after merge.
 
 ---
 
@@ -77,17 +77,17 @@
 - [x] **4.5 JOB-36** Review tests + prompt regression cases
 
 **Job-description match (JOB-8)**
-- [ ] **4.6 JOB-37** Job description analysis data model
-- [ ] **4.7 JOB-38** Paste / analyze UI
-- [ ] **4.8 JOB-39** AI requirement extraction
-- [ ] **4.9 JOB-40** Resume-to-job match scoring
-- [ ] **4.10 JOB-41** Match results UI (matched / missing chips like landing)
+- [x] **4.6 JOB-37** Job description analysis data model
+- [x] **4.7 JOB-38** Paste / analyze UI
+- [x] **4.8 JOB-39** AI requirement extraction
+- [x] **4.9 JOB-40** Resume-to-job match scoring
+- [x] **4.10 JOB-41** Match results UI (matched / missing chips like landing)
 
 **Personalized prep plan (JOB-10) — core product promise**
-- [ ] **4.11 JOB-46** Prep plan data model
-- [ ] **4.12 JOB-47** Prep plan generation service
-- [ ] **4.13 JOB-48** Prep plan dashboard UI (checklist + priority; landing “Current plan” card)
-- [ ] **4.14 JOB-49** Refresh & dependency rules (e.g. re-run after new CV review / JD)
+- [x] **4.11 JOB-46** Prep plan data model
+- [x] **4.12 JOB-47** Prep plan generation service
+- [x] **4.13 JOB-48** Prep plan dashboard UI (checklist + priority; landing “Current plan” card)
+- [x] **4.14 JOB-49** Refresh & dependency rules (e.g. re-run after new CV review / JD)
 
 ### Exit criteria
 
