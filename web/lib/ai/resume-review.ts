@@ -1,6 +1,8 @@
-import { generateObject } from "ai";
 import { z } from "zod";
-import { getOpenRouterModel, getOpenRouterModelId } from "@/lib/ai/openrouter";
+import {
+  generateObjectWithFallback,
+  getOpenRouterModelId,
+} from "@/lib/ai/openrouter";
 import {
   resumeReviewResultSchema,
   type ResumeReviewResult,
@@ -11,6 +13,11 @@ export type ReviewInput = {
   experienceLevel: string;
   resumeText: string;
   parsedJson?: unknown;
+};
+
+export type ResumeReviewGeneration = {
+  result: ResumeReviewResult;
+  modelId: string;
 };
 
 const bulletRewriteSchema = z.object({
@@ -58,19 +65,19 @@ function buildReviewPrompt(input: ReviewInput): string {
 
 export async function generateResumeReview(
   input: ReviewInput
-): Promise<ResumeReviewResult> {
-  const model = getOpenRouterModel();
+): Promise<ResumeReviewGeneration> {
+  const { object, modelId } = await generateObjectWithFallback<ResumeReviewResult>(
+    {
+      schema: resumeReviewResultSchema,
+      system: REVIEW_SYSTEM_PROMPT,
+      prompt: buildReviewPrompt(input),
+    }
+  );
 
-  const { object } = await generateObject({
-    model,
-    schema: resumeReviewResultSchema,
-    system: REVIEW_SYSTEM_PROMPT,
-    prompt: buildReviewPrompt(input),
-  });
-
-  return object;
+  return { result: object, modelId };
 }
 
+/** Preferred model id for UI/docs (primary). Prefer `modelId` from generation for DB. */
 export function getReviewModelId(): string {
   return getOpenRouterModelId();
 }
@@ -78,24 +85,23 @@ export function getReviewModelId(): string {
 export async function rewriteResumeBullet(input: {
   original: string;
   surroundingContext?: string;
-}): Promise<string[]> {
+}): Promise<{ suggestions: string[]; modelId: string }> {
   const trimmed = input.original.trim();
   if (!trimmed) {
     throw new Error("Original bullet text is required.");
   }
 
-  const model = getOpenRouterModel();
-
   const contextBlock = input.surroundingContext?.trim()
     ? `\n\nSurrounding context:\n${input.surroundingContext.trim()}`
     : "";
 
-  const { object } = await generateObject({
-    model,
+  const { object, modelId } = await generateObjectWithFallback<{
+    suggestions: string[];
+  }>({
     schema: bulletRewriteSchema,
     system: REWRITE_SYSTEM_PROMPT,
     prompt: `Original bullet:\n${trimmed}${contextBlock}`,
   });
 
-  return object.suggestions;
+  return { suggestions: object.suggestions, modelId };
 }

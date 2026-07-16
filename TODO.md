@@ -15,7 +15,7 @@
 | Merged PRs | [#1](https://github.com/RavindraTarunokusumo/job-prep-website/pull/1), [#2](https://github.com/RavindraTarunokusumo/job-prep-website/pull/2), [#3](https://github.com/RavindraTarunokusumo/job-prep-website/pull/3) (`208c3a6`) |
 | Branch / worktree | `feat/phase-4-application-readiness` @ `.worktree/phase-4-application-readiness` |
 | Subagent model | **Composer 2.5** via `grok-composer-2.5-fast` |
-| AI | `OPENROUTER_API_KEY` → Vercel AI SDK + OpenRouter (default model `openai/gpt-4o-mini`) |
+| AI | `OPENROUTER_API_KEY` → Vercel AI SDK + OpenRouter (`tencent/hy3:free`, fallback `nvidia/nemotron-3-ultra-550b-a55b:free`) |
 | Out of agent scope | **JOB-79** (owned by another person — ignore) |
 | Git notes | [`.github/git_notes_template.md`](.github/git_notes_template.md) |
 

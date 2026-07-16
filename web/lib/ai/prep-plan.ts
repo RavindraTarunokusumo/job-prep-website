@@ -1,5 +1,7 @@
-import { generateObject } from "ai";
-import { getOpenRouterModel, getOpenRouterModelId } from "@/lib/ai/openrouter";
+import {
+  generateObjectWithFallback,
+  getOpenRouterModelId,
+} from "@/lib/ai/openrouter";
 import type { JobMatchResult } from "@/lib/validation/job-match";
 import {
   prepPlanGenerationSchema,
@@ -98,17 +100,15 @@ function buildPlanPrompt(input: GeneratePrepPlanInput): string {
 
 export async function generatePrepPlan(
   input: GeneratePrepPlanInput
-): Promise<PrepPlanGeneration> {
-  const model = getOpenRouterModel();
+): Promise<{ plan: PrepPlanGeneration; modelId: string }> {
+  const { object, modelId } =
+    await generateObjectWithFallback<PrepPlanGeneration>({
+      schema: prepPlanGenerationSchema,
+      system: PLAN_SYSTEM_PROMPT,
+      prompt: buildPlanPrompt(input),
+    });
 
-  const { object } = await generateObject({
-    model,
-    schema: prepPlanGenerationSchema,
-    system: PLAN_SYSTEM_PROMPT,
-    prompt: buildPlanPrompt(input),
-  });
-
-  return object;
+  return { plan: object, modelId };
 }
 
 export function getPrepPlanModelId(): string {

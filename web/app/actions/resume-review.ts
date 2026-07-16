@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 import { userFacingAiError } from "@/lib/ai/errors";
 import {
   generateResumeReview,
-  getReviewModelId,
   rewriteResumeBullet,
 } from "@/lib/ai/resume-review";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
@@ -67,7 +66,7 @@ export async function runResumeReviewAction(
   });
 
   try {
-    const result = await generateResumeReview({
+    const { result, modelId } = await generateResumeReview({
       targetRole: profile.targetRole,
       experienceLevel: profile.experienceLevel,
       resumeText,
@@ -75,7 +74,6 @@ export async function runResumeReviewAction(
     });
 
     const validated = parseResumeReviewResult(result);
-    const modelId = getReviewModelId();
 
     await prisma.resumeReview.update({
       where: { id: review.id },
@@ -127,7 +125,7 @@ export async function rewriteResumeBulletAction(input: {
   }
 
   try {
-    const suggestions = await rewriteResumeBullet({
+    const { suggestions } = await rewriteResumeBullet({
       original,
       surroundingContext: input.surroundingContext,
     });

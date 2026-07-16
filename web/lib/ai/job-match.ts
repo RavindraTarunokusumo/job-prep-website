@@ -1,5 +1,7 @@
-import { generateObject } from "ai";
-import { getOpenRouterModel, getOpenRouterModelId } from "@/lib/ai/openrouter";
+import {
+  generateObjectWithFallback,
+  getOpenRouterModelId,
+} from "@/lib/ai/openrouter";
 import {
   jobMatchResultSchema,
   jobRequirementsSchema,
@@ -30,17 +32,14 @@ Rules:
 
 export async function extractJobRequirements(
   rawText: string
-): Promise<JobRequirements> {
-  const model = getOpenRouterModel();
-
-  const { object } = await generateObject({
-    model,
+): Promise<{ requirements: JobRequirements; modelId: string }> {
+  const { object, modelId } = await generateObjectWithFallback<JobRequirements>({
     schema: jobRequirementsSchema,
     system: EXTRACT_SYSTEM_PROMPT,
     prompt: `Job description text:\n\n${rawText}`,
   });
 
-  return object;
+  return { requirements: object, modelId };
 }
 
 export type ScoreJobMatchInput = {
@@ -54,9 +53,7 @@ export type ScoreJobMatchInput = {
 
 export async function scoreJobMatch(
   input: ScoreJobMatchInput
-): Promise<JobMatchResult> {
-  const model = getOpenRouterModel();
-
+): Promise<{ result: JobMatchResult; modelId: string }> {
   const parts = [
     `Target role (profile): ${input.targetRole}`,
     `Experience level (profile): ${input.experienceLevel}`,
@@ -70,14 +67,13 @@ export async function scoreJobMatch(
     input.resumeText,
   ];
 
-  const { object } = await generateObject({
-    model,
+  const { object, modelId } = await generateObjectWithFallback<JobMatchResult>({
     schema: jobMatchResultSchema,
     system: MATCH_SYSTEM_PROMPT,
     prompt: parts.join("\n"),
   });
 
-  return object;
+  return { result: object, modelId };
 }
 
 export function getJobMatchModelId(): string {

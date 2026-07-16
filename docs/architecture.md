@@ -159,7 +159,8 @@ Phase 4 features (resume checker, JD match, prep plan) need structured LLM outpu
 #### Decision
 
 - Use **`ai`** + **`@ai-sdk/openai`** with `createOpenAI` pointed at OpenRouter (`baseURL` default `https://openrouter.ai/api/v1`).
-- Env: `OPENROUTER_API_KEY` (required), optional `OPENROUTER_MODEL` (default `openai/gpt-4o-mini`), optional `OPENROUTER_BASE_URL`.
+- Env: `OPENROUTER_API_KEY` (required), optional `OPENROUTER_MODEL` (default `tencent/hy3:free`), optional `OPENROUTER_FALLBACK_MODEL` (default `nvidia/nemotron-3-ultra-550b-a55b:free`), optional `OPENROUTER_BASE_URL`.
+- Generation tries the primary model first; on failure, retries with the fallback and records whichever model succeeded.
 - All LLM calls are **server-only** (lib services + Server Actions). Never expose the key to the client.
 - Prefer **`generateObject`** with **zod** schemas; reject invalid AI payloads with safe user-facing errors.
 - Prompts forbid inventing experience, employers, dates, or metrics not present in user resume/profile text.

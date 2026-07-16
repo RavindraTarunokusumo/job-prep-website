@@ -37,7 +37,8 @@ Linear/specs call for **Vercel AI SDK**. The environment has **`OPENROUTER_API_K
 - Use **Vercel AI SDK** (`ai` + `@ai-sdk/openai` provider pointed at OpenRouter).
 - Env:
   - `OPENROUTER_API_KEY` (required for AI features)
-  - `OPENROUTER_MODEL` optional; default **`openai/gpt-4o-mini`** (cheap, structured-JSON capable)
+  - `OPENROUTER_MODEL` optional; default **`tencent/hy3:free`**
+  - `OPENROUTER_FALLBACK_MODEL` optional; default **`nvidia/nemotron-3-ultra-550b-a55b:free`** (used if primary fails)
   - Optional `OPENROUTER_BASE_URL` default `https://openrouter.ai/api/v1`
 - All LLM calls **server-only** (Server Actions / lib services). Never expose the key to the client.
 - Prefer **structured output** validated with **zod** after generation; reject invalid AI payloads with a safe user-facing error.
