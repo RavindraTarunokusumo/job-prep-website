@@ -47,3 +47,6 @@ Never commit secrets. Use gitignored `.env.local` at repo root and/or `web/.env.
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Browser/server user session |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only admin (storage bucket ensure/upload helpers) |
 | `BLOB_READ_WRITE_TOKEN` | Optional future Vercel Blob adapter (not required for MVP storage) |
+| `OPENROUTER_API_KEY` | Server-only OpenRouter API key for Phase 4 AI features (resume review, JD match, prep plan) |
+| `OPENROUTER_MODEL` | Optional OpenRouter model id; default `openai/gpt-4o-mini` |
+| `OPENROUTER_BASE_URL` | Optional OpenRouter API base; default `https://openrouter.ai/api/v1` |
