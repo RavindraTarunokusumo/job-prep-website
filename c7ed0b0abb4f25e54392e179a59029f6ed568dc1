@@ -1,0 +1,5 @@
+Task: PR #4 review fixes
+Summary: Fixed review bugs: getMyPlanStalenessSources auth, integer score transforms, plan status parse, parsed-resume guard, advisory lock on plan regen, max JD length, relative href schema, userFacingAiError.
+Docs: N/A
+TODO: Phase 4 PR #4 reception
+Validation: lint, typecheck, vitest 47, next build
