@@ -70,8 +70,8 @@
 - [ ] **4.0 JOB-79** Research widespread CV formats & ATS requirements — **owned by another person; skip in agent Autopilot**
 
 **CV / resume checker (JOB-7)**
-- [ ] **4.1 JOB-32** Resume review result schema
-- [ ] **4.2 JOB-33** AI resume review (Vercel AI SDK)
+- [x] **4.1 JOB-32** Resume review result schema
+- [ ] **4.2 JOB-33** AI resume review (Vercel AI SDK + OpenRouter)
 - [ ] **4.3 JOB-34** Resume review dashboard UI (highlights + scores à la landing)
 - [ ] **4.4 JOB-35** Bullet rewrite workflow (editable; no invented experience)
 - [ ] **4.5 JOB-36** Review tests + prompt regression cases
