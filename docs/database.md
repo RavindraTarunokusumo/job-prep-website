@@ -12,6 +12,7 @@ Migrations: `web/prisma/migrations/`
 | `User` | Mirrors Supabase `auth.users` id + email |
 | `Profile` | Career onboarding fields |
 | `ResumeDocument` | CV upload metadata, status, raw text, parsed JSON, storage key |
+| `ResumeReview` | AI resume review runs; `result` JSON validated by `resumeReviewResultSchema` in `web/lib/validation/resume-review.ts`; `overallScore` denormalized 0–100 for lists |
 
 ### Prisma client in Next.js dev
 
