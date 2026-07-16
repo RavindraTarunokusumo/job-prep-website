@@ -16,7 +16,10 @@ export const prepPlanItemSchema = z.object({
   description: z.string().optional(),
   reason: z.string(),
   priority: z.number(),
-  href: z.string().optional(),
+  href: z
+    .string()
+    .regex(/^\/[a-zA-Z0-9/_-]*$/, "href must be a relative app path")
+    .optional(),
 });
 
 export const prepPlanGenerationSchema = z.object({
@@ -31,4 +34,8 @@ export type PrepPlanGeneration = z.infer<typeof prepPlanGenerationSchema>;
 
 export function parsePrepPlanGeneration(data: unknown): PrepPlanGeneration {
   return prepPlanGenerationSchema.parse(data);
+}
+
+export function parsePrepPlanItemStatus(status: unknown): PrepPlanItemStatus {
+  return prepPlanItemStatusSchema.parse(status);
 }

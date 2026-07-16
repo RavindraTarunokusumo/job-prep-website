@@ -101,4 +101,10 @@ describe("assertJobDescriptionHasContent", () => {
       /too short/i
     );
   });
+
+  it("rejects oversized job descriptions", () => {
+    expect(() => assertJobDescriptionHasContent("x".repeat(32_001))).toThrow(
+      /too long/i
+    );
+  });
 });

@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  getPlanStalenessSources,
+  getMyPlanStalenessSources,
   isPlanStale,
 } from "@/app/actions/prep-plan";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
@@ -32,7 +32,7 @@ export default async function PlanPage() {
       prisma.resumeDocument.count({
         where: { userId: user.id, status: "parsed" },
       }),
-      getPlanStalenessSources(user.id),
+      getMyPlanStalenessSources(),
     ]);
 
   const canGenerate =

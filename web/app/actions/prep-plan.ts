@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { userFacingAiError } from "@/lib/ai/errors";
 import { generatePrepPlan, getPrepPlanModelId } from "@/lib/ai/prep-plan";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
 import { isPlanStale } from "@/lib/plan/staleness";
@@ -9,6 +10,7 @@ import { assertResumeHasContent } from "@/lib/resume/content";
 import { parseJobMatchResult } from "@/lib/validation/job-match";
 import {
   parsePrepPlanGeneration,
+  parsePrepPlanItemStatus,
   type PrepPlanItemStatus,
 } from "@/lib/validation/prep-plan";
 import { parseResumeReviewResult } from "@/lib/validation/resume-review";
@@ -22,7 +24,8 @@ async function getLatestParsedDocument(userId: string) {
   });
 }
 
-export async function getPlanStalenessSources(userId: string) {
+/** Internal helper — not a public server action entry (no userId param). */
+async function loadPlanStalenessSources(userId: string) {
   const [profile, latestReview, latestMatch] = await Promise.all([
     prisma.profile.findUnique({
       where: { userId },
@@ -45,6 +48,12 @@ export async function getPlanStalenessSources(userId: string) {
     latestReviewId: latestReview?.id ?? null,
     latestMatchId: latestMatch?.id ?? null,
   };
+}
+
+/** Authenticated: staleness sources for the current user only. */
+export async function getMyPlanStalenessSources() {
+  const user = await requireUser();
+  return loadPlanStalenessSources(user.id);
 }
 
 export async function generatePrepPlanAction(opts?: {
@@ -97,7 +106,7 @@ export async function generatePrepPlanAction(opts?: {
           where: { userId: user.id, status: "completed" },
           orderBy: { createdAt: "desc" },
         }),
-    getPlanStalenessSources(user.id),
+    loadPlanStalenessSources(user.id),
   ]);
 
   let reviewResult = null;
@@ -140,6 +149,8 @@ export async function generatePrepPlanAction(opts?: {
     const modelId = getPrepPlanModelId();
 
     const plan = await prisma.$transaction(async (tx) => {
+      // Session-level lock so concurrent regenerates for the same user serialize.
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${user.id}))`;
       await tx.preparationPlan.updateMany({
         where: { userId: user.id, status: "active" },
         data: { status: "archived" },
@@ -174,11 +185,13 @@ export async function generatePrepPlanAction(opts?: {
 
     return { ok: true, planId: plan.id };
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Plan generation failed. Please try again.";
-    return { ok: false, error: message };
+    return {
+      ok: false,
+      error: userFacingAiError(
+        error,
+        "Plan generation failed. Please try again."
+      ),
+    };
   }
 }
 
@@ -187,6 +200,13 @@ export async function updatePlanItemStatusAction(
   status: PrepPlanItemStatus
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const user = await requireUser();
+
+  let nextStatus: PrepPlanItemStatus;
+  try {
+    nextStatus = parsePrepPlanItemStatus(status);
+  } catch {
+    return { ok: false, error: "Invalid plan item status." };
+  }
 
   const item = await prisma.preparationPlanItem.findUnique({
     where: { id: itemId },
@@ -207,7 +227,7 @@ export async function updatePlanItemStatusAction(
 
   await prisma.preparationPlanItem.update({
     where: { id: itemId },
-    data: { status },
+    data: { status: nextStatus },
   });
 
   revalidatePath("/plan");

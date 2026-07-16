@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-const scoreSchema = z.number().min(0).max(100);
+const scoreSchema = z
+  .number()
+  .min(0)
+  .max(100)
+  .transform((n) => Math.round(n));
 
 export const resumeReviewSectionScoreSchema = z.object({
   section: z.string(),

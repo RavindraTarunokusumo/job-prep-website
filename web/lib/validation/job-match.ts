@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-const scoreSchema = z.number().min(0).max(100);
+const scoreSchema = z
+  .number()
+  .min(0)
+  .max(100)
+  .transform((n) => Math.round(n));
 
 export const jobRequirementsSchema = z.object({
   roleTitle: z.string().optional(),
@@ -59,6 +63,7 @@ export function parseJobMatchResult(data: unknown): JobMatchResult {
 }
 
 export const MIN_JD_TEXT_LENGTH = 80;
+export const MAX_JD_TEXT_LENGTH = 32_000;
 
 export function assertJobDescriptionHasContent(rawText: string): string {
   const trimmed = rawText.trim();
@@ -68,6 +73,11 @@ export function assertJobDescriptionHasContent(rawText: string): string {
   if (trimmed.length < MIN_JD_TEXT_LENGTH) {
     throw new Error(
       "Job description is too short. Paste the full posting (at least a few sentences)."
+    );
+  }
+  if (trimmed.length > MAX_JD_TEXT_LENGTH) {
+    throw new Error(
+      "Job description is too long. Paste up to about 32,000 characters."
     );
   }
   return trimmed;

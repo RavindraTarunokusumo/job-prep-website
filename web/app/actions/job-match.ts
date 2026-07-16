@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { userFacingAiError } from "@/lib/ai/errors";
 import {
   extractJobRequirements,
   getJobMatchModelId,
@@ -146,10 +147,10 @@ export async function analyzeJobDescriptionAction(form: {
 
     return { ok: true, matchId: match.id, jobId: job.id };
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Job match analysis failed. Please try again.";
+    const message = userFacingAiError(
+      error,
+      "Job match analysis failed. Please try again."
+    );
 
     await prisma.jobDescription.update({
       where: { id: job.id },

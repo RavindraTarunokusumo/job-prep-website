@@ -56,4 +56,12 @@ describe("resumeReviewResultSchema", () => {
     expect(result.success).toBe(false);
     expect(() => parseResumeReviewResult(withoutSummary)).toThrow();
   });
+
+  it("rounds fractional overallScore to an integer", () => {
+    const result = parseResumeReviewResult({
+      ...validFixture,
+      overallScore: 72.6,
+    });
+    expect(result.overallScore).toBe(73);
+  });
 });

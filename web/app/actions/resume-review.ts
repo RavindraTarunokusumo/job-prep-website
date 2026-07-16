@@ -1,13 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { prisma } from "@/lib/prisma";
-import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { userFacingAiError } from "@/lib/ai/errors";
 import {
   generateResumeReview,
   getReviewModelId,
   rewriteResumeBullet,
 } from "@/lib/ai/resume-review";
+import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { prisma } from "@/lib/prisma";
 import { assertResumeHasContent } from "@/lib/resume/content";
 import { parseResumeReviewResult } from "@/lib/validation/resume-review";
 
@@ -31,6 +32,13 @@ export async function runResumeReviewAction(
   const doc = await getOwnedDocument(user.id, documentId);
   if (!doc) {
     return { ok: false, error: "Resume not found or access denied." };
+  }
+
+  if (doc.status !== "parsed") {
+    return {
+      ok: false,
+      error: "Finish parsing this resume before running a review.",
+    };
   }
 
   const profile = await getProfileForUser(user.id);
@@ -86,10 +94,10 @@ export async function runResumeReviewAction(
 
     return { ok: true, reviewId: review.id };
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Review generation failed. Please try again.";
+    const message = userFacingAiError(
+      error,
+      "Review generation failed. Please try again."
+    );
 
     await prisma.resumeReview.update({
       where: { id: review.id },
@@ -126,10 +134,12 @@ export async function rewriteResumeBulletAction(input: {
 
     return { ok: true, suggestions };
   } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Bullet rewrite failed. Please try again.";
-    return { ok: false, error: message };
+    return {
+      ok: false,
+      error: userFacingAiError(
+        error,
+        "Bullet rewrite failed. Please try again."
+      ),
+    };
   }
 }
