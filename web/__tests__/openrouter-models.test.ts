@@ -1,10 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
-import {
-  DEFAULT_OPENROUTER_FALLBACK_MODEL,
-  DEFAULT_OPENROUTER_MODEL,
-  getOpenRouterFallbackModelId,
-  getOpenRouterModelId,
-} from "@/lib/ai/openrouter";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 const ORIGINAL_MODEL = process.env.OPENROUTER_MODEL;
 const ORIGINAL_FALLBACK = process.env.OPENROUTER_FALLBACK_MODEL;
@@ -20,29 +14,27 @@ afterEach(() => {
   } else {
     process.env.OPENROUTER_FALLBACK_MODEL = ORIGINAL_FALLBACK;
   }
+  vi.resetModules();
 });
 
-describe("OpenRouter model defaults", () => {
-  it("defaults primary to tencent/hy3:free", () => {
+describe("aiConfig OpenRouter models", () => {
+  it("defaults primary and fallback from config module", async () => {
     delete process.env.OPENROUTER_MODEL;
-    expect(getOpenRouterModelId()).toBe(DEFAULT_OPENROUTER_MODEL);
-    expect(DEFAULT_OPENROUTER_MODEL).toBe("tencent/hy3:free");
-  });
-
-  it("defaults fallback to nvidia/nemotron-3-ultra-550b-a55b:free", () => {
     delete process.env.OPENROUTER_FALLBACK_MODEL;
-    expect(getOpenRouterFallbackModelId()).toBe(
-      DEFAULT_OPENROUTER_FALLBACK_MODEL
-    );
-    expect(DEFAULT_OPENROUTER_FALLBACK_MODEL).toBe(
+    vi.resetModules();
+    const { aiConfig } = await import("@/lib/ai/config");
+    expect(aiConfig.openrouter.model).toBe("tencent/hy3:free");
+    expect(aiConfig.openrouter.fallbackModel).toBe(
       "nvidia/nemotron-3-ultra-550b-a55b:free"
     );
   });
 
-  it("respects env overrides", () => {
+  it("respects env overrides via config", async () => {
     process.env.OPENROUTER_MODEL = "custom/primary";
     process.env.OPENROUTER_FALLBACK_MODEL = "custom/fallback";
-    expect(getOpenRouterModelId()).toBe("custom/primary");
-    expect(getOpenRouterFallbackModelId()).toBe("custom/fallback");
+    vi.resetModules();
+    const { aiConfig } = await import("@/lib/ai/config");
+    expect(aiConfig.openrouter.model).toBe("custom/primary");
+    expect(aiConfig.openrouter.fallbackModel).toBe("custom/fallback");
   });
 });

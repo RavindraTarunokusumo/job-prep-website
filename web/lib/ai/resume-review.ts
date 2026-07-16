@@ -15,11 +15,6 @@ export type ReviewInput = {
   parsedJson?: unknown;
 };
 
-export type ResumeReviewGeneration = {
-  result: ResumeReviewResult;
-  modelId: string;
-};
-
 const bulletRewriteSchema = z.object({
   suggestions: z.array(z.string()).min(1).max(3),
 });
@@ -65,19 +60,15 @@ function buildReviewPrompt(input: ReviewInput): string {
 
 export async function generateResumeReview(
   input: ReviewInput
-): Promise<ResumeReviewGeneration> {
-  const { object, modelId } = await generateObjectWithFallback<ResumeReviewResult>(
-    {
-      schema: resumeReviewResultSchema,
-      system: REVIEW_SYSTEM_PROMPT,
-      prompt: buildReviewPrompt(input),
-    }
-  );
-
-  return { result: object, modelId };
+): Promise<ResumeReviewResult> {
+  const { object } = await generateObjectWithFallback<ResumeReviewResult>({
+    schema: resumeReviewResultSchema,
+    system: REVIEW_SYSTEM_PROMPT,
+    prompt: buildReviewPrompt(input),
+  });
+  return object;
 }
 
-/** Preferred model id for UI/docs (primary). Prefer `modelId` from generation for DB. */
 export function getReviewModelId(): string {
   return getOpenRouterModelId();
 }
@@ -85,7 +76,7 @@ export function getReviewModelId(): string {
 export async function rewriteResumeBullet(input: {
   original: string;
   surroundingContext?: string;
-}): Promise<{ suggestions: string[]; modelId: string }> {
+}): Promise<string[]> {
   const trimmed = input.original.trim();
   if (!trimmed) {
     throw new Error("Original bullet text is required.");
@@ -95,7 +86,7 @@ export async function rewriteResumeBullet(input: {
     ? `\n\nSurrounding context:\n${input.surroundingContext.trim()}`
     : "";
 
-  const { object, modelId } = await generateObjectWithFallback<{
+  const { object } = await generateObjectWithFallback<{
     suggestions: string[];
   }>({
     schema: bulletRewriteSchema,
@@ -103,5 +94,5 @@ export async function rewriteResumeBullet(input: {
     prompt: `Original bullet:\n${trimmed}${contextBlock}`,
   });
 
-  return { suggestions: object.suggestions, modelId };
+  return object.suggestions;
 }

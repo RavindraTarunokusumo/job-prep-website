@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { userFacingAiError } from "@/lib/ai/errors";
 import {
   extractJobRequirements,
+  getJobMatchModelId,
   scoreJobMatch,
 } from "@/lib/ai/job-match";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
@@ -105,7 +106,7 @@ export async function analyzeJobDescriptionAction(form: {
   });
 
   try {
-    const { requirements } = await extractJobRequirements(rawText);
+    const requirements = await extractJobRequirements(rawText);
     const validatedRequirements = parseJobRequirements(requirements);
 
     await prisma.jobDescription.update({
@@ -117,7 +118,7 @@ export async function analyzeJobDescriptionAction(form: {
       },
     });
 
-    const { result: matchResult, modelId } = await scoreJobMatch({
+    const matchResult = await scoreJobMatch({
       requirements: validatedRequirements,
       resumeText,
       targetRole: profile.targetRole,
@@ -134,7 +135,7 @@ export async function analyzeJobDescriptionAction(form: {
         status: "completed",
         result: validatedMatch,
         matchScore: validatedMatch.matchScore,
-        model: modelId,
+        model: getJobMatchModelId(),
         errorMessage: null,
       },
     });

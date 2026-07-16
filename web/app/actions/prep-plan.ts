@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { userFacingAiError } from "@/lib/ai/errors";
-import { generatePrepPlan } from "@/lib/ai/prep-plan";
+import { generatePrepPlan, getPrepPlanModelId } from "@/lib/ai/prep-plan";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
 import { isPlanStale } from "@/lib/plan/staleness";
 import { prisma } from "@/lib/prisma";
@@ -130,7 +130,7 @@ export async function generatePrepPlanAction(opts?: {
   const resumeSummary = reviewResult?.summary ?? null;
 
   try {
-    const { plan: generated, modelId } = await generatePrepPlan({
+    const generated = await generatePrepPlan({
       profile: {
         targetRole: profile.targetRole,
         experienceLevel: profile.experienceLevel,
@@ -146,6 +146,7 @@ export async function generatePrepPlanAction(opts?: {
     });
 
     const validated = parsePrepPlanGeneration(generated);
+    const modelId = getPrepPlanModelId();
 
     const plan = await prisma.$transaction(async (tx) => {
       // Session-level lock so concurrent regenerates for the same user serialize.

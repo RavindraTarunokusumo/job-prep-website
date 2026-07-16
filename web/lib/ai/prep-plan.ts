@@ -100,15 +100,13 @@ function buildPlanPrompt(input: GeneratePrepPlanInput): string {
 
 export async function generatePrepPlan(
   input: GeneratePrepPlanInput
-): Promise<{ plan: PrepPlanGeneration; modelId: string }> {
-  const { object, modelId } =
-    await generateObjectWithFallback<PrepPlanGeneration>({
-      schema: prepPlanGenerationSchema,
-      system: PLAN_SYSTEM_PROMPT,
-      prompt: buildPlanPrompt(input),
-    });
-
-  return { plan: object, modelId };
+): Promise<PrepPlanGeneration> {
+  const { object } = await generateObjectWithFallback<PrepPlanGeneration>({
+    schema: prepPlanGenerationSchema,
+    system: PLAN_SYSTEM_PROMPT,
+    prompt: buildPlanPrompt(input),
+  });
+  return object;
 }
 
 export function getPrepPlanModelId(): string {

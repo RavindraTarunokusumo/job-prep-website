@@ -32,14 +32,13 @@ Rules:
 
 export async function extractJobRequirements(
   rawText: string
-): Promise<{ requirements: JobRequirements; modelId: string }> {
-  const { object, modelId } = await generateObjectWithFallback<JobRequirements>({
+): Promise<JobRequirements> {
+  const { object } = await generateObjectWithFallback<JobRequirements>({
     schema: jobRequirementsSchema,
     system: EXTRACT_SYSTEM_PROMPT,
     prompt: `Job description text:\n\n${rawText}`,
   });
-
-  return { requirements: object, modelId };
+  return object;
 }
 
 export type ScoreJobMatchInput = {
@@ -53,7 +52,7 @@ export type ScoreJobMatchInput = {
 
 export async function scoreJobMatch(
   input: ScoreJobMatchInput
-): Promise<{ result: JobMatchResult; modelId: string }> {
+): Promise<JobMatchResult> {
   const parts = [
     `Target role (profile): ${input.targetRole}`,
     `Experience level (profile): ${input.experienceLevel}`,
@@ -67,13 +66,12 @@ export async function scoreJobMatch(
     input.resumeText,
   ];
 
-  const { object, modelId } = await generateObjectWithFallback<JobMatchResult>({
+  const { object } = await generateObjectWithFallback<JobMatchResult>({
     schema: jobMatchResultSchema,
     system: MATCH_SYSTEM_PROMPT,
     prompt: parts.join("\n"),
   });
-
-  return { result: object, modelId };
+  return object;
 }
 
 export function getJobMatchModelId(): string {
