@@ -108,7 +108,7 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 ### Tasks
 
 - [x] **13.1 JOB-59** Assessment practice data model
-- [ ] **13.2 JOB-60** Seed original MVP assessment question bank
+- [x] **13.2 JOB-60** Seed original MVP assessment question bank
 - [ ] **13.3 JOB-61** Assessment practice UI (`/assessments`)
 - [ ] **13.4 JOB-62** Assessment scoring and result summaries
 

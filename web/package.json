@@ -9,7 +9,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate",
+    "seed:assessments": "npx tsx scripts/seed-assessments.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^4.0.15",
