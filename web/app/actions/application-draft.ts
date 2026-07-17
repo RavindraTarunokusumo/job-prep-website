@@ -30,6 +30,8 @@ import {
   type Length,
   type Tone,
 } from "@/lib/validation/application-draft";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { trackEvent } from "@/lib/analytics/track";
 
 const SHORT_MESSAGE_TYPES = new Set<string>([
   "recruiter_dm",
@@ -267,6 +269,12 @@ export async function generateCoverLetterAction(form: {
 
     revalidatePath("/cover-letter");
     revalidatePath("/dashboard");
+
+    await trackEvent({
+      userId: user.id,
+      name: ANALYTICS_EVENTS.COVER_LETTER_GEN,
+      props: { draftId: draft.id },
+    });
 
     return { ok: true, draftId: draft.id };
   } catch (error) {

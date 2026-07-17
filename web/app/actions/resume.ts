@@ -22,6 +22,8 @@ import {
   validateResumeUpload,
 } from "@/lib/validation/resume";
 import type { ResumeDocument } from "@prisma/client";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { trackEvent } from "@/lib/analytics/track";
 
 export type ResumeActionState = {
   error?: string;
@@ -210,6 +212,17 @@ export async function uploadResume(
   }
 
   await processResumeDocument(documentId, user.id);
+
+  await trackEvent({
+    userId: user.id,
+    name: ANALYTICS_EVENTS.CV_UPLOAD,
+    props: {
+      documentId,
+      mimeType: file.type,
+      byteSize: file.size,
+    },
+  });
+
   redirect(`/resume/review?id=${documentId}`);
 }
 

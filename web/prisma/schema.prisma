@@ -23,6 +23,21 @@ model User {
   interviewSessions  InterviewSession[]
   consents           UserConsent[]
   dataRequests       DataRequest[]
+  analyticsEvents    AnalyticsEvent[]
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  userId    String?  @db.Uuid
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name      String
+  props     Json?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([name])
+  @@index([createdAt])
+  @@index([userId, name])
 }
 
 model UserConsent {

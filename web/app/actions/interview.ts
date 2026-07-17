@@ -15,6 +15,8 @@ import { getProfileForUser, requireUser } from "@/lib/auth/session";
 import { requireAiConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 import { getResumeTextContent } from "@/lib/resume/content";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { trackEvent } from "@/lib/analytics/track";
 import type { InterviewFeedback } from "@/lib/validation/interview";
 
 const EXCERPT_MAX_CHARS = 8_000;
@@ -177,6 +179,12 @@ export async function startInterviewSessionAction(form: {
 
     revalidatePath("/interview");
     revalidatePath("/dashboard");
+
+    await trackEvent({
+      userId: user.id,
+      name: ANALYTICS_EVENTS.MOCK_INTERVIEW_START,
+      props: { sessionId: session.id },
+    });
 
     return { ok: true, sessionId: session.id };
   } catch (error) {
@@ -569,6 +577,12 @@ export async function completeInterviewSessionAction(form: {
       status: "completed",
       completedAt: new Date(),
     },
+  });
+
+  await trackEvent({
+    userId: user.id,
+    name: ANALYTICS_EVENTS.MOCK_INTERVIEW_COMPLETE,
+    props: { sessionId: session.id },
   });
 
   revalidatePath("/interview");

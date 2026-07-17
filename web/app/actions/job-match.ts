@@ -16,6 +16,8 @@ import {
   parseJobMatchResult,
   parseJobRequirements,
 } from "@/lib/validation/job-match";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { trackEvent } from "@/lib/analytics/track";
 
 async function getOwnedDocument(userId: string, documentId: string) {
   const doc = await prisma.resumeDocument.findUnique({
@@ -146,6 +148,16 @@ export async function analyzeJobDescriptionAction(form: {
     revalidatePath("/jobs/match");
     revalidatePath("/dashboard");
     revalidatePath("/plan");
+
+    await trackEvent({
+      userId: user.id,
+      name: ANALYTICS_EVENTS.JD_ANALYSIS,
+      props: {
+        matchId: match.id,
+        jobId: job.id,
+        matchScore: validatedMatch.matchScore,
+      },
+    });
 
     return { ok: true, matchId: match.id, jobId: job.id };
   } catch (error) {

@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ValidationMetricsCard } from "@/components/analytics/validation-metrics-card";
 import {
   getProfileForUser,
   requireUser,
@@ -42,30 +43,45 @@ export default async function DashboardPage() {
   const profile = await getProfileForUser(user.id);
   const onboardingComplete = profile?.onboardingCompletedAt != null;
 
-  const [latestReview, latestMatch, activePlan, latestCoverLetter] =
-    await Promise.all([
-      prisma.resumeReview.findFirst({
-        where: { userId: user.id, status: "completed" },
-        orderBy: { createdAt: "desc" },
-        select: { overallScore: true },
-      }),
-      prisma.jobMatchAnalysis.findFirst({
-        where: { userId: user.id, status: "completed" },
-        orderBy: { createdAt: "desc" },
-        select: { matchScore: true },
-      }),
-      prisma.preparationPlan.findFirst({
-        where: { userId: user.id, status: "active" },
-        include: {
-          items: { select: { status: true } },
-        },
-      }),
-      prisma.applicationDraft.findFirst({
-        where: { userId: user.id, type: "cover_letter" },
-        orderBy: { updatedAt: "desc" },
-        select: { id: true, title: true, status: true },
-      }),
-    ]);
+  const [
+    latestReview,
+    latestMatch,
+    activePlan,
+    latestCoverLetter,
+    eventCountRows,
+  ] = await Promise.all([
+    prisma.resumeReview.findFirst({
+      where: { userId: user.id, status: "completed" },
+      orderBy: { createdAt: "desc" },
+      select: { overallScore: true },
+    }),
+    prisma.jobMatchAnalysis.findFirst({
+      where: { userId: user.id, status: "completed" },
+      orderBy: { createdAt: "desc" },
+      select: { matchScore: true },
+    }),
+    prisma.preparationPlan.findFirst({
+      where: { userId: user.id, status: "active" },
+      include: {
+        items: { select: { status: true } },
+      },
+    }),
+    prisma.applicationDraft.findFirst({
+      where: { userId: user.id, type: "cover_letter" },
+      orderBy: { updatedAt: "desc" },
+      select: { id: true, title: true, status: true },
+    }),
+    prisma.analyticsEvent.groupBy({
+      by: ["name"],
+      where: { userId: user.id },
+      _count: { _all: true },
+    }),
+  ]);
+
+  const eventCounts: Record<string, number> = {};
+  for (const row of eventCountRows) {
+    eventCounts[row.name] = row._count._all;
+  }
 
   const planDone =
     activePlan?.items.filter((item) => item.status === "done").length ?? 0;
@@ -224,6 +240,8 @@ export default async function DashboardPage() {
               </Link>
             </CardContent>
           </Card>
+
+          <ValidationMetricsCard counts={eventCounts} />
         </div>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">

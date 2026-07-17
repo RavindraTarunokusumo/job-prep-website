@@ -14,6 +14,8 @@ import {
   onboardingFormSchema,
   type OnboardingFormInput,
 } from "@/lib/validation/onboarding";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { trackEvent } from "@/lib/analytics/track";
 
 export type OnboardingActionState = {
   error?: string;
@@ -70,6 +72,7 @@ export async function saveProfile(
   });
 
   const now = new Date();
+  const firstTime = existing?.onboardingCompletedAt == null;
   const onboardingCompletedAt = existing?.onboardingCompletedAt ?? now;
 
   await prisma.profile.upsert({
@@ -84,6 +87,14 @@ export async function saveProfile(
       onboardingCompletedAt,
     },
   });
+
+  if (firstTime) {
+    await trackEvent({
+      userId: user.id,
+      name: ANALYTICS_EVENTS.ONBOARDING_COMPLETE,
+      props: { firstTime: true },
+    });
+  }
 
   const cookieStore = await cookies();
   cookieStore.set(ONBOARDING_COOKIE, onboardingCookieValue(true), {

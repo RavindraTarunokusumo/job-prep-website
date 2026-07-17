@@ -7,6 +7,7 @@ import {
   generatePrepPlanAction,
   updatePlanItemStatusAction,
 } from "@/app/actions/prep-plan";
+import { WorkflowFeedbackPrompt } from "@/components/analytics/workflow-feedback-prompt";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -68,6 +69,7 @@ export function PlanChecklist({ plan, stale, canGenerate }: PlanChecklistProps) 
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [feedbackPlanId, setFeedbackPlanId] = useState<string | null>(null);
 
   function handleGenerate() {
     setError(null);
@@ -77,6 +79,7 @@ export function PlanChecklist({ plan, stale, canGenerate }: PlanChecklistProps) 
         setError(result.error);
         return;
       }
+      setFeedbackPlanId(result.planId);
       router.refresh();
     });
   }
@@ -89,6 +92,7 @@ export function PlanChecklist({ plan, stale, canGenerate }: PlanChecklistProps) 
         setError(result.error);
         return;
       }
+      setFeedbackPlanId(result.planId);
       router.refresh();
     });
   }
@@ -161,6 +165,15 @@ export function PlanChecklist({ plan, stale, canGenerate }: PlanChecklistProps) 
         <p className="text-sm text-destructive" role="alert">
           {error}
         </p>
+      ) : null}
+
+      {feedbackPlanId ? (
+        <WorkflowFeedbackPrompt
+          key={`prep_plan-${feedbackPlanId}`}
+          context="prep_plan"
+          relatedId={feedbackPlanId}
+          title="How useful is this prep plan?"
+        />
       ) : null}
 
       {plan?.summary ? (

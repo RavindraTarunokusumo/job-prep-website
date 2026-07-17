@@ -8,6 +8,7 @@ import {
   startInterviewSessionAction,
   submitInterviewAnswerAction,
 } from "@/app/actions/interview";
+import { WorkflowFeedbackPrompt } from "@/components/analytics/workflow-feedback-prompt";
 import {
   FeedbackPanel,
   SessionFeedbackSummary,
@@ -521,6 +522,16 @@ function ClosedSession({ session }: { session: SessionSnapshot }) {
           </li>
         ))}
       </ul>
+
+
+      {session.status === "completed" ? (
+        <WorkflowFeedbackPrompt
+          key={`mock_interview-${session.id}`}
+          context="mock_interview"
+          relatedId={session.id}
+          title="How useful was this mock interview?"
+        />
+      ) : null}
     </div>
   );
 }
