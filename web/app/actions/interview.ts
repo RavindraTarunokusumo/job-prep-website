@@ -11,6 +11,8 @@ import { prisma } from "@/lib/prisma";
 import { getResumeTextContent } from "@/lib/resume/content";
 
 const EXCERPT_MAX_CHARS = 8_000;
+/** Max stored length for a single mock-interview answer (plain text). */
+const ANSWER_MAX_CHARS = 8_000;
 
 type ActionOk = { ok: true; sessionId: string };
 type ActionErr = { ok: false; error: string };
@@ -204,6 +206,12 @@ export async function submitInterviewAnswerAction(form: {
   if (!answer) {
     return { ok: false, error: "Write an answer before submitting." };
   }
+  if (answer.length > ANSWER_MAX_CHARS) {
+    return {
+      ok: false,
+      error: `Keep your answer under ${ANSWER_MAX_CHARS.toLocaleString()} characters.`,
+    };
+  }
 
   const session = await prisma.interviewSession.findUnique({
     where: { id: form.sessionId },
@@ -228,7 +236,7 @@ export async function submitInterviewAnswerAction(form: {
     return { ok: false, error: "Question not found in this session." };
   }
 
-  // Idempotent: already answered with same or any text → treat as success
+  // Idempotent: already answered → do not overwrite; advance based on current state
   if (turn.answer != null && turn.answeredAt != null) {
     const next = session.turns.find(
       (t) => t.answeredAt == null && t.orderIndex > turn.orderIndex
@@ -241,15 +249,38 @@ export async function submitInterviewAnswerAction(form: {
     };
   }
 
-  await prisma.interviewTurn.update({
-    where: { id: turn.id },
+  // Atomic write: only set answer when still unanswered (reduces TOCTOU races)
+  const updated = await prisma.interviewTurn.updateMany({
+    where: {
+      id: turn.id,
+      sessionId: session.id,
+      answeredAt: null,
+    },
     data: {
       answer,
       answeredAt: new Date(),
     },
   });
 
-  // T4 will insert follow-ups here. For now, advance to next primary (or any) unanswered turn.
+  if (updated.count === 0) {
+    // Concurrent submit won; reload progress without overwriting
+    const turns = await prisma.interviewTurn.findMany({
+      where: { sessionId: session.id },
+      orderBy: { orderIndex: "asc" },
+    });
+    const current = turns.find((t) => t.id === form.turnId);
+    const next = turns.find(
+      (t) => t.answeredAt == null && t.orderIndex > (current?.orderIndex ?? -1)
+    );
+    return {
+      ok: true,
+      nextTurnId: next?.id,
+      followUp: false,
+      sessionComplete: !next,
+    };
+  }
+
+  // T4 will insert follow-ups here. For now, advance to next unanswered turn.
   const next = session.turns.find(
     (t) =>
       t.id !== turn.id &&
