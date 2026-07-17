@@ -84,7 +84,7 @@ Finish **Milestone 2**, then enter **Milestone 3** practice tools, then **Milest
 
 - [x] **5.1 JOB-42** Application draft data model (Prisma + ownership) — `95a8b26`
 - [x] **5.2 JOB-43** AI cover letter generation (structured output, no invented experience) — `493b5d8`
-- [ ] **5.3 JOB-44** Cover letter editor UI (`/cover-letter` — replace placeholder)
+- [x] **5.3 JOB-44** Cover letter editor UI (`/cover-letter` — replace placeholder) — `d848538`
 - [ ] **5.4 JOB-45** Short recruiter / application message generator
 
 ### Exit criteria
