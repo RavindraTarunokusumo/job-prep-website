@@ -18,6 +18,12 @@ Migrations: `web/prisma/migrations/`
 | `PreparationPlan` | Personalized prep plan with source snapshot IDs for staleness detection |
 | `PreparationPlanItem` | Checklist items (`category`, `status`, `priority`, optional `href` deep link) |
 | `ApplicationDraft` | Cover letters and short application messages; `type`/`status`/`tone`/`length` as strings; optional `sections`/`meta` JSON; version lineage via `supersedesId` + `version`; zod in `web/lib/validation/application-draft.ts` |
+| `AssessmentCategory` | Global aptitude practice categories (`slug` unique; `disclaimerKind` string, default `practice_only`); not user-owned |
+| `AssessmentQuestion` | Global bank items per category; `choices` JSON `[{key,label}]`; `correctAnswer` nullable for reflection; optional `difficulty` string |
+| `AssessmentAttempt` | User-owned practice run (`status`: `in_progress` \| `completed`); optional `score`/`maxScore`/`summary` JSON; `startedAt`/`completedAt` |
+| `AssessmentAnswer` | One answer per question per attempt (`@@unique([attemptId, questionId])`); `selectedKey` and/or `freeText`; `isCorrect` nullable for reflection |
+
+Zod enums/payloads for category slugs, attempt status, choices, and question payloads live in `web/lib/validation/assessment.ts`.
 
 ### Prisma client in Next.js dev
 
