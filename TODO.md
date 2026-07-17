@@ -25,7 +25,7 @@
 | # | Milestone | Target | Progress |
 |---|-----------|--------|----------|
 | 1 | Profile & document intake | 2026-07-31 | **Done** (JOB-18, JOB-5, JOB-6) |
-| 2 | Application readiness tools | 2026-08-31 | **JOB-7/8/10 done** · **JOB-9 in progress** (JOB-79 skip) |
+| 2 | Application readiness tools | 2026-08-31 | **JOB-7/8/9/10 done** (JOB-79 skip) · PR pending for JOB-9 |
 | 3 | Interview practice & assessment | 2026-09-30 | 0% — JOB-11 → 12 → 13 → 14 |
 | 4 | Report, launch polish & validation | 2026-10-31 | 0% — JOB-16 early, then 15/17 |
 
@@ -56,7 +56,7 @@ Finish **Milestone 2**, then enter **Milestone 3** practice tools, then **Milest
 | **2** Auth & onboarding | **Done** | JOB-5 | PR #2 |
 | **3** CV upload & parsing | **Done** | JOB-6 | PR #3 |
 | **4** Checker / JD match / plan | **Done** | JOB-7/8/10 | PR #4 `3f324f5` |
-| **5** Cover letter & messages | **In progress** | JOB-9 | Children JOB-42…45 · Autopilot |
+| **5** Cover letter & messages | **Done (PR pending)** | JOB-9 | Children JOB-42…45 |
 | **6** Text mock + feedback | Pending | JOB-11 + JOB-12 | Children JOB-50…58 |
 | **7** Assessments & videos | Pending | JOB-13 + JOB-14 | Children JOB-59…66 |
 | **8** Report, privacy, metrics | Pending | JOB-15/16/17 | Children JOB-67…78 |
@@ -85,7 +85,7 @@ Finish **Milestone 2**, then enter **Milestone 3** practice tools, then **Milest
 - [x] **5.1 JOB-42** Application draft data model (Prisma + ownership) — `95a8b26`
 - [x] **5.2 JOB-43** AI cover letter generation (structured output, no invented experience) — `493b5d8`
 - [x] **5.3 JOB-44** Cover letter editor UI (`/cover-letter` — replace placeholder) — `d848538`
-- [ ] **5.4 JOB-45** Short recruiter / application message generator
+- [x] **5.4 JOB-45** Short recruiter / application message generator — `a22609c`
 
 ### Exit criteria
 
