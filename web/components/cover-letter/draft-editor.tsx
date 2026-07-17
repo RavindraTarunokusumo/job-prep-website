@@ -118,7 +118,9 @@ export function DraftEditor({
   const [intro, setIntro] = useState(initialDraft?.sections?.intro ?? "");
   const [body, setBody] = useState(initialDraft?.sections?.body ?? "");
   const [closing, setClosing] = useState(initialDraft?.sections?.closing ?? "");
-  const hasSections = initialDraft?.sections != null;
+  const [hasSections, setHasSections] = useState(
+    initialDraft?.sections != null
+  );
   const [tone, setTone] = useState<Tone>(parseTone(initialDraft?.tone));
   const [length, setLength] = useState<Length>(
     parseLength(initialDraft?.length)
@@ -141,6 +143,12 @@ export function DraftEditor({
     [jobs, jobDescriptionId]
   );
 
+  const composedFromSections = useMemo(() => {
+    if (!hasSections) return null;
+    if (!intro.trim() || !body.trim() || !closing.trim()) return null;
+    return composeContentFromSections({ intro, body, closing });
+  }, [hasSections, intro, body, closing]);
+
   const updateSection = useCallback(
     (key: keyof DraftSections, value: string) => {
       const next = {
@@ -156,10 +164,23 @@ export function DraftEditor({
     [intro, body, closing]
   );
 
+  function applySections(sections: DraftSections, nextContent: string) {
+    setHasSections(true);
+    setIntro(sections.intro);
+    setBody(sections.body);
+    setClosing(sections.closing);
+    setContent(nextContent);
+  }
+
   function runAction(
     label: string,
     action: () => Promise<
-      | { ok: true; draftId?: string }
+      | {
+          ok: true;
+          draftId?: string;
+          content?: string;
+          sections?: DraftSections;
+        }
       | { ok: false; error: string }
       | { ok: true }
     >
@@ -177,9 +198,16 @@ export function DraftEditor({
 
       setStatusMessage(label);
 
+      if ("sections" in result && result.sections && result.content) {
+        applySections(result.sections, result.content);
+      }
+
       if ("draftId" in result && result.draftId) {
         setDraftId(result.draftId);
-        router.push(`/cover-letter?draftId=${result.draftId}`);
+        // New version / first generate navigates; same-id section regen stays.
+        if (result.draftId !== draftId) {
+          router.push(`/cover-letter?draftId=${result.draftId}`);
+        }
         router.refresh();
         return;
       }
@@ -224,6 +252,8 @@ export function DraftEditor({
       regenerateCoverLetterSectionAction({
         draftId,
         section,
+        tone,
+        length,
       })
     );
   }
@@ -238,10 +268,23 @@ export function DraftEditor({
       return;
     }
 
-    const sectionsPayload =
-      hasSections && intro.trim() && body.trim() && closing.trim()
-        ? { intro: intro.trim(), body: body.trim(), closing: closing.trim() }
+    // Keep structured sections only when full letter still matches them.
+    // Free-editing the main textarea drops section metadata so save cannot
+    // overwrite user content by recomposing intro/body/closing.
+    const sectionsInSync =
+      hasSections &&
+      composedFromSections != null &&
+      content.trim() === composedFromSections.trim();
+
+    const sectionsPayload = sectionsInSync
+      ? { intro: intro.trim(), body: body.trim(), closing: closing.trim() }
+      : hasSections
+        ? null
         : undefined;
+
+    if (hasSections && !sectionsInSync) {
+      setHasSections(false);
+    }
 
     runAction("Draft saved.", async () =>
       saveApplicationDraftAction({

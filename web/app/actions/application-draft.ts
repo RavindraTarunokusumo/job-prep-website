@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 import {
   generateShortMessage,
   getApplicationMessageModelId,
@@ -36,8 +37,16 @@ const SHORT_MESSAGE_TYPES = new Set<string>([
 ]);
 
 type ActionOkId = { ok: true; draftId: string };
+type ActionOkDraftPayload = {
+  ok: true;
+  draftId: string;
+  content: string;
+  sections: CoverLetterSections;
+  title?: string;
+};
 type ActionErr = { ok: false; error: string };
 type ActionResult = ActionOkId | ActionErr;
+type SectionRegenResult = ActionOkDraftPayload | ActionErr;
 
 async function getOwnedResumeDocument(userId: string, documentId: string) {
   const doc = await prisma.resumeDocument.findUnique({
@@ -280,7 +289,10 @@ export async function generateCoverLetterAction(form: {
 export async function regenerateCoverLetterSectionAction(form: {
   draftId: string;
   section: "intro" | "body" | "closing";
-}): Promise<ActionResult> {
+  /** Prefer form controls; fall back to draft metadata. */
+  tone?: string;
+  length?: string;
+}): Promise<SectionRegenResult> {
   const user = await requireUser();
 
   const profile = await getProfileForUser(user.id);
@@ -352,8 +364,12 @@ export async function regenerateCoverLetterSectionAction(form: {
     }
   }
 
-  const toneResult = toneSchema.safeParse(draft.tone ?? "professional");
-  const lengthResult = lengthSchema.safeParse(draft.length ?? "medium");
+  const toneResult = toneSchema.safeParse(
+    form.tone ?? draft.tone ?? "professional"
+  );
+  const lengthResult = lengthSchema.safeParse(
+    form.length ?? draft.length ?? "medium"
+  );
   const tone = toneResult.success ? toneResult.data : "professional";
   const length = lengthResult.success ? lengthResult.data : "medium";
 
@@ -383,6 +399,8 @@ export async function regenerateCoverLetterSectionAction(form: {
         status: "draft",
         sections: validatedSections,
         content,
+        tone,
+        length,
         model,
         errorMessage: null,
       },
@@ -391,7 +409,12 @@ export async function regenerateCoverLetterSectionAction(form: {
     revalidatePath("/cover-letter");
     revalidatePath("/dashboard");
 
-    return { ok: true, draftId: draft.id };
+    return {
+      ok: true,
+      draftId: draft.id,
+      content,
+      sections: validatedSections,
+    };
   } catch (error) {
     const message = userFacingAiError(
       error,
@@ -578,7 +601,8 @@ export async function saveApplicationDraftAction(form: {
   draftId: string;
   title?: string;
   content: string;
-  sections?: { intro: string; body: string; closing: string };
+  /** Pass sections to keep structured panels; null clears them; omit leaves DB value. */
+  sections?: { intro: string; body: string; closing: string } | null;
 }): Promise<{ ok: true } | ActionErr> {
   const user = await requireUser();
 
@@ -593,7 +617,7 @@ export async function saveApplicationDraftAction(form: {
   }
 
   let sections: CoverLetterSections | undefined;
-  if (form.sections) {
+  if (form.sections != null) {
     const parsed = coverLetterSectionsSchema.safeParse(form.sections);
     if (!parsed.success) {
       return {
@@ -607,12 +631,18 @@ export async function saveApplicationDraftAction(form: {
   const title =
     form.title !== undefined ? form.title.trim() || draft.title : undefined;
 
+  // Prefer the client-provided full content (user edits win). Sections are
+  // stored as structured metadata only when the client still has them in sync.
   await prisma.applicationDraft.update({
     where: { id: draft.id },
     data: {
-      content: sections ? composeContentFromSections(sections) : content,
+      content,
       ...(title !== undefined ? { title } : {}),
-      ...(sections ? { sections } : {}),
+      ...(form.sections === null
+        ? { sections: Prisma.JsonNull }
+        : sections
+          ? { sections }
+          : {}),
       status: draft.status === "failed" ? "draft" : draft.status,
       errorMessage: null,
     },
