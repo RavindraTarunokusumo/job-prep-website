@@ -168,6 +168,7 @@ export function PlanChecklist({ plan, stale, canGenerate }: PlanChecklistProps) 
 
       {feedbackPlanId ? (
         <WorkflowFeedbackPrompt
+          key={`prep_plan-${feedbackPlanId}`}
           context="prep_plan"
           relatedId={feedbackPlanId}
           title="How useful is this prep plan?"

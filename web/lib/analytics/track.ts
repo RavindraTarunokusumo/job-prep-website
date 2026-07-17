@@ -56,12 +56,13 @@ export type TrackEventInput = {
 /**
  * Server-safe event logger. Persists AnalyticsEvent rows.
  * Never throws — analytics must not break product flows.
+ * Returns whether the row was stored (for feedback UI correctness).
  */
-export async function trackEvent(input: TrackEventInput): Promise<void> {
+export async function trackEvent(input: TrackEventInput): Promise<boolean> {
   try {
     const name = String(input.name ?? "").trim();
     if (!name) {
-      return;
+      return false;
     }
 
     const props = sanitizeAnalyticsProps(input.props ?? undefined);
@@ -79,9 +80,11 @@ export async function trackEvent(input: TrackEventInput): Promise<void> {
           : {}),
       },
     });
+    return true;
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
       console.warn("[analytics] trackEvent failed", error);
     }
+    return false;
   }
 }

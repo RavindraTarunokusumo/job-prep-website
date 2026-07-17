@@ -42,7 +42,7 @@ export async function submitFeedbackAction(input: {
       ? input.relatedId.trim()
       : undefined;
 
-  await trackEvent({
+  const saved = await trackEvent({
     userId: user.id,
     name: ANALYTICS_EVENTS.FEEDBACK_RATING,
     props: {
@@ -52,6 +52,13 @@ export async function submitFeedbackAction(input: {
       ...(relatedId ? { relatedId } : {}),
     },
   });
+
+  if (!saved) {
+    return {
+      ok: false,
+      error: "Could not save feedback right now. Please try again.",
+    };
+  }
 
   return { ok: true };
 }

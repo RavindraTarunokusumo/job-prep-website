@@ -461,6 +461,7 @@ function ClosedSession({ session }: { session: SessionSnapshot }) {
 
       {session.status === "completed" ? (
         <WorkflowFeedbackPrompt
+          key={`mock_interview-${session.id}`}
           context="mock_interview"
           relatedId={session.id}
           title="How useful was this mock interview?"

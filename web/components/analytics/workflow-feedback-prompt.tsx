@@ -18,6 +18,7 @@ type WorkflowFeedbackPromptProps = {
 /**
  * Lightweight post-workflow 1–5 rating + optional comment (JOB-78).
  * Stored as AnalyticsEvent name=feedback_rating.
+ * Parent should pass a stable `key` including relatedId so state resets on new entity.
  */
 export function WorkflowFeedbackPrompt({
   context,
