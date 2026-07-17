@@ -21,7 +21,8 @@ export function VideoAdminForm() {
     setError(null);
     setSuccess(null);
 
-    const fd = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
     const title = String(fd.get("title") ?? "").trim();
     const url = String(fd.get("url") ?? "").trim();
     const categoryTags = parseTagList(String(fd.get("categoryTags") ?? ""));
@@ -56,7 +57,7 @@ export function VideoAdminForm() {
       }
 
       setSuccess("Video entry saved to the global library.");
-      e.currentTarget.reset();
+      form.reset();
       router.refresh();
     });
   }

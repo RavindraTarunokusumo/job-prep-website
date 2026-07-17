@@ -17,9 +17,26 @@ export type VideoCategoryTag = z.infer<typeof videoCategoryTagSchema>;
 
 const nonEmptyString = z.string().trim().min(1);
 
+/** Only allow http(s) watch links — blocks javascript:/data: on rendered hrefs. */
+const httpUrlSchema = z
+  .string()
+  .trim()
+  .url()
+  .refine(
+    (value) => {
+      try {
+        const protocol = new URL(value).protocol;
+        return protocol === "http:" || protocol === "https:";
+      } catch {
+        return false;
+      }
+    },
+    { message: "URL must start with http:// or https://" }
+  );
+
 export const interviewVideoCreateSchema = z.object({
   title: nonEmptyString.max(200),
-  url: z.string().trim().url(),
+  url: httpUrlSchema,
   categoryTags: z.array(nonEmptyString.max(64)).min(1).max(20),
   targetRoles: z.array(nonEmptyString.max(120)).max(20).default([]),
   targetIndustries: z.array(nonEmptyString.max(120)).max(20).default([]),
