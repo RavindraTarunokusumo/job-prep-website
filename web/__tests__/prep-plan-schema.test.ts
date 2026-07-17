@@ -47,6 +47,22 @@ describe("prepPlanGenerationSchema", () => {
     };
     expect(prepPlanGenerationSchema.safeParse(invalid).success).toBe(false);
   });
+
+  it("accepts relative hrefs with optional query (video library filters)", () => {
+    const withVideos = {
+      ...validPlan,
+      items: [
+        {
+          category: "interview" as const,
+          title: "Watch behavioral interview tips",
+          reason: "Interview prep gap.",
+          priority: 3,
+          href: "/videos?category=behavioral",
+        },
+      ],
+    };
+    expect(prepPlanGenerationSchema.safeParse(withVideos).success).toBe(true);
+  });
 });
 
 describe("prepPlanItemStatusSchema", () => {

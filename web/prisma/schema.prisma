@@ -360,3 +360,24 @@ model InterviewTurn {
   @@index([sessionId])
   @@index([sessionId, orderIndex])
 }
+
+// Global curated interview video library (not user-owned). Human-made / external hosts only.
+model InterviewVideo {
+  id                String   @id @default(cuid())
+  title             String
+  url               String
+  // e.g. behavioral, technical, case, motivation
+  categoryTags      String[] @default([])
+  // Empty arrays mean "all" for that filter dimension
+  targetRoles       String[] @default([])
+  targetIndustries  String[] @default([])
+  experienceLevels  String[] @default([])
+  summary           String?  @db.Text
+  transcript        String?  @db.Text
+  published         Boolean  @default(true)
+  sortOrder         Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([published])
+}

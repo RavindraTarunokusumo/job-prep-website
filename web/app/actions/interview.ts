@@ -2,15 +2,22 @@
 
 import { revalidatePath } from "next/cache";
 import {
+  generateAnswerFeedback,
+  getInterviewFeedbackModelId,
+} from "@/lib/ai/interview-feedback";
+import { userFacingAiError } from "@/lib/ai/errors";
+import { decideFollowUp } from "@/lib/ai/interview-follow-up";
+import {
   generateInterviewQuestions,
   getInterviewQuestionsModelId,
 } from "@/lib/ai/interview-questions";
-import { userFacingAiError } from "@/lib/ai/errors";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { requireAiConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 import { getResumeTextContent } from "@/lib/resume/content";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { trackEvent } from "@/lib/analytics/track";
+import type { InterviewFeedback } from "@/lib/validation/interview";
 
 const EXCERPT_MAX_CHARS = 8_000;
 /** Max stored length for a single mock-interview answer (plain text). */
@@ -62,6 +69,9 @@ export async function startInterviewSessionAction(form: {
   preparationPlanItemId?: string;
 }): Promise<StartResult> {
   const user = await requireUser();
+
+  const consent = await requireAiConsent(user.id);
+  if (!consent.ok) return consent;
 
   const profile = await getProfileForUser(user.id);
   if (!profile?.onboardingCompletedAt) {
@@ -193,15 +203,139 @@ type SubmitOk = {
   nextTurnId?: string;
   followUp?: boolean;
   sessionComplete?: boolean;
+  feedback?: InterviewFeedback;
 };
 type SubmitResult = SubmitOk | ActionErr;
 
 type SessionActionOk = { ok: true };
 type SessionActionResult = SessionActionOk | ActionErr;
 
+type TurnRow = {
+  id: string;
+  kind: string;
+  category: string | null;
+  orderIndex: number;
+  question: string;
+  answer: string | null;
+  answeredAt: Date | null;
+  parentTurnId: string | null;
+  feedback: unknown;
+};
+
+function nextUnansweredAfter(
+  turns: TurnRow[],
+  fromOrderIndex: number
+): TurnRow | undefined {
+  return turns.find(
+    (t) => t.answeredAt == null && t.orderIndex > fromOrderIndex
+  );
+}
+
+async function loadSessionTurns(sessionId: string): Promise<TurnRow[]> {
+  return prisma.interviewTurn.findMany({
+    where: { sessionId },
+    orderBy: { orderIndex: "asc" },
+    select: {
+      id: true,
+      kind: true,
+      category: true,
+      orderIndex: true,
+      question: true,
+      answer: true,
+      answeredAt: true,
+      parentTurnId: true,
+      feedback: true,
+    },
+  });
+}
+
 /**
- * Save an answer on a turn. T3 stub: no follow-up decision, no feedback.
- * Advances to the next unanswered turn by orderIndex when present.
+ * Insert at most one follow-up turn immediately after the primary, shifting
+ * later orderIndex values by +1. Returns the new follow-up turn id.
+ */
+async function insertFollowUpTurn(input: {
+  sessionId: string;
+  parentTurnId: string;
+  afterOrderIndex: number;
+  question: string;
+}): Promise<string> {
+  return prisma.$transaction(async (tx) => {
+    // Cap: never create a second follow-up for the same primary.
+    const existing = await tx.interviewTurn.findFirst({
+      where: {
+        sessionId: input.sessionId,
+        parentTurnId: input.parentTurnId,
+        kind: "follow_up",
+      },
+      select: { id: true },
+    });
+    if (existing) {
+      return existing.id;
+    }
+
+    await tx.interviewTurn.updateMany({
+      where: {
+        sessionId: input.sessionId,
+        orderIndex: { gt: input.afterOrderIndex },
+      },
+      data: {
+        orderIndex: { increment: 1 },
+      },
+    });
+
+    const created = await tx.interviewTurn.create({
+      data: {
+        sessionId: input.sessionId,
+        kind: "follow_up",
+        category: "follow_up",
+        orderIndex: input.afterOrderIndex + 1,
+        question: input.question,
+        parentTurnId: input.parentTurnId,
+      },
+    });
+
+    return created.id;
+  });
+}
+
+async function scorePrimaryTurn(input: {
+  primary: TurnRow;
+  targetRole: string;
+  followUp?: TurnRow | null;
+}): Promise<InterviewFeedback | undefined> {
+  const answer = input.primary.answer?.trim();
+  if (!answer) {
+    return undefined;
+  }
+
+  // Skip re-score if feedback already persisted (idempotent).
+  if (input.primary.feedback != null) {
+    return undefined;
+  }
+
+  const feedback = await generateAnswerFeedback({
+    question: input.primary.question,
+    answer,
+    targetRole: input.targetRole,
+    category: input.primary.category,
+    followUpQuestion: input.followUp?.question,
+    followUpAnswer: input.followUp?.answer,
+  });
+
+  await prisma.interviewTurn.update({
+    where: { id: input.primary.id },
+    data: {
+      feedback,
+      feedbackModel: getInterviewFeedbackModelId(),
+    },
+  });
+
+  return feedback;
+}
+
+/**
+ * Save an answer, optionally ask one contextual follow-up (max 1 per primary),
+ * and persist coaching feedback when the primary unit is settled.
  */
 export async function submitInterviewAnswerAction(form: {
   sessionId: string;
@@ -246,13 +380,13 @@ export async function submitInterviewAnswerAction(form: {
 
   // Idempotent: already answered → do not overwrite; advance based on current state
   if (turn.answer != null && turn.answeredAt != null) {
-    const next = session.turns.find(
-      (t) => t.answeredAt == null && t.orderIndex > turn.orderIndex
-    );
+    const turns = await loadSessionTurns(session.id);
+    const current = turns.find((t) => t.id === form.turnId);
+    const next = nextUnansweredAfter(turns, current?.orderIndex ?? -1);
     return {
       ok: true,
       nextTurnId: next?.id,
-      followUp: false,
+      followUp: next?.kind === "follow_up" && next.parentTurnId === turn.id,
       sessionComplete: !next,
     };
   }
@@ -272,14 +406,9 @@ export async function submitInterviewAnswerAction(form: {
 
   if (updated.count === 0) {
     // Concurrent submit won; reload progress without overwriting
-    const turns = await prisma.interviewTurn.findMany({
-      where: { sessionId: session.id },
-      orderBy: { orderIndex: "asc" },
-    });
+    const turns = await loadSessionTurns(session.id);
     const current = turns.find((t) => t.id === form.turnId);
-    const next = turns.find(
-      (t) => t.answeredAt == null && t.orderIndex > (current?.orderIndex ?? -1)
-    );
+    const next = nextUnansweredAfter(turns, current?.orderIndex ?? -1);
     return {
       ok: true,
       nextTurnId: next?.id,
@@ -288,13 +417,112 @@ export async function submitInterviewAnswerAction(form: {
     };
   }
 
-  // T4 will insert follow-ups here. For now, advance to next unanswered turn.
-  const next = session.turns.find(
-    (t) =>
-      t.id !== turn.id &&
-      t.answeredAt == null &&
-      t.orderIndex > turn.orderIndex
-  );
+  let turns = await loadSessionTurns(session.id);
+  const answeredTurn = turns.find((t) => t.id === form.turnId);
+  if (!answeredTurn) {
+    revalidatePath("/interview");
+    return { ok: true, sessionComplete: true };
+  }
+
+  const consent = await requireAiConsent(user.id);
+  const canUseAi = consent.ok;
+
+  let followUpCreated = false;
+  let feedback: InterviewFeedback | undefined;
+
+  try {
+    if (answeredTurn.kind === "primary") {
+      const existingFollowUp = turns.find(
+        (t) =>
+          t.kind === "follow_up" && t.parentTurnId === answeredTurn.id
+      );
+
+      if (!existingFollowUp && canUseAi) {
+        try {
+          const decision = await decideFollowUp({
+            question: answeredTurn.question,
+            answer,
+            targetRole: session.targetRole,
+            category: answeredTurn.category,
+          });
+
+          if (
+            decision.askFollowUp &&
+            decision.followUpQuestion?.trim()
+          ) {
+            const followUpId = await insertFollowUpTurn({
+              sessionId: session.id,
+              parentTurnId: answeredTurn.id,
+              afterOrderIndex: answeredTurn.orderIndex,
+              question: decision.followUpQuestion.trim(),
+            });
+            followUpCreated = true;
+            turns = await loadSessionTurns(session.id);
+
+            revalidatePath("/interview");
+            revalidatePath("/dashboard");
+
+            return {
+              ok: true,
+              nextTurnId: followUpId,
+              followUp: true,
+              sessionComplete: false,
+            };
+          }
+        } catch (error) {
+          console.warn(
+            "[interview] follow-up decision failed; continuing without follow-up",
+            error
+          );
+        }
+      }
+
+      // No follow-up (or already had one / AI skipped): score the primary unit.
+      if (canUseAi) {
+        try {
+          const scored = await scorePrimaryTurn({
+            primary: { ...answeredTurn, answer },
+            targetRole: session.targetRole,
+            followUp: existingFollowUp ?? null,
+          });
+          if (scored) feedback = scored;
+        } catch (error) {
+          console.warn(
+            "[interview] feedback generation failed after primary answer",
+            error
+          );
+        }
+      }
+    } else if (answeredTurn.kind === "follow_up" && canUseAi) {
+      // Score primary after follow-up resolved.
+      const primary =
+        (answeredTurn.parentTurnId
+          ? turns.find((t) => t.id === answeredTurn.parentTurnId)
+          : null) ?? null;
+
+      if (primary?.answer) {
+        try {
+          const scored = await scorePrimaryTurn({
+            primary,
+            targetRole: session.targetRole,
+            followUp: { ...answeredTurn, answer },
+          });
+          if (scored) feedback = scored;
+        } catch (error) {
+          console.warn(
+            "[interview] feedback generation failed after follow-up answer",
+            error
+          );
+        }
+      }
+    }
+  } catch (error) {
+    // Answer is already saved; surface a soft failure only if everything blew up.
+    console.error("[interview] post-answer pipeline error", error);
+  }
+
+  turns = await loadSessionTurns(session.id);
+  const next = nextUnansweredAfter(turns, answeredTurn.orderIndex);
 
   revalidatePath("/interview");
   revalidatePath("/dashboard");
@@ -302,8 +530,9 @@ export async function submitInterviewAnswerAction(form: {
   return {
     ok: true,
     nextTurnId: next?.id,
-    followUp: false,
+    followUp: followUpCreated,
     sessionComplete: !next,
+    feedback,
   };
 }
 

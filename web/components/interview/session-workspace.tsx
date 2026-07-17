@@ -9,10 +9,15 @@ import {
   submitInterviewAnswerAction,
 } from "@/app/actions/interview";
 import { WorkflowFeedbackPrompt } from "@/components/analytics/workflow-feedback-prompt";
+import {
+  FeedbackPanel,
+  SessionFeedbackSummary,
+} from "@/components/interview/feedback-panel";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import type { InterviewFeedback } from "@/lib/validation/interview";
 
 const selectClassName =
   "w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground shadow-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50";
@@ -36,6 +41,8 @@ export type TurnSnapshot = {
   question: string;
   answer: string | null;
   answeredAt: string | null;
+  parentTurnId: string | null;
+  feedback: InterviewFeedback | null;
 };
 
 export type SessionSnapshot = {
@@ -200,6 +207,10 @@ function ActiveSession({ session }: { session: SessionSnapshot }) {
     totalCount > 0 ? Math.round((answeredCount / totalCount) * 100) : 0;
   const allAnswered = totalCount > 0 && answeredCount === totalCount;
 
+  const primaryWithFeedback = session.turns.filter(
+    (t) => t.kind === "primary" && t.feedback != null
+  );
+
   function handleSubmit() {
     if (!currentTurn) return;
     setError(null);
@@ -221,8 +232,16 @@ function ActiveSession({ session }: { session: SessionSnapshot }) {
         return;
       }
       setAnswer("");
-      if (result.sessionComplete) {
-        setStatusMessage("All questions answered. You can complete the session.");
+      if (result.followUp) {
+        setStatusMessage(
+          "Follow-up question ready — dig into the missing detail."
+        );
+      } else if (result.sessionComplete) {
+        setStatusMessage(
+          "All questions answered. Review coaching feedback, then complete the session."
+        );
+      } else if (result.feedback) {
+        setStatusMessage("Answer saved with coaching feedback.");
       }
       router.refresh();
     });
@@ -309,6 +328,9 @@ function ActiveSession({ session }: { session: SessionSnapshot }) {
             <Badge variant="outline" className="capitalize">
               {categoryLabel(currentTurn.category)}
             </Badge>
+            {currentTurn.kind === "follow_up" ? (
+              <Badge variant="secondary">Follow-up</Badge>
+            ) : null}
             <span className="text-xs text-muted-foreground">
               Question {answeredCount + 1} of {totalCount}
             </span>
@@ -332,13 +354,26 @@ function ActiveSession({ session }: { session: SessionSnapshot }) {
             onClick={handleSubmit}
             disabled={pending || !answer.trim()}
           >
-            {pending ? "Submitting…" : "Submit answer"}
+            {pending
+              ? "Submitting (may generate follow-up or feedback)…"
+              : "Submit answer"}
           </Button>
         </div>
       ) : allAnswered ? (
-        <div className="rounded-lg border border-border bg-muted/20 px-4 py-4 text-sm text-muted-foreground">
-          You have answered every question. Complete the session to mark it
-          done. Coaching feedback arrives in a later step.
+        <div className="space-y-4">
+          <div className="rounded-lg border border-border bg-muted/20 px-4 py-4 text-sm text-muted-foreground">
+            You have answered every question. Review coaching feedback below,
+            then complete the session.
+          </div>
+          <SessionFeedbackSummary
+            items={session.turns
+              .filter((t) => t.kind === "primary")
+              .map((t) => ({
+                id: t.id,
+                question: t.question,
+                feedback: t.feedback,
+              }))}
+          />
         </div>
       ) : (
         <p className="text-sm text-muted-foreground">
@@ -357,15 +392,32 @@ function ActiveSession({ session }: { session: SessionSnapshot }) {
               .map((t) => (
                 <li
                   key={t.id}
-                  className="rounded-lg border border-border bg-muted/10 px-3 py-3 text-sm"
+                  className="space-y-3 rounded-lg border border-border bg-muted/10 px-3 py-3 text-sm"
                 >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Badge variant="outline" className="capitalize">
+                      {categoryLabel(t.category)}
+                    </Badge>
+                    {t.kind === "follow_up" ? (
+                      <Badge variant="secondary">Follow-up</Badge>
+                    ) : null}
+                  </div>
                   <p className="font-medium text-foreground">{t.question}</p>
-                  <p className="mt-2 whitespace-pre-wrap text-muted-foreground">
+                  <p className="whitespace-pre-wrap text-muted-foreground">
                     {t.answer}
                   </p>
+                  {t.feedback ? (
+                    <FeedbackPanel feedback={t.feedback} compact />
+                  ) : null}
                 </li>
               ))}
           </ul>
+          {primaryWithFeedback.length > 0 && currentTurn ? (
+            <p className="text-xs text-muted-foreground">
+              Coaching feedback appears under each scored primary answer after
+              any follow-up is resolved.
+            </p>
+          ) : null}
         </div>
       ) : null}
 
@@ -403,6 +455,8 @@ function ActiveSession({ session }: { session: SessionSnapshot }) {
 }
 
 function ClosedSession({ session }: { session: SessionSnapshot }) {
+  const primaries = session.turns.filter((t) => t.kind === "primary");
+
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -425,11 +479,19 @@ function ClosedSession({ session }: { session: SessionSnapshot }) {
         </Badge>
       </div>
 
+      <SessionFeedbackSummary
+        items={primaries.map((t) => ({
+          id: t.id,
+          question: t.question,
+          feedback: t.feedback,
+        }))}
+      />
+
       <ul className="space-y-3">
         {session.turns.map((t, index) => (
           <li
             key={t.id}
-            className="rounded-lg border border-border bg-muted/10 px-3 py-3 text-sm"
+            className="space-y-3 rounded-lg border border-border bg-muted/10 px-3 py-3 text-sm"
           >
             <div className="mb-1 flex flex-wrap items-center gap-2">
               <span className="text-xs text-muted-foreground">
@@ -439,6 +501,9 @@ function ClosedSession({ session }: { session: SessionSnapshot }) {
                 <Badge variant="outline" className="capitalize">
                   {categoryLabel(t.category)}
                 </Badge>
+              ) : null}
+              {t.kind === "follow_up" ? (
+                <Badge variant="secondary">Follow-up</Badge>
               ) : null}
             </div>
             <p className="font-medium text-foreground">{t.question}</p>
@@ -451,13 +516,13 @@ function ClosedSession({ session }: { session: SessionSnapshot }) {
                 No answer recorded.
               </p>
             )}
+            {t.feedback ? (
+              <FeedbackPanel feedback={t.feedback} compact />
+            ) : null}
           </li>
         ))}
       </ul>
 
-      <p className="text-xs text-muted-foreground">
-        Coaching feedback will appear here once scoring is enabled.
-      </p>
 
       {session.status === "completed" ? (
         <WorkflowFeedbackPrompt

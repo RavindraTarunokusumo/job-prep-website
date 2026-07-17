@@ -17,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { videoHrefForPlanItem } from "@/lib/videos/recommend";
 import type { PrepPlanItemStatus } from "@/lib/validation/prep-plan";
 
 export type PlanItemSnapshot = {
@@ -248,6 +249,24 @@ export function PlanChecklist({ plan, stale, canGenerate }: PlanChecklistProps) 
                             Open related tool →
                           </Link>
                         ) : null}
+                        {(() => {
+                          const videoHref = videoHrefForPlanItem(item);
+                          // Avoid duplicating when primary href already points at videos
+                          if (
+                            !videoHref ||
+                            (item.href && item.href.startsWith("/videos"))
+                          ) {
+                            return null;
+                          }
+                          return (
+                            <Link
+                              href={videoHref}
+                              className="block text-xs font-semibold text-brand-blue hover:underline"
+                            >
+                              Watch related interview videos →
+                            </Link>
+                          );
+                        })()}
                       </div>
                       {item.status === "todo" ? (
                         <div className="flex shrink-0 gap-2">
