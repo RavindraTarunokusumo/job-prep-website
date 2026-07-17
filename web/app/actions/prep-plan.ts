@@ -15,6 +15,8 @@ import {
   type PrepPlanItemStatus,
 } from "@/lib/validation/prep-plan";
 import { parseResumeReviewResult } from "@/lib/validation/resume-review";
+import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
+import { trackEvent } from "@/lib/analytics/track";
 
 export { isPlanStale };
 
@@ -185,6 +187,15 @@ export async function generatePrepPlanAction(opts?: {
 
     revalidatePath("/plan");
     revalidatePath("/dashboard");
+
+    await trackEvent({
+      userId: user.id,
+      name: ANALYTICS_EVENTS.PREP_PLAN_GEN,
+      props: {
+        planId: plan.id,
+        itemCount: validated.items.length,
+      },
+    });
 
     return { ok: true, planId: plan.id };
   } catch (error) {

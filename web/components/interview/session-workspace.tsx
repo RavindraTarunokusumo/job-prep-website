@@ -8,6 +8,7 @@ import {
   startInterviewSessionAction,
   submitInterviewAnswerAction,
 } from "@/app/actions/interview";
+import { WorkflowFeedbackPrompt } from "@/components/analytics/workflow-feedback-prompt";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -457,6 +458,14 @@ function ClosedSession({ session }: { session: SessionSnapshot }) {
       <p className="text-xs text-muted-foreground">
         Coaching feedback will appear here once scoring is enabled.
       </p>
+
+      {session.status === "completed" ? (
+        <WorkflowFeedbackPrompt
+          context="mock_interview"
+          relatedId={session.id}
+          title="How useful was this mock interview?"
+        />
+      ) : null}
     </div>
   );
 }

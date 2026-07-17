@@ -1,7 +1,7 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 17 July 2026 (Wave 1 — Phase 6 interview PR; JOB-13/16 merged)
-**Branch:** `feat/phase-6-mock-interview`
+**Last updated:** 17 July 2026 (Wave 2 — JOB-17 metrics)
+**Branch:** `feat/job-17-metrics`
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.  
@@ -108,4 +108,26 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 
 ## Deferred
 
-- JOB-14 videos, JOB-15 report, JOB-17 metrics, JOB-79 (skip)
+- JOB-14 videos, JOB-15 report, JOB-79 (skip)
+
+---
+
+## Wave 2 — JOB-17 MVP success metrics (**this branch**)
+
+**Spec:** [docs/specs/2026-07-17-mvp-job-17-metrics.md](docs/specs/2026-07-17-mvp-job-17-metrics.md)  
+**Plan:** [docs/superpowers/plans/2026-07-17-job-17-metrics.md](docs/superpowers/plans/2026-07-17-job-17-metrics.md)  
+**Taxonomy:** [docs/analytics-taxonomy.md](docs/analytics-taxonomy.md)  
+**Linear:** JOB-17 · Children JOB-75…78  
+**Model:** `grok-4.5` high effort · **no git** (implementer boundary)
+
+### Tasks
+
+- [x] **17.1 JOB-75** Document event taxonomy (`docs/analytics-taxonomy.md` + `web/lib/analytics/events.ts`)
+- [x] **17.2 JOB-76** Analytics module + `AnalyticsEvent` model + hooks into key actions
+- [x] **17.3 JOB-77** Validation metrics card on dashboard (per-user counts)
+- [x] **17.4 JOB-78** Post-workflow feedback prompt (interview complete + prep plan gen)
+- [x] **17.5** Migration, tests, `database.md`, full suite
+
+### Exit criteria
+
+- Funnel events persist without raw CV/JD text; dashboard shows counts; feedback 1–5 stored as events

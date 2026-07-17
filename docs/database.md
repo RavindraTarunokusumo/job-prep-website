@@ -26,6 +26,7 @@ Migrations: `web/prisma/migrations/`
 | `AssessmentAnswer` | One answer per question per attempt (`@@unique([attemptId, questionId])`); `selectedKey` and/or `freeText`; `isCorrect` nullable for reflection |
 | `UserConsent` | User acknowledgments for upload and AI processing; `kind` is `upload` \| `ai_processing`; `version` matches `CONSENT_COPY_VERSION` in `web/lib/legal/copy.ts`; unique on `(userId, kind, version)` |
 | `DataRequest` | User export/deletion requests from Settings; `type` is `export` \| `deletion`; `status` is `pending` \| `completed` \| `rejected` (default `pending`); optional `note` for operators; MVP does **not** auto-delete storage — rows are for operator handling. Immediate export JSON is metadata-only (profile + document meta + recent analysis ids; no file bytes) via `requestDataExportAction` |
+| `AnalyticsEvent` | First-party product metrics (JOB-17); `userId` optional UUID FK (SET NULL on user delete); `name` event key from `web/lib/analytics/events.ts`; `props` JSON scalars only (ids, scores, rating — **never** resume/JD/answer body text); `createdAt`. Indexes on `userId`, `name`, `createdAt`, `(userId, name)`. Taxonomy: [analytics-taxonomy.md](./analytics-taxonomy.md) |
 
 Zod enums/payloads for category slugs, attempt status, choices, and question payloads live in `web/lib/validation/assessment.ts`.
 
