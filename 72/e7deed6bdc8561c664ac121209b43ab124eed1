@@ -1,0 +1,5 @@
+Task: Wave 2 JOB-14 video library
+Summary: Video library data model, browse/admin UI, plan recommendations, seed.
+Docs: docs/specs/2026-07-17-mvp-job-14-video-library.md
+TODO: JOB-14 / JOB-63–66
+Validation: web lint, typecheck, test, build (all pass)
