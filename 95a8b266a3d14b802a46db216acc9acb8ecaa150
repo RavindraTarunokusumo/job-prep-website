@@ -1,0 +1,5 @@
+Task: 5.1 JOB-42 Application draft data model
+Summary: Prisma ApplicationDraft + migration, zod schemas/helpers, schema tests, database.md row.
+Docs: docs/database.md
+TODO: Phase 5 / 5.1 JOB-42
+Validation: npm test (59), tsc --noEmit, npm run lint
