@@ -1,6 +1,7 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 17 July 2026 (Phase 5 merged PR #5 `3c929e1`)  
+**Last updated:** 17 July 2026 (Wave 1 Autopilot — JOB-16 privacy)
+**This worktree:** JOB-16 only (`feat/job-16-privacy`)  
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.
@@ -108,10 +109,30 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 
 ---
 
-## Phase 8 — Report, privacy, metrics
+## JOB-16 — Privacy, consent, AI-use disclaimers (**this branch**)
 
-**Linear parents:** JOB-15, JOB-16, JOB-17 · Milestone 4  
+**Spec:** [docs/specs/2026-07-17-mvp-job-16-privacy-consent.md](docs/specs/2026-07-17-mvp-job-16-privacy-consent.md)  
+**Plan:** [docs/superpowers/plans/2026-07-17-job-16-privacy-consent.md](docs/superpowers/plans/2026-07-17-job-16-privacy-consent.md)  
+**Linear:** [JOB-16](https://linear.app/job-prep-website/issue/JOB-16) · Children JOB-71…74  
+**Model:** `grok-4.5`
 
 ### Tasks
 
-- [ ] **8.x** See Linear children JOB-67…78
+- [ ] **16.1 JOB-71** Draft privacy and AI-use copy + legal pages
+- [ ] **16.2 JOB-72** Consent gates (upload + AI processing)
+- [ ] **16.3 JOB-73** User data deletion/export request path
+- [ ] **16.4 JOB-74** Privacy QA checklist + tests
+
+### Exit criteria
+
+- Real /privacy and /ai-use pages
+- Upload + AI consent gates
+- Settings export/deletion requests
+- Checklist documented
+
+---
+
+## Parallel Wave 1 (other worktrees)
+
+- Phase 6 interview → `.worktree/job-11-mock-interview`
+- JOB-13 assessments → `.worktree/job-13-assessments`
