@@ -1,9 +1,10 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 17 July 2026 (Phase 5 merged PR #5 `3c929e1`)  
+**Last updated:** 17 July 2026 (Wave 1 Autopilot — Phase 6 + parallel JOB-13 / JOB-16)  
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
-**Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.
+**Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.  
+**This worktree:** Phase 6 only (`feat/phase-6-mock-interview`)
 
 | Source | Link / path |
 |--------|-------------|
@@ -53,9 +54,11 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 | **3** CV upload & parsing | **Done** | JOB-6 | PR #3 |
 | **4** Checker / JD match / plan | **Done** | JOB-7/8/10 | PR #4 `3f324f5` |
 | **5** Cover letter & messages | **Done** | JOB-9 | PR #5 `3c929e1` · JOB-42…45 |
-| **6** Text mock + feedback | **Next** | JOB-11 + JOB-12 | Children JOB-50…58 |
-| **7** Assessments & videos | Pending | JOB-13 + JOB-14 | Children JOB-59…66 |
-| **8** Report, privacy, metrics | Pending | JOB-15/16/17 | Children JOB-67…78 |
+| **6** Text mock + feedback | **In progress (this branch)** | JOB-11 + JOB-12 | Spec `docs/specs/2026-07-17-mvp-phase-6-mock-interview-feedback.md` |
+| **7** Assessments | Parallel worktree | JOB-13 | `.worktree/job-13-assessments` |
+| **7b** Videos | Pending | JOB-14 | After Wave 1 |
+| **8a** Privacy | Parallel worktree | JOB-16 | `.worktree/job-16-privacy` |
+| **8b** Report / metrics | Pending | JOB-15/17 | After Wave 1 |
 
 ---
 
@@ -69,11 +72,12 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 
 ---
 
-## Phase 6 — Text mock interview & answer feedback (**next**)
+## Phase 6 — Text mock interview & answer feedback (**this branch**)
 
-**Linear parents:**  
-- [JOB-11](https://linear.app/job-prep-website/issue/JOB-11/build-text-based-mock-interview-flow) · Milestone 3 · **High**  
-- [JOB-12](https://linear.app/job-prep-website/issue/JOB-12/create-interview-answer-feedback-and-scoring) · **Low** but pair with 11  
+**Spec:** [docs/specs/2026-07-17-mvp-phase-6-mock-interview-feedback.md](docs/specs/2026-07-17-mvp-phase-6-mock-interview-feedback.md)  
+**Plan:** [docs/superpowers/plans/2026-07-17-phase-6-mock-interview-feedback.md](docs/superpowers/plans/2026-07-17-phase-6-mock-interview-feedback.md)  
+**Linear:** JOB-11 + JOB-12 · Children JOB-50…58  
+**Model:** `grok-4.5` (Composer 2.5 unavailable)
 
 ### Tasks (JOB-11)
 
@@ -96,22 +100,11 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 
 ---
 
-## Phase 7 — Assessments & video resources
+## Parallel Wave 1 (other worktrees — do not implement here)
 
-**Linear parents:**  
-- [JOB-13](https://linear.app/job-prep-website/issue/JOB-13/add-aptitude-and-psychometric-practice-module) · Milestone 3 · **Medium**  
-- [JOB-14](https://linear.app/job-prep-website/issue/JOB-14/set-up-human-made-interview-video-library) · **Low**
+- **JOB-13** assessments → `.worktree/job-13-assessments` / `feat/job-13-assessments`
+- **JOB-16** privacy/consent → `.worktree/job-16-privacy` / `feat/job-16-privacy`
 
-### Tasks
+## Deferred
 
-- [ ] **7.x** See Linear children JOB-59…66
-
----
-
-## Phase 8 — Report, privacy, metrics
-
-**Linear parents:** JOB-15, JOB-16, JOB-17 · Milestone 4  
-
-### Tasks
-
-- [ ] **8.x** See Linear children JOB-67…78
+- JOB-14 videos, JOB-15 report, JOB-17 metrics, JOB-79 (skip)
