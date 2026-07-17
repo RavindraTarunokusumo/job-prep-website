@@ -1,6 +1,7 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 17 July 2026 (Phase 5 merged PR #5 `3c929e1`)  
+**Last updated:** 17 July 2026 (Wave 1 Autopilot — JOB-13 assessments)
+**This worktree:** JOB-13 only (`feat/job-13-assessments`)  
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.
@@ -96,22 +97,29 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 
 ---
 
-## Phase 7 — Assessments & video resources
+## JOB-13 — Aptitude & psychometric practice (**this branch**)
 
-**Linear parents:**  
-- [JOB-13](https://linear.app/job-prep-website/issue/JOB-13/add-aptitude-and-psychometric-practice-module) · Milestone 3 · **Medium**  
-- [JOB-14](https://linear.app/job-prep-website/issue/JOB-14/set-up-human-made-interview-video-library) · **Low**
+**Spec:** [docs/specs/2026-07-17-mvp-job-13-assessments.md](docs/specs/2026-07-17-mvp-job-13-assessments.md)  
+**Plan:** [docs/superpowers/plans/2026-07-17-job-13-assessments.md](docs/superpowers/plans/2026-07-17-job-13-assessments.md)  
+**Linear:** [JOB-13](https://linear.app/job-prep-website/issue/JOB-13) · Children JOB-59…62  
+**Model:** `grok-4.5`  
+**Tests:** simple schema/seed/scoring only
 
 ### Tasks
 
-- [ ] **7.x** See Linear children JOB-59…66
+- [ ] **13.1 JOB-59** Assessment practice data model
+- [ ] **13.2 JOB-60** Seed original MVP assessment question bank
+- [ ] **13.3 JOB-61** Assessment practice UI (`/assessments`)
+- [ ] **13.4 JOB-62** Assessment scoring and result summaries
+
+### Exit criteria
+
+- User can pick a category, complete practice questions, see score + explanations
+- Work-style framed as non-clinical self-reflection
 
 ---
 
-## Phase 8 — Report, privacy, metrics
+## Parallel Wave 1 (other worktrees)
 
-**Linear parents:** JOB-15, JOB-16, JOB-17 · Milestone 4  
-
-### Tasks
-
-- [ ] **8.x** See Linear children JOB-67…78
+- Phase 6 interview → `.worktree/job-11-mock-interview`
+- JOB-16 privacy → `.worktree/job-16-privacy`

@@ -26,3 +26,4 @@ Example: `2026-07-15-mvp-phase-0-1-foundation-landing.md`
 | [2026-07-15-mvp-phase-3-cv-upload-parse.md](./2026-07-15-mvp-phase-3-cv-upload-parse.md) | **Accepted (merged PR #3)** | Phase 3 CV upload/parse (JOB-6); Supabase Storage + optional GLiNER |
 | [2026-07-16-mvp-phase-4-application-readiness.md](./2026-07-16-mvp-phase-4-application-readiness.md) | **Accepted (merged PR #4)** | Phase 4 checker / JD match / prep plan (JOB-7/8/10) |
 | [2026-07-17-mvp-phase-5-cover-letter-messages.md](./2026-07-17-mvp-phase-5-cover-letter-messages.md) | **Accepted (merged PR #5)** | Phase 5 cover letter & short messages (JOB-9 / JOB-42…45) |
+| [2026-07-17-mvp-job-13-assessments.md](./2026-07-17-mvp-job-13-assessments.md) | **Accepted (Wave 1 Autopilot)** | JOB-13 assessments practice (JOB-59…62) |
