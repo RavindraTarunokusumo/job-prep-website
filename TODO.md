@@ -1,6 +1,6 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 16 July 2026 (session wrap — next-job recommendations)  
+**Last updated:** 17 July 2026 (Phase 5 Autopilot — JOB-9 cover letter & messages)  
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.
@@ -8,10 +8,13 @@
 | Source | Link / path |
 |--------|-------------|
 | Linear project | https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e |
+| Active spec | [`docs/specs/2026-07-17-mvp-phase-5-cover-letter-messages.md`](docs/specs/2026-07-17-mvp-phase-5-cover-letter-messages.md) |
+| Plan | [`docs/superpowers/plans/2026-07-17-phase-5-cover-letter-messages.md`](docs/superpowers/plans/2026-07-17-phase-5-cover-letter-messages.md) |
 | Specs | `docs/specs/` |
 | Architecture ADRs | [`docs/architecture.md`](docs/architecture.md) |
 | Phase archives | [`docs/iterations/archive/`](docs/iterations/archive/) |
 | Merged PRs | [#1](https://github.com/RavindraTarunokusumo/job-prep-website/pull/1)–[#4](https://github.com/RavindraTarunokusumo/job-prep-website/pull/4) (`3f324f5`) |
+| Branch / worktree | `feat/phase-5-cover-letter-messages` @ `.worktree/job-9-cover-letter` |
 | Subagent model | **Composer 2.5** via `grok-composer-2.5-fast` |
 | AI | `web/lib/ai/config.ts` — OpenRouter primary + fallback |
 | Out of agent scope | **JOB-79** (owned by another person — ignore) |
@@ -22,7 +25,7 @@
 | # | Milestone | Target | Progress |
 |---|-----------|--------|----------|
 | 1 | Profile & document intake | 2026-07-31 | **Done** (JOB-18, JOB-5, JOB-6) |
-| 2 | Application readiness tools | 2026-08-31 | **JOB-7/8/10 done** · next **JOB-9** (JOB-79 skip) |
+| 2 | Application readiness tools | 2026-08-31 | **JOB-7/8/10 done** · **JOB-9 in progress** (JOB-79 skip) |
 | 3 | Interview practice & assessment | 2026-09-30 | 0% — JOB-11 → 12 → 13 → 14 |
 | 4 | Report, launch polish & validation | 2026-10-31 | 0% — JOB-16 early, then 15/17 |
 
@@ -34,7 +37,7 @@ Finish **Milestone 2**, then enter **Milestone 3** practice tools, then **Milest
 
 | Priority | When | Parent | Why |
 |----------|------|--------|-----|
-| **1 — next Autopilot** | Now | [JOB-9](https://linear.app/job-prep-website/issue/JOB-9/build-cover-letter-and-application-message-generator) | Last High open item on Milestone 2; reuses profile + JD match + OpenRouter stack from Phase 4 |
+| **1 — Autopilot active** | Now | [JOB-9](https://linear.app/job-prep-website/issue/JOB-9/build-cover-letter-and-application-message-generator) | Phase 5 cover letter & messages; reuses Phase 4 OpenRouter stack |
 | **2** | After JOB-9 | [JOB-11](https://linear.app/job-prep-website/issue/JOB-11/build-text-based-mock-interview-flow) | Starts Milestone 3; High; plan items already deep-link to interview stubs |
 | **3** | With / right after 11 | [JOB-12](https://linear.app/job-prep-website/issue/JOB-12/create-interview-answer-feedback-and-scoring) | Feedback makes mock interviews useful; can ship as one phase with JOB-11 |
 | **4** | After 11/12 | [JOB-13](https://linear.app/job-prep-website/issue/JOB-13/add-aptitude-and-psychometric-practice-module) | Medium; practice content, not AI-critical path first |
@@ -53,7 +56,7 @@ Finish **Milestone 2**, then enter **Milestone 3** practice tools, then **Milest
 | **2** Auth & onboarding | **Done** | JOB-5 | PR #2 |
 | **3** CV upload & parsing | **Done** | JOB-6 | PR #3 |
 | **4** Checker / JD match / plan | **Done** | JOB-7/8/10 | PR #4 `3f324f5` |
-| **5** Cover letter & messages | **Next** | JOB-9 | Children JOB-42…45 |
+| **5** Cover letter & messages | **In progress** | JOB-9 | Children JOB-42…45 · Autopilot |
 | **6** Text mock + feedback | Pending | JOB-11 + JOB-12 | Children JOB-50…58 |
 | **7** Assessments & videos | Pending | JOB-13 + JOB-14 | Children JOB-59…66 |
 | **8** Report, privacy, metrics | Pending | JOB-15/16/17 | Children JOB-67…78 |
@@ -69,11 +72,13 @@ Finish **Milestone 2**, then enter **Milestone 3** practice tools, then **Milest
 
 ---
 
-## Phase 5 — Cover letter & application messages (**next**)
+## Phase 5 — Cover letter & application messages (**in progress**)
 
 **Linear parent:** [JOB-9](https://linear.app/job-prep-website/issue/JOB-9/build-cover-letter-and-application-message-generator) · Milestone 2 · **High**  
+**Spec:** [`docs/specs/2026-07-17-mvp-phase-5-cover-letter-messages.md`](docs/specs/2026-07-17-mvp-phase-5-cover-letter-messages.md)  
+**Plan:** [`docs/superpowers/plans/2026-07-17-phase-5-cover-letter-messages.md`](docs/superpowers/plans/2026-07-17-phase-5-cover-letter-messages.md)  
 **Depends on:** Phase 4 (profile + resume + JD context)  
-**Reuse:** `web/lib/ai/config.ts`, OpenRouter `generateObjectWithFallback`, latest `JobMatchAnalysis` / `ResumeDocument`
+**Reuse:** `web/lib/ai/config.ts`, OpenRouter `generateObjectWithFallback`, latest `JobDescription` / `ResumeDocument`
 
 ### Tasks
 
