@@ -121,7 +121,7 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 - [x] **16.1 JOB-71** Draft privacy and AI-use copy + legal pages
 - [x] **16.2 JOB-72** Consent gates (upload + AI processing)
 - [x] **16.3 JOB-73** User data deletion/export request path
-- [ ] **16.4 JOB-74** Privacy QA checklist + tests
+- [x] **16.4 JOB-74** Privacy QA checklist + tests
 
 ### Exit criteria
 
