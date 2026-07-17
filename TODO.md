@@ -1,11 +1,11 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 17 July 2026 (Wave 1 — Phase 6 interview PR; JOB-13/16 merged)
-**Branch:** `feat/phase-6-mock-interview`
+**Last updated:** 17 July 2026 (Wave 2 — interview follow-up + feedback JOB-53/54/12)
+**Branch:** `feat/wave2-interview-feedback`
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.  
-**This worktree:** Phase 6 only (`feat/phase-6-mock-interview`)
+**This worktree:** Phase 6 remainder (`.worktree/wave2-interview-feedback`)
 
 | Source | Link / path |
 |--------|-------------|
@@ -55,7 +55,7 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 | **3** CV upload & parsing | **Done** | JOB-6 | PR #3 |
 | **4** Checker / JD match / plan | **Done** | JOB-7/8/10 | PR #4 `3f324f5` |
 | **5** Cover letter & messages | **Done** | JOB-9 | PR #5 `3c929e1` · JOB-42…45 |
-| **6** Text mock + feedback | **In progress (this branch)** | JOB-11 + JOB-12 | Spec `docs/specs/2026-07-17-mvp-phase-6-mock-interview-feedback.md` |
+| **6** Text mock + feedback | **In progress (Wave 2)** | JOB-11 + JOB-12 | Base + addendum `docs/specs/2026-07-17-wave2-interview-feedback-addendum.md` |
 | **7** Assessments | Parallel worktree | JOB-13 | `.worktree/job-13-assessments` |
 | **7b** Videos | Pending | JOB-14 | After Wave 1 |
 | **8a** Privacy | Parallel worktree | JOB-16 | `.worktree/job-16-privacy` |
@@ -73,9 +73,10 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 
 ---
 
-## Phase 6 — Text mock interview & answer feedback (**this branch**)
+## Phase 6 — Text mock interview & answer feedback (**this branch / Wave 2**)
 
 **Spec:** [docs/specs/2026-07-17-mvp-phase-6-mock-interview-feedback.md](docs/specs/2026-07-17-mvp-phase-6-mock-interview-feedback.md)  
+**Wave 2 addendum:** [docs/specs/2026-07-17-wave2-interview-feedback-addendum.md](docs/specs/2026-07-17-wave2-interview-feedback-addendum.md)  
 **Plan:** [docs/superpowers/plans/2026-07-17-phase-6-mock-interview-feedback.md](docs/superpowers/plans/2026-07-17-phase-6-mock-interview-feedback.md)  
 **Linear:** JOB-11 + JOB-12 · Children JOB-50…58  
 **Model:** `grok-4.5` (Composer 2.5 unavailable)
@@ -85,27 +86,23 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 - [x] **6.1 JOB-50** Mock interview session data model
 - [x] **6.2 JOB-51** Role-based interview question generation
 - [x] **6.3 JOB-52** Text mock interview UI (`/interview`)
-- [ ] **6.4 JOB-53** Contextual follow-up question logic
-- [ ] **6.5 JOB-54** Mock interview session tests
+- [x] **6.4 JOB-53** Contextual follow-up question logic
+- [x] **6.5 JOB-54** Mock interview session tests
 
 ### Tasks (JOB-12)
 
-- [ ] **6.6 JOB-55** Interview feedback scoring schema
-- [ ] **6.7 JOB-56** AI answer feedback service
-- [ ] **6.8 JOB-57** Interview feedback results UI
-- [ ] **6.9 JOB-58** Feedback tests and safety cases
+- [x] **6.6 JOB-55** Interview feedback scoring schema
+- [x] **6.7 JOB-56** AI answer feedback service
+- [x] **6.8 JOB-57** Interview feedback results UI
+- [x] **6.9 JOB-58** Feedback tests and safety cases
 
 ### Exit criteria
 
-- User can start a mock interview from plan, answer in text, get actionable feedback
+- [x] User can start a mock interview from plan, answer in text, get actionable feedback (follow-up + coaching scores)
 
 ---
-
-## Parallel Wave 1 (other worktrees — do not implement here)
-
-- **JOB-13** assessments → `.worktree/job-13-assessments` / `feat/job-13-assessments`
-- **JOB-16** privacy/consent → `.worktree/job-16-privacy` / `feat/job-16-privacy`
 
 ## Deferred
 
 - JOB-14 videos, JOB-15 report, JOB-17 metrics, JOB-79 (skip)
+- JOB-13 / JOB-16: merged or parallel elsewhere — not in this Wave 2 scope

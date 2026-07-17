@@ -9,6 +9,7 @@ import {
   type JobOption,
   type ResumeOption,
   type SessionSnapshot,
+  type TurnSnapshot,
 } from "@/components/interview/session-workspace";
 import {
   Card,
@@ -19,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
+import { safeParseInterviewFeedback } from "@/lib/validation/interview";
 
 type InterviewPageProps = {
   searchParams: Promise<{ sessionId?: string }>;
@@ -65,6 +67,8 @@ export default async function InterviewPage({
             question: true,
             answer: true,
             answeredAt: true,
+            parentTurnId: true,
+            feedback: true,
           },
         },
       },
@@ -119,6 +123,8 @@ export default async function InterviewPage({
             question: true,
             answer: true,
             answeredAt: true,
+            parentTurnId: true,
+            feedback: true,
           },
         },
       },
@@ -131,6 +137,30 @@ export default async function InterviewPage({
     selectedRow = sessionRows.find((row) => row.status === "active") ?? null;
   }
 
+  function toTurnSnapshot(t: {
+    id: string;
+    kind: string;
+    category: string | null;
+    orderIndex: number;
+    question: string;
+    answer: string | null;
+    answeredAt: Date | null;
+    parentTurnId: string | null;
+    feedback: unknown;
+  }): TurnSnapshot {
+    return {
+      id: t.id,
+      kind: t.kind,
+      category: t.category,
+      orderIndex: t.orderIndex,
+      question: t.question,
+      answer: t.answer,
+      answeredAt: t.answeredAt?.toISOString() ?? null,
+      parentTurnId: t.parentTurnId,
+      feedback: safeParseInterviewFeedback(t.feedback),
+    };
+  }
+
   const sessionSnapshot: SessionSnapshot | null = selectedRow
     ? {
         id: selectedRow.id,
@@ -138,15 +168,7 @@ export default async function InterviewPage({
         title: selectedRow.title,
         targetRole: selectedRow.targetRole,
         experienceLevel: selectedRow.experienceLevel,
-        turns: selectedRow.turns.map((t) => ({
-          id: t.id,
-          kind: t.kind,
-          category: t.category,
-          orderIndex: t.orderIndex,
-          question: t.question,
-          answer: t.answer,
-          answeredAt: t.answeredAt?.toISOString() ?? null,
-        })),
+        turns: selectedRow.turns.map(toTurnSnapshot),
       }
     : null;
 
@@ -186,8 +208,8 @@ export default async function InterviewPage({
               </CardTitle>
               <CardDescription>
                 Text-based practice aligned to your target role. Answer in your
-                own words; follow-ups and coaching scores land in later
-                updates.
+                own words; get contextual follow-ups and coaching feedback —
+                practice only, not a hiring decision.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
