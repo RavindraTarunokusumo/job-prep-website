@@ -19,7 +19,7 @@ Migrations: `web/prisma/migrations/`
 | `PreparationPlanItem` | Checklist items (`category`, `status`, `priority`, optional `href` deep link) |
 | `ApplicationDraft` | Cover letters and short application messages; `type`/`status`/`tone`/`length` as strings; optional `sections`/`meta` JSON; version lineage via `supersedesId` + `version`; zod in `web/lib/validation/application-draft.ts` |
 | `InterviewSession` | Text mock interview run; `status` as string (`active` \| `completed` \| `abandoned`); role/experience snapshot; optional resume/JD/plan-item ids; question-generation `model`; zod session/turn schemas in `web/lib/validation/interview.ts` |
-| `InterviewTurn` | Ordered question/answer turn in a session; `kind` as string (`primary` \| `follow_up`); optional `category`, `parentTurnId`, answer timestamps; optional `feedback` JSON + `feedbackModel` (JOB-12) |
+| `InterviewTurn` | Ordered question/answer turn in a session; `kind` as string (`primary` \| `follow_up`); optional `category`, `parentTurnId` (follow-up → primary, max one follow-up per primary); answer timestamps; optional `feedback` JSON validated by `interviewFeedbackSchema` + `feedbackModel` (JOB-12; coaching scores only, stored on primary after unit settles) |
 | `AssessmentCategory` | Global aptitude practice categories (`slug` unique; `disclaimerKind` string, default `practice_only`); not user-owned |
 | `AssessmentQuestion` | Global bank items per category; `choices` JSON `[{key,label}]`; `correctAnswer` nullable for reflection; optional `difficulty` string |
 | `AssessmentAttempt` | User-owned practice run (`status`: `in_progress` \| `completed`); optional `score`/`maxScore`/`summary` JSON; `startedAt`/`completedAt` |

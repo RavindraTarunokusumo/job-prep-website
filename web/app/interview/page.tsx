@@ -9,7 +9,9 @@ import {
   type JobOption,
   type ResumeOption,
   type SessionSnapshot,
+  type TurnSnapshot,
 } from "@/components/interview/session-workspace";
+import { AiConsentBanner } from "@/components/legal/ai-consent";
 import {
   Card,
   CardContent,
@@ -18,7 +20,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { hasConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
+import { safeParseInterviewFeedback } from "@/lib/validation/interview";
 
 type InterviewPageProps = {
   searchParams: Promise<{ sessionId?: string }>;
@@ -31,45 +35,49 @@ export default async function InterviewPage({
   const profile = await getProfileForUser(user.id);
   const { sessionId: requestedSessionId } = await searchParams;
 
-  const [parsedResumes, jobRows, sessionRows] = await Promise.all([
-    prisma.resumeDocument.findMany({
-      where: { userId: user.id, status: "parsed" },
-      orderBy: { updatedAt: "desc" },
-      select: { id: true, originalFilename: true },
-    }),
-    prisma.jobDescription.findMany({
-      where: { userId: user.id },
-      orderBy: { updatedAt: "desc" },
-      take: 20,
-      select: { id: true, title: true, company: true },
-    }),
-    prisma.interviewSession.findMany({
-      where: { userId: user.id },
-      orderBy: { updatedAt: "desc" },
-      take: 20,
-      select: {
-        id: true,
-        title: true,
-        status: true,
-        targetRole: true,
-        experienceLevel: true,
-        startedAt: true,
-        updatedAt: true,
-        turns: {
-          orderBy: { orderIndex: "asc" },
-          select: {
-            id: true,
-            kind: true,
-            category: true,
-            orderIndex: true,
-            question: true,
-            answer: true,
-            answeredAt: true,
+  const [parsedResumes, jobRows, sessionRows, aiConsentAccepted] =
+    await Promise.all([
+      prisma.resumeDocument.findMany({
+        where: { userId: user.id, status: "parsed" },
+        orderBy: { updatedAt: "desc" },
+        select: { id: true, originalFilename: true },
+      }),
+      prisma.jobDescription.findMany({
+        where: { userId: user.id },
+        orderBy: { updatedAt: "desc" },
+        take: 20,
+        select: { id: true, title: true, company: true },
+      }),
+      prisma.interviewSession.findMany({
+        where: { userId: user.id },
+        orderBy: { updatedAt: "desc" },
+        take: 20,
+        select: {
+          id: true,
+          title: true,
+          status: true,
+          targetRole: true,
+          experienceLevel: true,
+          startedAt: true,
+          updatedAt: true,
+          turns: {
+            orderBy: { orderIndex: "asc" },
+            select: {
+              id: true,
+              kind: true,
+              category: true,
+              orderIndex: true,
+              question: true,
+              answer: true,
+              answeredAt: true,
+              parentTurnId: true,
+              feedback: true,
+            },
           },
         },
-      },
-    }),
-  ]);
+      }),
+      hasConsent(user.id, "ai_processing"),
+    ]);
 
   const resumes: ResumeOption[] = parsedResumes.map((doc) => ({
     id: doc.id,
@@ -119,6 +127,8 @@ export default async function InterviewPage({
             question: true,
             answer: true,
             answeredAt: true,
+            parentTurnId: true,
+            feedback: true,
           },
         },
       },
@@ -131,6 +141,30 @@ export default async function InterviewPage({
     selectedRow = sessionRows.find((row) => row.status === "active") ?? null;
   }
 
+  function toTurnSnapshot(t: {
+    id: string;
+    kind: string;
+    category: string | null;
+    orderIndex: number;
+    question: string;
+    answer: string | null;
+    answeredAt: Date | null;
+    parentTurnId: string | null;
+    feedback: unknown;
+  }): TurnSnapshot {
+    return {
+      id: t.id,
+      kind: t.kind,
+      category: t.category,
+      orderIndex: t.orderIndex,
+      question: t.question,
+      answer: t.answer,
+      answeredAt: t.answeredAt?.toISOString() ?? null,
+      parentTurnId: t.parentTurnId,
+      feedback: safeParseInterviewFeedback(t.feedback),
+    };
+  }
+
   const sessionSnapshot: SessionSnapshot | null = selectedRow
     ? {
         id: selectedRow.id,
@@ -138,15 +172,7 @@ export default async function InterviewPage({
         title: selectedRow.title,
         targetRole: selectedRow.targetRole,
         experienceLevel: selectedRow.experienceLevel,
-        turns: selectedRow.turns.map((t) => ({
-          id: t.id,
-          kind: t.kind,
-          category: t.category,
-          orderIndex: t.orderIndex,
-          question: t.question,
-          answer: t.answer,
-          answeredAt: t.answeredAt?.toISOString() ?? null,
-        })),
+        turns: selectedRow.turns.map(toTurnSnapshot),
       }
     : null;
 
@@ -179,6 +205,8 @@ export default async function InterviewPage({
             Answers stay in your account for review.
           </div>
 
+          <AiConsentBanner initialAccepted={aiConsentAccepted} />
+
           <Card className="shadow-sm">
             <CardHeader>
               <CardTitle className="text-2xl font-extrabold tracking-tight">
@@ -186,8 +214,8 @@ export default async function InterviewPage({
               </CardTitle>
               <CardDescription>
                 Text-based practice aligned to your target role. Answer in your
-                own words; follow-ups and coaching scores land in later
-                updates.
+                own words; get contextual follow-ups and coaching feedback —
+                practice only, not a hiring decision.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-8">
