@@ -1,9 +1,9 @@
 import Link from "next/link";
-import {
-  DraftEditor,
-  type DraftSnapshot,
-  type JobOption,
-  type ResumeOption,
+import { CoverLetterWorkspace } from "@/components/cover-letter/cover-letter-workspace";
+import type {
+  DraftSnapshot,
+  JobOption,
+  ResumeOption,
 } from "@/components/cover-letter/draft-editor";
 import {
   DraftList,
@@ -53,7 +53,7 @@ export default async function CoverLetterPage({
       select: { id: true, title: true, company: true },
     }),
     prisma.applicationDraft.findMany({
-      where: { userId: user.id, type: "cover_letter" },
+      where: { userId: user.id },
       orderBy: { updatedAt: "desc" },
       take: 10,
       select: {
@@ -104,7 +104,6 @@ export default async function CoverLetterPage({
       where: {
         id: requestedDraftId,
         userId: user.id,
-        type: "cover_letter",
       },
       select: {
         id: true,
@@ -129,12 +128,13 @@ export default async function CoverLetterPage({
     selectedRow = draftRows[0];
   }
 
-  const initialDraft: DraftSnapshot | null = selectedRow
+  const initialDraft: (DraftSnapshot & { type: string }) | null = selectedRow
     ? {
         id: selectedRow.id,
         title: selectedRow.title,
         content: selectedRow.content,
         status: selectedRow.status,
+        type: selectedRow.type,
         tone: selectedRow.tone,
         length: selectedRow.length,
         sections: parseSections(selectedRow.sections),
@@ -172,32 +172,8 @@ export default async function CoverLetterPage({
                 sending.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Tab shell: T4 will enable Short messages */}
-              <div
-                className="flex gap-1 rounded-lg border border-border bg-muted/30 p-1"
-                role="tablist"
-                aria-label="Draft type"
-              >
-                <span
-                  role="tab"
-                  aria-selected="true"
-                  className="flex-1 rounded-md bg-background px-3 py-1.5 text-center text-sm font-semibold text-foreground shadow-sm"
-                >
-                  Cover letter
-                </span>
-                <span
-                  role="tab"
-                  aria-selected="false"
-                  aria-disabled="true"
-                  className="flex-1 cursor-not-allowed rounded-md px-3 py-1.5 text-center text-sm font-medium text-muted-foreground"
-                  title="Coming in the next update"
-                >
-                  Short messages
-                </span>
-              </div>
-
-              <DraftEditor
+            <CardContent>
+              <CoverLetterWorkspace
                 key={selectedId ?? "new"}
                 resumes={resumes}
                 jobs={jobs}
@@ -213,7 +189,8 @@ export default async function CoverLetterPage({
                 Recent drafts
               </CardTitle>
               <CardDescription>
-                Open a prior cover letter version to edit, regenerate, or copy.
+                Open a prior cover letter or short message to edit, regenerate,
+                or copy.
               </CardDescription>
             </CardHeader>
             <CardContent>

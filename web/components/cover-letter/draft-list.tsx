@@ -25,6 +25,21 @@ function statusVariant(
   }
 }
 
+function typeLabel(type: string): string {
+  switch (type) {
+    case "cover_letter":
+      return "Cover letter";
+    case "recruiter_dm":
+      return "Recruiter DM";
+    case "referral_request":
+      return "Referral";
+    case "application_note":
+      return "App note";
+    default:
+      return type;
+  }
+}
+
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleString();
 }
@@ -38,7 +53,8 @@ export function DraftList({ drafts, selectedId }: DraftListProps) {
   if (drafts.length === 0) {
     return (
       <p className="rounded-lg border border-border bg-muted/20 px-4 py-6 text-sm text-muted-foreground">
-        No drafts yet. Generate a cover letter above to get started.
+        No drafts yet. Generate a cover letter or short message above to get
+        started.
       </p>
     );
   }
@@ -56,6 +72,9 @@ export function DraftList({ drafts, selectedId }: DraftListProps) {
               }`}
             >
               <span className="min-w-0 truncate">
+                <span className="mr-2 inline-block text-xs font-medium text-muted-foreground">
+                  {typeLabel(draft.type)}
+                </span>
                 {draft.title || "Untitled draft"}
                 {draft.version > 1 ? (
                   <span className="ml-1 text-xs font-normal text-muted-foreground">

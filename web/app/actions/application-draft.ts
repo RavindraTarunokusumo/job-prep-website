@@ -2,6 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import {
+  generateShortMessage,
+  getApplicationMessageModelId,
+  type ShortMessageType,
+} from "@/lib/ai/application-message";
+import {
   generateCoverLetter,
   getCoverLetterModelId,
   regenerateCoverLetterSection,
@@ -13,14 +18,22 @@ import { assertResumeHasContent } from "@/lib/resume/content";
 import {
   composeContentFromSections,
   coverLetterSectionsSchema,
+  draftTypeSchema,
   lengthSchema,
   parseCoverLetterGeneration,
+  parseShortMessageGeneration,
   sectionKeySchema,
   toneSchema,
   type CoverLetterSections,
   type Length,
   type Tone,
 } from "@/lib/validation/application-draft";
+
+const SHORT_MESSAGE_TYPES = new Set<string>([
+  "recruiter_dm",
+  "referral_request",
+  "application_note",
+]);
 
 type ActionOkId = { ok: true; draftId: string };
 type ActionErr = { ok: false; error: string };
@@ -384,6 +397,178 @@ export async function regenerateCoverLetterSectionAction(form: {
       error,
       "Section regeneration failed. Please try again."
     );
+
+    return { ok: false, error: message };
+  }
+}
+
+export async function generateShortMessageAction(form: {
+  messageType: "recruiter_dm" | "referral_request" | "application_note";
+  resumeDocumentId?: string;
+  jobDescriptionId?: string;
+  tone: string;
+  supersedesId?: string;
+}): Promise<ActionResult> {
+  const user = await requireUser();
+
+  const profile = await getProfileForUser(user.id);
+  if (!profile?.onboardingCompletedAt) {
+    return {
+      ok: false,
+      error: "Complete onboarding first so we know your target role.",
+    };
+  }
+
+  const typeResult = draftTypeSchema.safeParse(form.messageType);
+  if (!typeResult.success || !SHORT_MESSAGE_TYPES.has(typeResult.data)) {
+    return {
+      ok: false,
+      error:
+        "Invalid message type. Choose recruiter DM, referral request, or application note.",
+    };
+  }
+  const messageType = typeResult.data as ShortMessageType;
+
+  const toneResult = toneSchema.safeParse(form.tone);
+  if (!toneResult.success) {
+    return {
+      ok: false,
+      error: "Invalid tone. Choose a valid option and try again.",
+    };
+  }
+  const tone = toneResult.data;
+
+  const resumeDoc = form.resumeDocumentId
+    ? await getOwnedResumeDocument(user.id, form.resumeDocumentId)
+    : await getLatestParsedDocument(user.id);
+
+  if (!resumeDoc || resumeDoc.status !== "parsed") {
+    return {
+      ok: false,
+      error:
+        "Upload and parse a resume first on the resume page before generating a message.",
+    };
+  }
+
+  let resumeText: string;
+  try {
+    resumeText = assertResumeHasContent(resumeDoc.rawText, resumeDoc.parsedData);
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Resume content is insufficient.";
+    return { ok: false, error: message };
+  }
+
+  let jobTitle: string | null = null;
+  let company: string | null = null;
+  let jobText: string | null = null;
+  let jobDescriptionId: string | null = null;
+
+  if (form.jobDescriptionId) {
+    const job = await getOwnedJobDescription(user.id, form.jobDescriptionId);
+    if (!job) {
+      return { ok: false, error: "Job description not found or access denied." };
+    }
+    jobDescriptionId = job.id;
+    jobTitle = job.title;
+    company = job.company;
+    jobText = job.rawText;
+  }
+
+  let version = 1;
+  let supersedesId: string | null = null;
+
+  if (form.supersedesId) {
+    const prior = await getOwnedDraft(user.id, form.supersedesId);
+    if (!prior) {
+      return {
+        ok: false,
+        error: "Prior draft not found or access denied.",
+      };
+    }
+    if (prior.type !== messageType) {
+      return {
+        ok: false,
+        error: "Can only supersede a draft of the same message type.",
+      };
+    }
+    version = prior.version + 1;
+    supersedesId = prior.id;
+  }
+
+  const draft = await prisma.applicationDraft.create({
+    data: {
+      userId: user.id,
+      type: messageType,
+      title: "Generating…",
+      status: "generating",
+      tone,
+      length: null,
+      content: "",
+      resumeDocumentId: resumeDoc.id,
+      jobDescriptionId,
+      supersedesId,
+      version,
+    },
+  });
+
+  try {
+    const generation = await generateShortMessage({
+      messageType,
+      targetRole: profile.targetRole,
+      experienceLevel: profile.experienceLevel,
+      targetIndustry: profile.targetIndustry,
+      skills: profile.skills,
+      resumeText,
+      jobTitle,
+      company,
+      jobText,
+      tone,
+    });
+
+    const validated = parseShortMessageGeneration(generation);
+    const model = getApplicationMessageModelId();
+
+    await prisma.applicationDraft.update({
+      where: { id: draft.id },
+      data: {
+        status: "draft",
+        title: validated.title,
+        content: validated.content,
+        tone,
+        model,
+        meta: {
+          tone,
+          model,
+          messageType,
+          sourceProfileTargetRole: profile.targetRole,
+          jobTitle,
+          company,
+          evidenceNotes: validated.evidenceNotes ?? [],
+        },
+        errorMessage: null,
+      },
+    });
+
+    revalidatePath("/cover-letter");
+    revalidatePath("/dashboard");
+
+    return { ok: true, draftId: draft.id };
+  } catch (error) {
+    const message = userFacingAiError(
+      error,
+      "Short message generation failed. Please try again."
+    );
+
+    await prisma.applicationDraft.update({
+      where: { id: draft.id },
+      data: {
+        status: "failed",
+        errorMessage: message,
+      },
+    });
+
+    revalidatePath("/cover-letter");
 
     return { ok: false, error: message };
   }
