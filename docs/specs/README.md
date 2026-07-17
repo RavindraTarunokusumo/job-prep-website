@@ -26,6 +26,9 @@ Example: `2026-07-15-mvp-phase-0-1-foundation-landing.md`
 | [2026-07-15-mvp-phase-3-cv-upload-parse.md](./2026-07-15-mvp-phase-3-cv-upload-parse.md) | **Accepted (merged PR #3)** | Phase 3 CV upload/parse (JOB-6); Supabase Storage + optional GLiNER |
 | [2026-07-16-mvp-phase-4-application-readiness.md](./2026-07-16-mvp-phase-4-application-readiness.md) | **Accepted (merged PR #4)** | Phase 4 checker / JD match / prep plan (JOB-7/8/10) |
 | [2026-07-17-mvp-phase-5-cover-letter-messages.md](./2026-07-17-mvp-phase-5-cover-letter-messages.md) | **Accepted (merged PR #5)** | Phase 5 cover letter & short messages (JOB-9 / JOB-42…45) |
-| [2026-07-17-mvp-phase-6-mock-interview-feedback.md](./2026-07-17-mvp-phase-6-mock-interview-feedback.md) | **Accepted (merged PR #6 — partial JOB-11 50–52; 53–58 open)** | Phase 6 mock interview + feedback (JOB-11/12) |
+| [2026-07-17-mvp-phase-6-mock-interview-feedback.md](./2026-07-17-mvp-phase-6-mock-interview-feedback.md) | **Accepted (merged PR #6 + #9)** | Phase 6 mock interview + feedback (JOB-11/12 complete) |
+| [2026-07-17-wave2-interview-feedback-addendum.md](./2026-07-17-wave2-interview-feedback-addendum.md) | **Accepted (merged PR #9)** | Wave 2 follow-up + feedback addendum |
 | [2026-07-17-mvp-job-13-assessments.md](./2026-07-17-mvp-job-13-assessments.md) | **Accepted (merged PR #7)** | JOB-13 assessments practice (JOB-59…62) |
+| [2026-07-17-mvp-job-14-video-library.md](./2026-07-17-mvp-job-14-video-library.md) | **Accepted (merged PR #10)** | JOB-14 video library (JOB-63…66) |
 | [2026-07-17-mvp-job-16-privacy-consent.md](./2026-07-17-mvp-job-16-privacy-consent.md) | **Accepted (merged PR #8)** | JOB-16 privacy/consent (JOB-71…74) |
+| [2026-07-17-mvp-job-17-metrics.md](./2026-07-17-mvp-job-17-metrics.md) | **Accepted (merged PR #11)** | JOB-17 metrics (JOB-75…78) |

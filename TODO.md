@@ -1,6 +1,6 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 17 July 2026 (Post-PR — Wave 1 PRs #6–#8 archived; Wave 2 next)  
+**Last updated:** 17 July 2026 (Post-PR Wave 2 PRs #9–#11; next = JOB-15 report)  
 **Branch:** `main`  
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
@@ -12,7 +12,7 @@
 | Specs | `docs/specs/` |
 | Architecture ADRs | [`docs/architecture.md`](docs/architecture.md) |
 | Phase archives | [`docs/iterations/archive/`](docs/iterations/archive/) |
-| Merged PRs | [#1](https://github.com/RavindraTarunokusumo/job-prep-website/pull/1)–[#5](https://github.com/RavindraTarunokusumo/job-prep-website/pull/5); **[#6](https://github.com/RavindraTarunokusumo/job-prep-website/pull/6)** `05a2085` (Phase 6 partial); **[#7](https://github.com/RavindraTarunokusumo/job-prep-website/pull/7)** `8f9f3d4` (JOB-13); **[#8](https://github.com/RavindraTarunokusumo/job-prep-website/pull/8)** `a900b09` (JOB-16) |
+| Merged PRs | [#1](https://github.com/RavindraTarunokusumo/job-prep-website/pull/1)–[#11](https://github.com/RavindraTarunokusumo/job-prep-website/pull/11) · latest Wave 2: **#9** `89465ac`, **#10** `5f27975`, **#11** `7781b5e` |
 | Subagent model | **grok-4.5** (Composer 2.5 Fast not available in this environment) |
 | AI | `web/lib/ai/config.ts` — OpenRouter primary + fallback |
 | Out of agent scope | **JOB-79** (owned by another person — ignore) |
@@ -22,41 +22,36 @@
 
 | # | Milestone | Target | Progress |
 |---|-----------|--------|----------|
-| 1 | Profile & document intake | 2026-07-31 | **Done** (JOB-18, JOB-5, JOB-6) |
-| 2 | Application readiness tools | 2026-08-31 | **JOB-7/8/9/10 done** (JOB-79 skip) |
-| 3 | Interview practice & assessment | 2026-09-30 | **Partial** — JOB-11 50–52 + JOB-13 done; JOB-12 + JOB-53/54 + JOB-14 open |
-| 4 | Report, launch polish & validation | 2026-10-31 | **Partial** — JOB-16 done early; JOB-15/17 open |
+| 1 | Profile & document intake | 2026-07-31 | **Done** |
+| 2 | Application readiness tools | 2026-08-31 | **Done** (JOB-79 skip) |
+| 3 | Interview practice & assessment | 2026-09-30 | **Done** (JOB-11/12/13/14) |
+| 4 | Report, launch polish & validation | 2026-10-31 | **Partial** — JOB-16/17 done; **JOB-15 next** |
 
 ---
 
 ## Recommended next implementation order
 
-Wave 1 complete (PRs #6–#8). Next: **Wave 2** — finish Phase 6 feedback, then remaining Milestone 3/4 items. Agent Autopilot should **not** pick up JOB-79.
+Wave 2 complete (PRs #9–#11). Next: **JOB-15 compiled performance report** (Milestone 4). Skip JOB-79.
 
 | Priority | When | Parent | Why |
 |----------|------|--------|-----|
-| **1 — next Autopilot** | Now | [JOB-11](https://linear.app/job-prep-website/issue/JOB-11/build-text-based-mock-interview-flow) remainder + [JOB-12](https://linear.app/job-prep-website/issue/JOB-12/create-interview-answer-feedback-and-scoring) | Complete Phase 6: follow-ups (JOB-53/54) + full answer feedback (JOB-55…58) |
-| **2** | After Phase 6 complete | [JOB-14](https://linear.app/job-prep-website/issue/JOB-14/set-up-human-made-interview-video-library) | Low; content/admin heavy video library |
-| **3** | Milestone 4 | [JOB-17](https://linear.app/job-prep-website/issue/JOB-17/define-mvp-success-metrics-and-validation-dashboard) | High for launch validation; taxonomy can start earlier if desired |
-| **4** | Milestone 4 | [JOB-15](https://linear.app/job-prep-website/issue/JOB-15/create-compiled-performance-report) | Needs prior workflow outputs (review, match, interview, assessments) |
+| **1 — next Autopilot** | Now | [JOB-15](https://linear.app/job-prep-website/issue/JOB-15/create-compiled-performance-report) | Aggregates review, match, interview, assessments into one readiness report |
+| **2** | Optional polish | Remaining launch items | Any post-MVP hardening not covered by JOB-15 |
 
-**Done (Wave 1):** JOB-13 assessments (PR #7), JOB-16 privacy (PR #8), JOB-11 partial 50–52 (PR #6).  
-**Skip:** [JOB-79](https://linear.app/job-prep-website/issue/JOB-79/research-widespread-cvresume-formats-and-ats-requirements) (Todo, another owner).
+**Done recently:** Phase 6 complete (PR #9), JOB-14 videos (PR #10), JOB-17 metrics (PR #11), JOB-16 privacy (PR #8).  
+**Skip:** [JOB-79](https://linear.app/job-prep-website/issue/JOB-79/research-widespread-cvresume-formats-and-ats-requirements).
 
 ### Phase status
 
 | Phase | Status | Linear | Notes |
 |-------|--------|--------|-------|
-| **0–1** Foundation + landing | **Done** | JOB-18 | PR #1 |
-| **2** Auth & onboarding | **Done** | JOB-5 | PR #2 |
-| **3** CV upload & parsing | **Done** | JOB-6 | PR #3 |
-| **4** Checker / JD match / plan | **Done** | JOB-7/8/10 | PR #4 `3f324f5` |
-| **5** Cover letter & messages | **Done** | JOB-9 | PR #5 `3c929e1` · JOB-42…45 |
-| **6** Text mock + feedback | **Partial (Wave 2 next)** | JOB-11 + JOB-12 | PR #6 `05a2085` landed 6.1–6.3 (JOB-50–52); **6.4–6.9 open** |
-| **7** Assessments | **Done** | JOB-13 | PR #7 `8f9f3d4` · JOB-59…62 |
-| **7b** Videos | Pending | JOB-14 | After Phase 6 complete |
-| **8a** Privacy | **Done** | JOB-16 | PR #8 `a900b09` · JOB-71…74 |
-| **8b** Report / metrics | Pending | JOB-15/17 | After Phase 6 / Wave 2 |
+| **0–5** | **Done** | JOB-18…9 | PRs #1–#5 |
+| **6** Text mock + feedback | **Done** | JOB-11 + JOB-12 | PR #6 + **#9** `89465ac` |
+| **7** Assessments | **Done** | JOB-13 | PR #7 |
+| **7b** Videos | **Done** | JOB-14 | PR #10 `5f27975` |
+| **8a** Privacy | **Done** | JOB-16 | PR #8 |
+| **8b** Metrics | **Done** | JOB-17 | PR #11 `7781b5e` |
+| **8c** Report | **Next** | JOB-15 | Children JOB-67…70 |
 
 ---
 
@@ -64,43 +59,37 @@ Wave 1 complete (PRs #6–#8). Next: **Wave 2** — finish Phase 6 feedback, the
 
 - Phase 0–1 — `docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md`
 - Phase 2 — `docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md`
-- Phase 3 — `docs/iterations/archive/2026-07-15-phase-3-cv-upload-parse.md` (PR #3)
-- Phase 4 — `docs/iterations/archive/2026-07-16-phase-4-application-readiness.md` (PR #4 `3f324f5`)
-- Phase 5 — `docs/iterations/archive/2026-07-17-phase-5-cover-letter-messages.md` (PR #5 `3c929e1`)
-- Phase 6 partial (JOB-50–52) — `docs/iterations/archive/2026-07-17-phase-6-mock-interview-partial.md` (PR #6 `05a2085`)
-- JOB-13 assessments — `docs/iterations/archive/2026-07-17-job-13-assessments.md` (PR #7 `8f9f3d4`)
-- JOB-16 privacy — `docs/iterations/archive/2026-07-17-job-16-privacy-consent.md` (PR #8 `a900b09`)
+- Phase 3 — `docs/iterations/archive/2026-07-15-phase-3-cv-upload-parse.md`
+- Phase 4 — `docs/iterations/archive/2026-07-16-phase-4-application-readiness.md`
+- Phase 5 — `docs/iterations/archive/2026-07-17-phase-5-cover-letter-messages.md`
+- Phase 6 partial (JOB-50–52) — `docs/iterations/archive/2026-07-17-phase-6-mock-interview-partial.md` (PR #6)
+- Phase 6 complete (JOB-53–58) — `docs/iterations/archive/2026-07-17-phase-6-interview-feedback-complete.md` (PR #9 `89465ac`)
+- JOB-13 assessments — `docs/iterations/archive/2026-07-17-job-13-assessments.md` (PR #7)
+- JOB-14 videos — `docs/iterations/archive/2026-07-17-job-14-video-library.md` (PR #10 `5f27975`)
+- JOB-16 privacy — `docs/iterations/archive/2026-07-17-job-16-privacy-consent.md` (PR #8)
+- JOB-17 metrics — `docs/iterations/archive/2026-07-17-job-17-metrics.md` (PR #11 `7781b5e`)
 
 ---
 
-## Phase 6 — Text mock interview & answer feedback (**Wave 2 — active**)
+## Phase 8c — Compiled performance report (**next**)
 
-**Spec:** [docs/specs/2026-07-17-mvp-phase-6-mock-interview-feedback.md](docs/specs/2026-07-17-mvp-phase-6-mock-interview-feedback.md)  
-**Plan:** [docs/superpowers/plans/2026-07-17-phase-6-mock-interview-feedback.md](docs/superpowers/plans/2026-07-17-phase-6-mock-interview-feedback.md)  
-**Linear:** JOB-11 + JOB-12 · Children JOB-50…58  
-**PR #6 merge:** `05a208517dea1ae5da84f4ea6c0b04074e60b1b2` (partial)
+**Linear parent:** [JOB-15](https://linear.app/job-prep-website/issue/JOB-15/create-compiled-performance-report) · Milestone 4 · Medium  
+**Children:** JOB-67…70
 
-### Tasks (JOB-11)
+### Tasks
 
-- [x] **6.1 JOB-50** Mock interview session data model — `8624adb`
-- [x] **6.2 JOB-51** Role-based interview question generation — `1b2511d`
-- [x] **6.3 JOB-52** Text mock interview UI (`/interview`) — `200b021`
-- [ ] **6.4 JOB-53** Contextual follow-up question logic
-- [ ] **6.5 JOB-54** Mock interview session tests
-
-### Tasks (JOB-12)
-
-- [ ] **6.6 JOB-55** Interview feedback scoring schema
-- [ ] **6.7 JOB-56** AI answer feedback service
-- [ ] **6.8 JOB-57** Interview feedback results UI
-- [ ] **6.9 JOB-58** Feedback tests and safety cases
+- [ ] **15.1 JOB-67** Compiled performance report data model
+- [ ] **15.2 JOB-68** Performance report generation service
+- [ ] **15.3 JOB-69** Performance report UI (`/report`)
+- [ ] **15.4 JOB-70** Report generation tests and QA scenarios
 
 ### Exit criteria
 
-- User can start a mock interview from plan, answer in text, get actionable feedback
+- User can generate a structured readiness report after core workflows
+- Report is readable, evidence-based, export-ready; no hire predictions
 
 ---
 
-## Deferred
+## Deferred / out of scope
 
-- JOB-14 videos, JOB-15 report, JOB-17 metrics, JOB-79 (skip)
+- **JOB-79** CV/ATS research (another owner — ignore)
