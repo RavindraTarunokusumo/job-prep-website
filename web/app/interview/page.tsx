@@ -11,6 +11,7 @@ import {
   type SessionSnapshot,
   type TurnSnapshot,
 } from "@/components/interview/session-workspace";
+import { AiConsentBanner } from "@/components/legal/ai-consent";
 import {
   Card,
   CardContent,
@@ -19,6 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { hasConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 import { safeParseInterviewFeedback } from "@/lib/validation/interview";
 
@@ -33,47 +35,49 @@ export default async function InterviewPage({
   const profile = await getProfileForUser(user.id);
   const { sessionId: requestedSessionId } = await searchParams;
 
-  const [parsedResumes, jobRows, sessionRows] = await Promise.all([
-    prisma.resumeDocument.findMany({
-      where: { userId: user.id, status: "parsed" },
-      orderBy: { updatedAt: "desc" },
-      select: { id: true, originalFilename: true },
-    }),
-    prisma.jobDescription.findMany({
-      where: { userId: user.id },
-      orderBy: { updatedAt: "desc" },
-      take: 20,
-      select: { id: true, title: true, company: true },
-    }),
-    prisma.interviewSession.findMany({
-      where: { userId: user.id },
-      orderBy: { updatedAt: "desc" },
-      take: 20,
-      select: {
-        id: true,
-        title: true,
-        status: true,
-        targetRole: true,
-        experienceLevel: true,
-        startedAt: true,
-        updatedAt: true,
-        turns: {
-          orderBy: { orderIndex: "asc" },
-          select: {
-            id: true,
-            kind: true,
-            category: true,
-            orderIndex: true,
-            question: true,
-            answer: true,
-            answeredAt: true,
-            parentTurnId: true,
-            feedback: true,
+  const [parsedResumes, jobRows, sessionRows, aiConsentAccepted] =
+    await Promise.all([
+      prisma.resumeDocument.findMany({
+        where: { userId: user.id, status: "parsed" },
+        orderBy: { updatedAt: "desc" },
+        select: { id: true, originalFilename: true },
+      }),
+      prisma.jobDescription.findMany({
+        where: { userId: user.id },
+        orderBy: { updatedAt: "desc" },
+        take: 20,
+        select: { id: true, title: true, company: true },
+      }),
+      prisma.interviewSession.findMany({
+        where: { userId: user.id },
+        orderBy: { updatedAt: "desc" },
+        take: 20,
+        select: {
+          id: true,
+          title: true,
+          status: true,
+          targetRole: true,
+          experienceLevel: true,
+          startedAt: true,
+          updatedAt: true,
+          turns: {
+            orderBy: { orderIndex: "asc" },
+            select: {
+              id: true,
+              kind: true,
+              category: true,
+              orderIndex: true,
+              question: true,
+              answer: true,
+              answeredAt: true,
+              parentTurnId: true,
+              feedback: true,
+            },
           },
         },
-      },
-    }),
-  ]);
+      }),
+      hasConsent(user.id, "ai_processing"),
+    ]);
 
   const resumes: ResumeOption[] = parsedResumes.map((doc) => ({
     id: doc.id,
@@ -200,6 +204,8 @@ export default async function InterviewPage({
             coaching mock interview — not a real interview or hiring decision.
             Answers stay in your account for review.
           </div>
+
+          <AiConsentBanner initialAccepted={aiConsentAccepted} />
 
           <Card className="shadow-sm">
             <CardHeader>
