@@ -1,0 +1,5 @@
+Task: 5.2 JOB-43 AI cover letter generation
+Summary: cover-letter AI service + application-draft actions (generate, section regen, save); error keyword pass-through.
+Docs: N/A
+TODO: Phase 5 / 5.2 JOB-43
+Validation: npm test (59), tsc --noEmit, npm run lint
