@@ -16,7 +16,10 @@ export function userFacingAiError(
     msg.includes("Upload") ||
     msg.includes("parse") ||
     msg.includes("access denied") ||
-    msg.includes("not found")
+    msg.includes("not found") ||
+    msg.includes("structured sections") ||
+    msg.includes("Invalid tone") ||
+    msg.includes("Invalid section")
   ) {
     if (msg.includes("OPENROUTER_API_KEY") || msg.includes("not configured")) {
       return "AI is not configured. Add OPENROUTER_API_KEY on the server.";
