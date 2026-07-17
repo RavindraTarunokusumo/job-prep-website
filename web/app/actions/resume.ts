@@ -15,6 +15,7 @@ import {
   downloadResumeFile,
   uploadResumeFile,
 } from "@/lib/storage/resumes";
+import { hasConsent, recordConsent } from "@/lib/legal/consent";
 import {
   parseResumeFormData,
   type ParsedResume,
@@ -153,6 +154,16 @@ export async function uploadResume(
 ): Promise<ResumeActionState> {
   const user = await requireUser();
   await upsertUserFromAuth(user);
+
+  const consentChecked = formData.get("uploadConsent") === "on";
+  if (consentChecked) {
+    await recordConsent(user.id, "upload");
+  } else if (!(await hasConsent(user.id, "upload"))) {
+    return {
+      error:
+        "Confirm the upload consent checkbox before uploading your CV.",
+    };
+  }
 
   const file = formData.get("file");
   if (!(file instanceof File)) {

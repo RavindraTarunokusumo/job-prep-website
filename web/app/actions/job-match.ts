@@ -8,6 +8,7 @@ import {
   scoreJobMatch,
 } from "@/lib/ai/job-match";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { requireAiConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 import { assertResumeHasContent } from "@/lib/resume/content";
 import {
@@ -47,6 +48,8 @@ export async function analyzeJobDescriptionAction(form: {
   { ok: true; matchId: string; jobId: string } | { ok: false; error: string }
 > {
   const user = await requireUser();
+  const consent = await requireAiConsent(user.id);
+  if (!consent.ok) return consent;
 
   const profile = await getProfileForUser(user.id);
   if (!profile?.onboardingCompletedAt) {

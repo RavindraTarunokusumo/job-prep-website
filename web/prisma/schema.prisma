@@ -19,6 +19,38 @@ model User {
   jobMatchAnalyses  JobMatchAnalysis[]
   preparationPlans  PreparationPlan[]
   applicationDrafts ApplicationDraft[]
+  consents          UserConsent[]
+  dataRequests      DataRequest[]
+}
+
+model UserConsent {
+  id         String   @id @default(cuid())
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // upload | ai_processing
+  kind       String
+  // copy version string e.g. "2026-07-17"
+  version    String
+  acceptedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, kind, version])
+  @@index([userId])
+}
+
+model DataRequest {
+  id        String   @id @default(cuid())
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // export | deletion
+  type      String
+  // pending | completed | rejected
+  status    String   @default("pending")
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model ResumeDocument {

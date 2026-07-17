@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SignOutButton } from "@/components/auth/sign-out-button";
+import { YourDataSection } from "@/components/settings/your-data-section";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -111,6 +112,8 @@ export default async function SettingsPage() {
             </div>
           </CardContent>
         </Card>
+
+        <YourDataSection />
       </div>
     </main>
   );
