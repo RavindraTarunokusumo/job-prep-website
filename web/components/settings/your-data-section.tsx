@@ -24,8 +24,15 @@ function downloadJson(filename: string, data: unknown) {
   const anchor = document.createElement("a");
   anchor.href = url;
   anchor.download = filename;
+  // Append to DOM so browsers reliably start the download
+  anchor.style.display = "none";
+  document.body.appendChild(anchor);
   anchor.click();
-  URL.revokeObjectURL(url);
+  // Delay revoke until after the download has a chance to start
+  window.setTimeout(() => {
+    URL.revokeObjectURL(url);
+    anchor.remove();
+  }, 1_000);
 }
 
 /**
@@ -63,6 +70,12 @@ export function YourDataSection() {
   function handleDeletion() {
     setError(null);
     setDeletionMessage(null);
+    const confirmed = window.confirm(
+      "Request deletion of your career data? This records a request for operator handling — it does not wipe your account immediately."
+    );
+    if (!confirmed) {
+      return;
+    }
     startTransition(async () => {
       const result = await requestDataDeletionAction();
       if (!result.ok) {
