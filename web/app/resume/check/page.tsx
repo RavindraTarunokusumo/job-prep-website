@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AiConsentBanner } from "@/components/legal/ai-consent";
 import { CheckDashboard } from "@/components/resume/check-dashboard";
 import { Logo } from "@/components/landing/logo";
 import {
@@ -9,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { hasConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 import {
   parseResumeReviewResult,
@@ -37,7 +39,7 @@ export default async function ResumeCheckPage({
   const user = await requireUser();
   const { documentId: requestedDocumentId } = await searchParams;
 
-  const [profile, parsedDocuments] = await Promise.all([
+  const [profile, parsedDocuments, aiConsentAccepted] = await Promise.all([
     getProfileForUser(user.id),
     prisma.resumeDocument.findMany({
       where: {
@@ -51,6 +53,7 @@ export default async function ResumeCheckPage({
         updatedAt: true,
       },
     }),
+    hasConsent(user.id, "ai_processing"),
   ]);
 
   const documentOptions = parsedDocuments.map((doc) => ({
@@ -109,7 +112,8 @@ export default async function ResumeCheckPage({
               experience.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            <AiConsentBanner initialAccepted={aiConsentAccepted} />
             <CheckDashboard
               documents={documentOptions}
               selectedDocumentId={selectedDocumentId}

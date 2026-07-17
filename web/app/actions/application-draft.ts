@@ -14,6 +14,7 @@ import {
 } from "@/lib/ai/cover-letter";
 import { userFacingAiError } from "@/lib/ai/errors";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { requireAiConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 import { assertResumeHasContent } from "@/lib/resume/content";
 import {
@@ -127,6 +128,8 @@ export async function generateCoverLetterAction(form: {
   supersedesId?: string;
 }): Promise<ActionResult> {
   const user = await requireUser();
+  const consent = await requireAiConsent(user.id);
+  if (!consent.ok) return consent;
 
   const profile = await getProfileForUser(user.id);
   if (!profile?.onboardingCompletedAt) {
@@ -294,6 +297,8 @@ export async function regenerateCoverLetterSectionAction(form: {
   length?: string;
 }): Promise<SectionRegenResult> {
   const user = await requireUser();
+  const consent = await requireAiConsent(user.id);
+  if (!consent.ok) return consent;
 
   const profile = await getProfileForUser(user.id);
   if (!profile?.onboardingCompletedAt) {
@@ -433,6 +438,8 @@ export async function generateShortMessageAction(form: {
   supersedesId?: string;
 }): Promise<ActionResult> {
   const user = await requireUser();
+  const consent = await requireAiConsent(user.id);
+  if (!consent.ok) return consent;
 
   const profile = await getProfileForUser(user.id);
   if (!profile?.onboardingCompletedAt) {

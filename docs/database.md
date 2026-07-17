@@ -22,6 +22,8 @@ Migrations: `web/prisma/migrations/`
 | `AssessmentQuestion` | Global bank items per category; `choices` JSON `[{key,label}]`; `correctAnswer` nullable for reflection; optional `difficulty` string |
 | `AssessmentAttempt` | User-owned practice run (`status`: `in_progress` \| `completed`); optional `score`/`maxScore`/`summary` JSON; `startedAt`/`completedAt` |
 | `AssessmentAnswer` | One answer per question per attempt (`@@unique([attemptId, questionId])`); `selectedKey` and/or `freeText`; `isCorrect` nullable for reflection |
+| `UserConsent` | User acknowledgments for upload and AI processing; `kind` is `upload` \| `ai_processing`; `version` matches `CONSENT_COPY_VERSION` in `web/lib/legal/copy.ts`; unique on `(userId, kind, version)` |
+| `DataRequest` | User export/deletion requests from Settings; `type` is `export` \| `deletion`; `status` is `pending` \| `completed` \| `rejected` (default `pending`); optional `note` for operators; MVP does **not** auto-delete storage — rows are for operator handling. Immediate export JSON is metadata-only (profile + document meta + recent analysis ids; no file bytes) via `requestDataExportAction` |
 
 Zod enums/payloads for category slugs, attempt status, choices, and question payloads live in `web/lib/validation/assessment.ts`.
 

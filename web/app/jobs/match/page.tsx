@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MatchResults, type MatchSnapshot } from "@/components/jobs/match-results";
 import { PasteForm } from "@/components/jobs/paste-form";
 import { Logo } from "@/components/landing/logo";
+import { AiConsentBanner } from "@/components/legal/ai-consent";
 import {
   Card,
   CardContent,
@@ -10,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { requireUser } from "@/lib/auth/session";
+import { hasConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 import { parseJobMatchResult } from "@/lib/validation/job-match";
 
@@ -38,7 +40,7 @@ export default async function JobsMatchPage({
   const user = await requireUser();
   const { matchId: requestedMatchId } = await searchParams;
 
-  const [parsedResumes, historyRows] = await Promise.all([
+  const [parsedResumes, historyRows, aiConsentAccepted] = await Promise.all([
     prisma.resumeDocument.findMany({
       where: { userId: user.id, status: "parsed" },
       orderBy: { updatedAt: "desc" },
@@ -54,6 +56,7 @@ export default async function JobsMatchPage({
         },
       },
     }),
+    hasConsent(user.id, "ai_processing"),
   ]);
 
   const resumeOptions = parsedResumes.map((doc) => ({
@@ -110,7 +113,11 @@ export default async function JobsMatchPage({
                 requirements. Match score reflects fit — not hire probability.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <AiConsentBanner
+                initialAccepted={aiConsentAccepted}
+                disclaimerKey="jobFitLimitations"
+              />
               <PasteForm
                 resumes={resumeOptions}
                 defaultResumeId={defaultResumeId}

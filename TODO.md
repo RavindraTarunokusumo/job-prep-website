@@ -1,7 +1,7 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 17 July 2026 (Wave 1 Autopilot — JOB-13 assessments)
-**This worktree:** JOB-13 only (`feat/job-13-assessments`)  
+**Last updated:** 17 July 2026 (Wave 1 — JOB-13 assessments; JOB-16 merged PR #8)
+**Branch:** `feat/job-13-assessments`
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.
@@ -119,7 +119,10 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 
 ---
 
-## Parallel Wave 1 (other worktrees)
+## JOB-16 — Privacy (merged PR #8)
 
-- Phase 6 interview → `.worktree/job-11-mock-interview`
-- JOB-16 privacy → `.worktree/job-16-privacy`
+- [x] JOB-71…74 landed on main via PR #8
+
+## Parallel Wave 1
+
+- Phase 6 interview → PR #6 (`.worktree/job-11-mock-interview`)
