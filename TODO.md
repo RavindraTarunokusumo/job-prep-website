@@ -1,7 +1,7 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 17 July 2026 (Wave 1 Autopilot — JOB-16 privacy)
-**This worktree:** JOB-16 only (`feat/job-16-privacy`)  
+**Last updated:** 17 July 2026 (Wave 1 — JOB-13 assessments; JOB-16 merged PR #8)
+**Branch:** `feat/job-13-assessments`
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.
@@ -97,42 +97,32 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 
 ---
 
-## Phase 7 — Assessments & video resources
+## JOB-13 — Aptitude & psychometric practice (**this branch**)
 
-**Linear parents:**  
-- [JOB-13](https://linear.app/job-prep-website/issue/JOB-13/add-aptitude-and-psychometric-practice-module) · Milestone 3 · **Medium**  
-- [JOB-14](https://linear.app/job-prep-website/issue/JOB-14/set-up-human-made-interview-video-library) · **Low**
-
-### Tasks
-
-- [ ] **7.x** See Linear children JOB-59…66
-
----
-
-## JOB-16 — Privacy, consent, AI-use disclaimers (**this branch**)
-
-**Spec:** [docs/specs/2026-07-17-mvp-job-16-privacy-consent.md](docs/specs/2026-07-17-mvp-job-16-privacy-consent.md)  
-**Plan:** [docs/superpowers/plans/2026-07-17-job-16-privacy-consent.md](docs/superpowers/plans/2026-07-17-job-16-privacy-consent.md)  
-**Linear:** [JOB-16](https://linear.app/job-prep-website/issue/JOB-16) · Children JOB-71…74  
-**Model:** `grok-4.5`
+**Spec:** [docs/specs/2026-07-17-mvp-job-13-assessments.md](docs/specs/2026-07-17-mvp-job-13-assessments.md)  
+**Plan:** [docs/superpowers/plans/2026-07-17-job-13-assessments.md](docs/superpowers/plans/2026-07-17-job-13-assessments.md)  
+**Linear:** [JOB-13](https://linear.app/job-prep-website/issue/JOB-13) · Children JOB-59…62  
+**Model:** `grok-4.5`  
+**Tests:** simple schema/seed/scoring only
 
 ### Tasks
 
-- [x] **16.1 JOB-71** Draft privacy and AI-use copy + legal pages
-- [x] **16.2 JOB-72** Consent gates (upload + AI processing)
-- [x] **16.3 JOB-73** User data deletion/export request path
-- [x] **16.4 JOB-74** Privacy QA checklist + tests
+- [x] **13.1 JOB-59** Assessment practice data model
+- [x] **13.2 JOB-60** Seed original MVP assessment question bank
+- [x] **13.3 JOB-61** Assessment practice UI (`/assessments`)
+- [x] **13.4 JOB-62** Assessment scoring and result summaries
 
 ### Exit criteria
 
-- Real /privacy and /ai-use pages
-- Upload + AI consent gates
-- Settings export/deletion requests
-- Checklist documented
+- User can pick a category, complete practice questions, see score + explanations
+- Work-style framed as non-clinical self-reflection
 
 ---
 
-## Parallel Wave 1 (other worktrees)
+## JOB-16 — Privacy (merged PR #8)
 
-- Phase 6 interview → `.worktree/job-11-mock-interview`
-- JOB-13 assessments → `.worktree/job-13-assessments`
+- [x] JOB-71…74 landed on main via PR #8
+
+## Parallel Wave 1
+
+- Phase 6 interview → PR #6 (`.worktree/job-11-mock-interview`)

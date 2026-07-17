@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
  * models, a stale client can be missing delegates (e.g. resumeDocument).
  * Bump PRISMA_CLIENT_VERSION when the schema gains models used at runtime.
  */
-const PRISMA_CLIENT_VERSION = "2026-07-17-job16-data-request";
+const PRISMA_CLIENT_VERSION = "2026-07-17-job13-plus-job16";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -25,6 +25,8 @@ function hasRequiredDelegates(client: PrismaClient): boolean {
     jobDescription?: { findMany?: unknown };
     jobMatchAnalysis?: { findMany?: unknown };
     preparationPlan?: { findMany?: unknown };
+    assessmentCategory?: { findMany?: unknown };
+    assessmentAttempt?: { findMany?: unknown };
     dataRequest?: { findMany?: unknown };
   };
   return (
@@ -33,6 +35,8 @@ function hasRequiredDelegates(client: PrismaClient): boolean {
     typeof extended.jobDescription?.findMany === "function" &&
     typeof extended.jobMatchAnalysis?.findMany === "function" &&
     typeof extended.preparationPlan?.findMany === "function" &&
+    typeof extended.assessmentCategory?.findMany === "function" &&
+    typeof extended.assessmentAttempt?.findMany === "function" &&
     typeof extended.dataRequest?.findMany === "function"
   );
 }
