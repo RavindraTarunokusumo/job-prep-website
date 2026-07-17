@@ -83,7 +83,7 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 
 - [x] **6.1 JOB-50** Mock interview session data model
 - [x] **6.2 JOB-51** Role-based interview question generation
-- [ ] **6.3 JOB-52** Text mock interview UI (`/interview`)
+- [x] **6.3 JOB-52** Text mock interview UI (`/interview`)
 - [ ] **6.4 JOB-53** Contextual follow-up question logic
 - [ ] **6.5 JOB-54** Mock interview session tests
 

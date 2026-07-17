@@ -177,3 +177,180 @@ export async function startInterviewSessionAction(form: {
     };
   }
 }
+
+type SubmitOk = {
+  ok: true;
+  nextTurnId?: string;
+  followUp?: boolean;
+  sessionComplete?: boolean;
+};
+type SubmitResult = SubmitOk | ActionErr;
+
+type SessionActionOk = { ok: true };
+type SessionActionResult = SessionActionOk | ActionErr;
+
+/**
+ * Save an answer on a turn. T3 stub: no follow-up decision, no feedback.
+ * Advances to the next unanswered turn by orderIndex when present.
+ */
+export async function submitInterviewAnswerAction(form: {
+  sessionId: string;
+  turnId: string;
+  answer: string;
+}): Promise<SubmitResult> {
+  const user = await requireUser();
+
+  const answer = form.answer?.trim() ?? "";
+  if (!answer) {
+    return { ok: false, error: "Write an answer before submitting." };
+  }
+
+  const session = await prisma.interviewSession.findUnique({
+    where: { id: form.sessionId },
+    include: {
+      turns: { orderBy: { orderIndex: "asc" } },
+    },
+  });
+
+  if (!session || session.userId !== user.id) {
+    return { ok: false, error: "Interview session not found or access denied." };
+  }
+
+  if (session.status !== "active") {
+    return {
+      ok: false,
+      error: "This interview is no longer active.",
+    };
+  }
+
+  const turn = session.turns.find((t) => t.id === form.turnId);
+  if (!turn) {
+    return { ok: false, error: "Question not found in this session." };
+  }
+
+  // Idempotent: already answered with same or any text → treat as success
+  if (turn.answer != null && turn.answeredAt != null) {
+    const next = session.turns.find(
+      (t) => t.answeredAt == null && t.orderIndex > turn.orderIndex
+    );
+    return {
+      ok: true,
+      nextTurnId: next?.id,
+      followUp: false,
+      sessionComplete: !next,
+    };
+  }
+
+  await prisma.interviewTurn.update({
+    where: { id: turn.id },
+    data: {
+      answer,
+      answeredAt: new Date(),
+    },
+  });
+
+  // T4 will insert follow-ups here. For now, advance to next primary (or any) unanswered turn.
+  const next = session.turns.find(
+    (t) =>
+      t.id !== turn.id &&
+      t.answeredAt == null &&
+      t.orderIndex > turn.orderIndex
+  );
+
+  revalidatePath("/interview");
+  revalidatePath("/dashboard");
+
+  return {
+    ok: true,
+    nextTurnId: next?.id,
+    followUp: false,
+    sessionComplete: !next,
+  };
+}
+
+export async function completeInterviewSessionAction(form: {
+  sessionId: string;
+}): Promise<SessionActionResult> {
+  const user = await requireUser();
+
+  const session = await prisma.interviewSession.findUnique({
+    where: { id: form.sessionId },
+    include: {
+      turns: { select: { answeredAt: true } },
+    },
+  });
+
+  if (!session || session.userId !== user.id) {
+    return { ok: false, error: "Interview session not found or access denied." };
+  }
+
+  if (session.status === "completed") {
+    return { ok: true };
+  }
+
+  if (session.status !== "active") {
+    return {
+      ok: false,
+      error: "Only an active interview can be completed.",
+    };
+  }
+
+  const unanswered = session.turns.some((t) => t.answeredAt == null);
+  if (unanswered) {
+    return {
+      ok: false,
+      error: "Answer all questions before completing, or abandon the session.",
+    };
+  }
+
+  await prisma.interviewSession.update({
+    where: { id: session.id },
+    data: {
+      status: "completed",
+      completedAt: new Date(),
+    },
+  });
+
+  revalidatePath("/interview");
+  revalidatePath("/dashboard");
+
+  return { ok: true };
+}
+
+export async function abandonInterviewSessionAction(form: {
+  sessionId: string;
+}): Promise<SessionActionResult> {
+  const user = await requireUser();
+
+  const session = await prisma.interviewSession.findUnique({
+    where: { id: form.sessionId },
+  });
+
+  if (!session || session.userId !== user.id) {
+    return { ok: false, error: "Interview session not found or access denied." };
+  }
+
+  if (session.status === "abandoned" || session.status === "completed") {
+    return { ok: true };
+  }
+
+  if (session.status !== "active") {
+    return {
+      ok: false,
+      error: "Only an active interview can be abandoned.",
+    };
+  }
+
+  await prisma.interviewSession.update({
+    where: { id: session.id },
+    data: {
+      status: "abandoned",
+      completedAt: new Date(),
+    },
+  });
+
+  revalidatePath("/interview");
+  revalidatePath("/dashboard");
+
+  return { ok: true };
+}
