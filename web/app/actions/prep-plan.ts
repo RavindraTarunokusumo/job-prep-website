@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { userFacingAiError } from "@/lib/ai/errors";
 import { generatePrepPlan, getPrepPlanModelId } from "@/lib/ai/prep-plan";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { requireAiConsent } from "@/lib/legal/consent";
 import { isPlanStale } from "@/lib/plan/staleness";
 import { prisma } from "@/lib/prisma";
 import { assertResumeHasContent } from "@/lib/resume/content";
@@ -60,6 +61,8 @@ export async function generatePrepPlanAction(opts?: {
   jobMatchId?: string;
 }): Promise<{ ok: true; planId: string } | { ok: false; error: string }> {
   const user = await requireUser();
+  const consent = await requireAiConsent(user.id);
+  if (!consent.ok) return consent;
 
   const profile = await getProfileForUser(user.id);
   if (!profile?.onboardingCompletedAt) {

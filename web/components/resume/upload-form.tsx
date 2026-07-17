@@ -7,6 +7,7 @@ import {
 } from "@/app/actions/resume";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { LEGAL_COPY } from "@/lib/legal/copy";
 import {
   RESUME_ALLOWED_MIME_TYPES,
   RESUME_MAX_BYTES,
@@ -21,6 +22,7 @@ export function UploadForm() {
   const [state, formAction, pending] = useActionState(uploadResume, initialState);
   const [clientError, setClientError] = useState<string | null>(null);
   const [selectedName, setSelectedName] = useState<string | null>(null);
+  const [consentChecked, setConsentChecked] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(file: File | undefined) {
@@ -46,10 +48,21 @@ export function UploadForm() {
     setSelectedName(file.name);
   }
 
+  function handleSubmit(formData: FormData) {
+    if (!consentChecked) {
+      setClientError(
+        "Confirm the upload consent checkbox before uploading your CV."
+      );
+      return;
+    }
+    setClientError(null);
+    formAction(formData);
+  }
+
   const error = clientError ?? state.error;
 
   return (
-    <form action={formAction} className="space-y-4">
+    <form action={handleSubmit} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="resume-file">CV / resume file</Label>
         <div
@@ -101,13 +114,34 @@ export function UploadForm() {
         ) : null}
       </div>
 
+      <label className="flex items-start gap-2 text-sm font-medium text-foreground">
+        <input
+          type="checkbox"
+          name="uploadConsent"
+          checked={consentChecked}
+          onChange={(event) => {
+            setConsentChecked(event.target.checked);
+            if (event.target.checked) {
+              setClientError(null);
+            }
+          }}
+          className="mt-0.5 size-4 shrink-0 rounded border-input"
+          required
+        />
+        <span>{LEGAL_COPY.uploadConsent}</span>
+      </label>
+
       {error ? (
         <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {error}
         </p>
       ) : null}
 
-      <Button type="submit" size="lg" disabled={pending || Boolean(clientError)}>
+      <Button
+        type="submit"
+        size="lg"
+        disabled={pending || Boolean(clientError) || !consentChecked}
+      >
         {pending ? "Uploading and parsing…" : "Upload resume"}
       </Button>
     </form>

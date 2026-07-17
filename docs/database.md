@@ -18,6 +18,7 @@ Migrations: `web/prisma/migrations/`
 | `PreparationPlan` | Personalized prep plan with source snapshot IDs for staleness detection |
 | `PreparationPlanItem` | Checklist items (`category`, `status`, `priority`, optional `href` deep link) |
 | `ApplicationDraft` | Cover letters and short application messages; `type`/`status`/`tone`/`length` as strings; optional `sections`/`meta` JSON; version lineage via `supersedesId` + `version`; zod in `web/lib/validation/application-draft.ts` |
+| `UserConsent` | User acknowledgments for upload and AI processing; `kind` is `upload` \| `ai_processing`; `version` matches `CONSENT_COPY_VERSION` in `web/lib/legal/copy.ts`; unique on `(userId, kind, version)` |
 
 ### Prisma client in Next.js dev
 

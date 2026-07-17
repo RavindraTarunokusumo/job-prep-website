@@ -10,6 +10,7 @@ import {
   type DraftListItem,
 } from "@/components/cover-letter/draft-list";
 import { Logo } from "@/components/landing/logo";
+import { AiConsentBanner } from "@/components/legal/ai-consent";
 import {
   Card,
   CardContent,
@@ -18,6 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { hasConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 import { coverLetterSectionsSchema } from "@/lib/validation/application-draft";
 
@@ -40,39 +42,41 @@ export default async function CoverLetterPage({
   const profile = await getProfileForUser(user.id);
   const { draftId: requestedDraftId } = await searchParams;
 
-  const [parsedResumes, jobRows, draftRows] = await Promise.all([
-    prisma.resumeDocument.findMany({
-      where: { userId: user.id, status: "parsed" },
-      orderBy: { updatedAt: "desc" },
-      select: { id: true, originalFilename: true },
-    }),
-    prisma.jobDescription.findMany({
-      where: { userId: user.id },
-      orderBy: { updatedAt: "desc" },
-      take: 20,
-      select: { id: true, title: true, company: true },
-    }),
-    prisma.applicationDraft.findMany({
-      where: { userId: user.id },
-      orderBy: { updatedAt: "desc" },
-      take: 10,
-      select: {
-        id: true,
-        title: true,
-        status: true,
-        type: true,
-        version: true,
-        updatedAt: true,
-        content: true,
-        tone: true,
-        length: true,
-        sections: true,
-        resumeDocumentId: true,
-        jobDescriptionId: true,
-        errorMessage: true,
-      },
-    }),
-  ]);
+  const [parsedResumes, jobRows, draftRows, aiConsentAccepted] =
+    await Promise.all([
+      prisma.resumeDocument.findMany({
+        where: { userId: user.id, status: "parsed" },
+        orderBy: { updatedAt: "desc" },
+        select: { id: true, originalFilename: true },
+      }),
+      prisma.jobDescription.findMany({
+        where: { userId: user.id },
+        orderBy: { updatedAt: "desc" },
+        take: 20,
+        select: { id: true, title: true, company: true },
+      }),
+      prisma.applicationDraft.findMany({
+        where: { userId: user.id },
+        orderBy: { updatedAt: "desc" },
+        take: 10,
+        select: {
+          id: true,
+          title: true,
+          status: true,
+          type: true,
+          version: true,
+          updatedAt: true,
+          content: true,
+          tone: true,
+          length: true,
+          sections: true,
+          resumeDocumentId: true,
+          jobDescriptionId: true,
+          errorMessage: true,
+        },
+      }),
+      hasConsent(user.id, "ai_processing"),
+    ]);
 
   const resumes: ResumeOption[] = parsedResumes.map((doc) => ({
     id: doc.id,
@@ -172,7 +176,8 @@ export default async function CoverLetterPage({
                 sending.
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <AiConsentBanner initialAccepted={aiConsentAccepted} />
               <CoverLetterWorkspace
                 key={selectedId ?? "new"}
                 resumes={resumes}

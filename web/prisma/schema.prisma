@@ -19,6 +19,22 @@ model User {
   jobMatchAnalyses  JobMatchAnalysis[]
   preparationPlans  PreparationPlan[]
   applicationDrafts ApplicationDraft[]
+  consents          UserConsent[]
+}
+
+model UserConsent {
+  id         String   @id @default(cuid())
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // upload | ai_processing
+  kind       String
+  // copy version string e.g. "2026-07-17"
+  version    String
+  acceptedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, kind, version])
+  @@index([userId])
 }
 
 model ResumeDocument {

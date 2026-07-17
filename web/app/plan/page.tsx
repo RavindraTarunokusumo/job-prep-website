@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/landing/logo";
+import { AiConsentBanner } from "@/components/legal/ai-consent";
 import { PlanChecklist } from "@/components/plan/plan-checklist";
 import {
   Card,
@@ -13,12 +14,13 @@ import {
   isPlanStale,
 } from "@/app/actions/prep-plan";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { hasConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 
 export default async function PlanPage() {
   const user = await requireUser();
 
-  const [profile, activePlan, parsedResumeCount, stalenessSources] =
+  const [profile, activePlan, parsedResumeCount, stalenessSources, aiConsentAccepted] =
     await Promise.all([
       getProfileForUser(user.id),
       prisma.preparationPlan.findFirst({
@@ -33,6 +35,7 @@ export default async function PlanPage() {
         where: { userId: user.id, status: "parsed" },
       }),
       getMyPlanStalenessSources(),
+      hasConsent(user.id, "ai_processing"),
     ]);
 
   const canGenerate =
@@ -91,7 +94,11 @@ export default async function PlanPage() {
               review.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            <AiConsentBanner
+              initialAccepted={aiConsentAccepted}
+              disclaimerKey="careerRecommendationLimits"
+            />
             <PlanChecklist
               plan={planSnapshot}
               stale={stale}
