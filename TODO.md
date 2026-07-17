@@ -1,7 +1,7 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 17 July 2026 (Wave 1 — Phase 6 interview PR; JOB-13/16 merged)
-**Branch:** `feat/phase-6-mock-interview`
+**Last updated:** 17 July 2026 (Wave 2 — JOB-14 video library in this worktree)
+**Branch:** `feat/job-14-videos`
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.  
@@ -57,7 +57,7 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 | **5** Cover letter & messages | **Done** | JOB-9 | PR #5 `3c929e1` · JOB-42…45 |
 | **6** Text mock + feedback | **In progress (this branch)** | JOB-11 + JOB-12 | Spec `docs/specs/2026-07-17-mvp-phase-6-mock-interview-feedback.md` |
 | **7** Assessments | Parallel worktree | JOB-13 | `.worktree/job-13-assessments` |
-| **7b** Videos | Pending | JOB-14 | After Wave 1 |
+| **7b** Videos | **In progress (this worktree)** | JOB-14 | Wave 2 · JOB-63…66 |
 | **8a** Privacy | Parallel worktree | JOB-16 | `.worktree/job-16-privacy` |
 | **8b** Report / metrics | Pending | JOB-15/17 | After Wave 1 |
 
@@ -106,6 +106,32 @@ Milestone 2 complete (except JOB-79 research). Next: **Milestone 3** practice to
 - **JOB-13** assessments → `.worktree/job-13-assessments` / `feat/job-13-assessments`
 - **JOB-16** privacy/consent → `.worktree/job-16-privacy` / `feat/job-16-privacy`
 
+## Wave 2 — JOB-14 Interview video library (**this worktree**)
+
+**Spec:** [docs/specs/2026-07-17-mvp-job-14-video-library.md](docs/specs/2026-07-17-mvp-job-14-video-library.md)  
+**Plan:** [docs/superpowers/plans/2026-07-17-job-14-video-library.md](docs/superpowers/plans/2026-07-17-job-14-video-library.md)  
+**Linear:** JOB-14 · Children JOB-63…66  
+**Branch / worktree:** `feat/job-14-videos` @ `.worktree/wave2-job-14-videos`  
+**Model:** `grok-4.5` high effort  
+**Policy:** Human-made / externally hosted placeholders only — **no AI video generation**
+
+### Tasks
+
+- [x] **14.1 JOB-63** Prisma `InterviewVideo` model + migration + validation
+- [x] **14.2 JOB-64** `/videos` browse + filter UI (replace placeholder)
+- [x] **14.3 JOB-65** Simple admin `/videos/admin` (authenticated onboarded writers; global content)
+- [x] **14.4 JOB-66** Prep plan recommendations (href + category match helpers)
+- [x] **14.5** Seed sample video metadata + `npm run seed:videos`
+- [x] **14.6** Simple tests + `docs/database.md` + full `web/` suite
+
+### Exit criteria
+
+- Users can filter published videos, add entries via admin, and reach library links from plan items when relevant
+
+### Notes
+
+- MVP admin writes are **not** operator-role gated — any onboarded user can add global rows; tighten later if needed
+
 ## Deferred
 
-- JOB-14 videos, JOB-15 report, JOB-17 metrics, JOB-79 (skip)
+- JOB-15 report, JOB-17 metrics, JOB-79 (skip)
