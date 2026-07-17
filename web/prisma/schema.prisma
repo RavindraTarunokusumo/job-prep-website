@@ -20,6 +20,7 @@ model User {
   preparationPlans  PreparationPlan[]
   applicationDrafts ApplicationDraft[]
   consents          UserConsent[]
+  dataRequests      DataRequest[]
 }
 
 model UserConsent {
@@ -34,6 +35,21 @@ model UserConsent {
   createdAt  DateTime @default(now())
 
   @@unique([userId, kind, version])
+  @@index([userId])
+}
+
+model DataRequest {
+  id        String   @id @default(cuid())
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // export | deletion
+  type      String
+  // pending | completed | rejected
+  status    String   @default("pending")
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   @@index([userId])
 }
 

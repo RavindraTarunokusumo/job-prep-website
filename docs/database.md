@@ -19,6 +19,7 @@ Migrations: `web/prisma/migrations/`
 | `PreparationPlanItem` | Checklist items (`category`, `status`, `priority`, optional `href` deep link) |
 | `ApplicationDraft` | Cover letters and short application messages; `type`/`status`/`tone`/`length` as strings; optional `sections`/`meta` JSON; version lineage via `supersedesId` + `version`; zod in `web/lib/validation/application-draft.ts` |
 | `UserConsent` | User acknowledgments for upload and AI processing; `kind` is `upload` \| `ai_processing`; `version` matches `CONSENT_COPY_VERSION` in `web/lib/legal/copy.ts`; unique on `(userId, kind, version)` |
+| `DataRequest` | User export/deletion requests from Settings; `type` is `export` \| `deletion`; `status` is `pending` \| `completed` \| `rejected` (default `pending`); optional `note` for operators; MVP does **not** auto-delete storage — rows are for operator handling. Immediate export JSON is metadata-only (profile + document meta + recent analysis ids; no file bytes) via `requestDataExportAction` |
 
 ### Prisma client in Next.js dev
 
