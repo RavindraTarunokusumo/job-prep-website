@@ -17,6 +17,7 @@ Migrations: `web/prisma/migrations/`
 | `JobMatchAnalysis` | Resume-to-JD match runs; `result` JSON validated by `jobMatchResultSchema`; `matchScore` denormalized 0–100 (fit score, not hire probability) |
 | `PreparationPlan` | Personalized prep plan with source snapshot IDs for staleness detection |
 | `PreparationPlanItem` | Checklist items (`category`, `status`, `priority`, optional `href` deep link) |
+| `ApplicationDraft` | Cover letters and short application messages; `type`/`status`/`tone`/`length` as strings; optional `sections`/`meta` JSON; version lineage via `supersedesId` + `version`; zod in `web/lib/validation/application-draft.ts` |
 
 ### Prisma client in Next.js dev
 

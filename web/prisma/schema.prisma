@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id               String              @id @db.Uuid
-  email            String              @unique
-  createdAt        DateTime            @default(now())
-  updatedAt        DateTime            @updatedAt
-  profile          Profile?
-  resumeDocuments  ResumeDocument[]
-  resumeReviews    ResumeReview[]
-  jobDescriptions  JobDescription[]
-  jobMatchAnalyses JobMatchAnalysis[]
-  preparationPlans PreparationPlan[]
+  id                String              @id @db.Uuid
+  email             String              @unique
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  profile           Profile?
+  resumeDocuments   ResumeDocument[]
+  resumeReviews     ResumeReview[]
+  jobDescriptions   JobDescription[]
+  jobMatchAnalyses  JobMatchAnalysis[]
+  preparationPlans  PreparationPlan[]
+  applicationDrafts ApplicationDraft[]
 }
 
 model ResumeDocument {
@@ -33,10 +34,11 @@ model ResumeDocument {
   rawText          String?  @db.Text
   parseError       String?
   parsedData       Json?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  resumeReviews    ResumeReview[]
-  jobMatchAnalyses JobMatchAnalysis[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  resumeReviews     ResumeReview[]
+  jobMatchAnalyses  JobMatchAnalysis[]
+  applicationDrafts ApplicationDraft[]
 
   @@index([userId])
 }
@@ -90,7 +92,8 @@ model JobDescription {
   errorMessage  String?
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt
-  matchAnalyses JobMatchAnalysis[]
+  matchAnalyses     JobMatchAnalysis[]
+  applicationDrafts ApplicationDraft[]
 
   @@index([userId])
 }
@@ -148,4 +151,40 @@ model PreparationPlanItem {
   updatedAt   DateTime        @updatedAt
 
   @@index([planId])
+}
+
+model ApplicationDraft {
+  id               String           @id @default(cuid())
+  userId           String           @db.Uuid
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // cover_letter | recruiter_dm | referral_request | application_note
+  type             String
+  title            String
+  // draft | generating | failed
+  status           String           @default("draft")
+  // professional | enthusiastic | formal | concise
+  tone             String?
+  // short | medium | long (cover letter primarily)
+  length           String?
+  content          String           @db.Text
+  // { intro?: string, body?: string, closing?: string }
+  sections         Json?
+  // generation options / provenance snapshot
+  meta             Json?
+  jobDescriptionId String?
+  jobDescription   JobDescription?  @relation(fields: [jobDescriptionId], references: [id], onDelete: SetNull)
+  resumeDocumentId String?
+  resumeDocument   ResumeDocument?  @relation(fields: [resumeDocumentId], references: [id], onDelete: SetNull)
+  // Version lineage: null = root; prior draft id when superseding
+  supersedesId     String?
+  version          Int              @default(1)
+  model            String?
+  errorMessage     String?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([userId, type])
+  @@index([jobDescriptionId])
+  @@index([resumeDocumentId])
 }

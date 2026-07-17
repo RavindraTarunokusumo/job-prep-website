@@ -42,24 +42,30 @@ export default async function DashboardPage() {
   const profile = await getProfileForUser(user.id);
   const onboardingComplete = profile?.onboardingCompletedAt != null;
 
-  const [latestReview, latestMatch, activePlan] = await Promise.all([
-    prisma.resumeReview.findFirst({
-      where: { userId: user.id, status: "completed" },
-      orderBy: { createdAt: "desc" },
-      select: { overallScore: true },
-    }),
-    prisma.jobMatchAnalysis.findFirst({
-      where: { userId: user.id, status: "completed" },
-      orderBy: { createdAt: "desc" },
-      select: { matchScore: true },
-    }),
-    prisma.preparationPlan.findFirst({
-      where: { userId: user.id, status: "active" },
-      include: {
-        items: { select: { status: true } },
-      },
-    }),
-  ]);
+  const [latestReview, latestMatch, activePlan, latestCoverLetter] =
+    await Promise.all([
+      prisma.resumeReview.findFirst({
+        where: { userId: user.id, status: "completed" },
+        orderBy: { createdAt: "desc" },
+        select: { overallScore: true },
+      }),
+      prisma.jobMatchAnalysis.findFirst({
+        where: { userId: user.id, status: "completed" },
+        orderBy: { createdAt: "desc" },
+        select: { matchScore: true },
+      }),
+      prisma.preparationPlan.findFirst({
+        where: { userId: user.id, status: "active" },
+        include: {
+          items: { select: { status: true } },
+        },
+      }),
+      prisma.applicationDraft.findFirst({
+        where: { userId: user.id, type: "cover_letter" },
+        orderBy: { updatedAt: "desc" },
+        select: { id: true, title: true, status: true },
+      }),
+    ]);
 
   const planDone =
     activePlan?.items.filter((item) => item.status === "done").length ?? 0;
@@ -103,7 +109,7 @@ export default async function DashboardPage() {
           ) : null}
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2">
           <Card className="shadow-sm">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-semibold">Resume score</CardTitle>
@@ -185,6 +191,36 @@ export default async function DashboardPage() {
                 className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
               >
                 View plan
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">Cover letter</CardTitle>
+              <CardDescription className="text-xs">
+                Latest draft
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {latestCoverLetter ? (
+                <p className="truncate text-sm font-semibold text-foreground">
+                  {latestCoverLetter.status === "generating"
+                    ? "Generating…"
+                    : latestCoverLetter.title || "Untitled draft"}
+                </p>
+              ) : (
+                <p className="text-sm text-muted-foreground">Not started</p>
+              )}
+              <Link
+                href={
+                  latestCoverLetter
+                    ? `/cover-letter?draftId=${latestCoverLetter.id}`
+                    : "/cover-letter"
+                }
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              >
+                {latestCoverLetter ? "Open draft" : "Write letter"}
               </Link>
             </CardContent>
           </Card>
