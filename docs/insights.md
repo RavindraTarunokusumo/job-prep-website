@@ -117,4 +117,38 @@ Workflow lessons above were folded into `AGENTS.md` / `CLAUDE.md`:
 - PR #4 merged (`3f324f5`); Post-PR archive Phase 4; Linear JOB-7/8/10 already Done.
 - Reflection written; harness proposals listed above for user approval before AGENTS/CLAUDE edit.
 
+## 2026-07-17 — Phase 5 Autopilot cycle (session close)
+
+### Tools & commands
+
+- **Model id drift:** AGENTS.md pin `grok-composer-2.5-fast` failed with `unknown model id`. `HOME=/root grok models` listed only **`grok-4.5`**. Handoffs used `-m grok-4.5 --effort high --yolo --output-format json` successfully.
+- Long handoffs still need background + wait; capture `sessionId` and `find ~/.grok/sessions -type d -name $sessionId -prune -exec rm -rf {} +`.
+- Worktree: `git worktree add .worktree/job-9-cover-letter -b feat/... main`; symlink `web/.env.local`; `npm ci` + `npx prisma generate` in worktree.
+- GitNexus CLI not registered for this repo (only unrelated indexes). Fall back to direct reads; note blocker, do not block Autopilot.
+- Linear: full project name filter; mark parent + children Done after merge; PR attachment auto-linked.
+- PR path: `gh pr create` (no `--json` on create); `gh pr merge N --merge` preserves SHAs/notes; push `refs/notes/commits` separately.
+- Dirty main tree (local AGENTS/CLAUDE edits) blocked clean checkout — `git stash` before ff-only pull for Post-PR.
+
+### Skills / review
+
+- Bundled `/bundled:review` on PR #5 posted **PENDING** review with real UI bugs: section regen same-id left client state stale; save recomposed from sections and wiped free-edited full letter.
+- Reception: verified against code, fixed before relying on merge (landed as `31a99dd`). PENDING review still needs human Submit on GitHub.
+
+### Recurring failure modes
+
+- Documented model pin becomes stale when CLI model catalog changes — orchestrator must run `grok models` and fall back without aborting Autopilot.
+- Client editors that remount only on id change will not reflect in-place server updates unless actions return payloads and client applies them (or force remount keys).
+- Prisma JSON clear needs `Prisma.JsonNull`, not raw `null`, under strict client types.
+
+### Worth improving (harness proposals)
+
+1. **Model pin rule:** “Prefer AGENTS model pin; if CLI rejects, run `grok models` and use listed default; record actual model in insights.”
+2. **Editor action contract:** Server actions that mutate same-row content should return `{ content, sections? }` for client state sync when UI is useState-initialized from props.
+3. **GitNexus optional:** if repo not in index, one-line log and continue (already practice; make explicit so juniors do not thrash on impact commands).
+
+### Applied this session
+
+- PR #5 merged (`3c929e1`); archive Phase 5; Linear JOB-9 + JOB-42…45 Done.
+- Reflection written; harness proposals above for user approval before AGENTS/CLAUDE edit.
+
 
