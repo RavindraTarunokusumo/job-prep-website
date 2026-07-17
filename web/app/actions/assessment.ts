@@ -208,6 +208,21 @@ export async function submitAnswerAction(
     return { ok: false, error: "Question not found for this attempt." };
   }
 
+  const existing = await prisma.assessmentAnswer.findUnique({
+    where: {
+      attemptId_questionId: {
+        attemptId: attempt.id,
+        questionId: question.id,
+      },
+    },
+  });
+  if (existing) {
+    return {
+      ok: false,
+      error: "This question was already answered. Answers cannot be changed.",
+    };
+  }
+
   const choices = parseChoices(question.choices);
   const reflection = isReflectionQuestion(question.correctAnswer, choices);
 
@@ -233,26 +248,22 @@ export async function submitAnswerAction(
     isCorrect = selected === question.correctAnswer;
   }
 
-  await prisma.assessmentAnswer.upsert({
-    where: {
-      attemptId_questionId: {
+  try {
+    await prisma.assessmentAnswer.create({
+      data: {
         attemptId: attempt.id,
         questionId: question.id,
+        selectedKey: selected,
+        freeText: free,
+        isCorrect,
       },
-    },
-    create: {
-      attemptId: attempt.id,
-      questionId: question.id,
-      selectedKey: selected,
-      freeText: free,
-      isCorrect,
-    },
-    update: {
-      selectedKey: selected,
-      freeText: free,
-      isCorrect,
-    },
-  });
+    });
+  } catch {
+    return {
+      ok: false,
+      error: "This question was already answered. Answers cannot be changed.",
+    };
+  }
 
   revalidatePath("/assessments");
   return {
@@ -382,6 +393,7 @@ export async function getAttemptAction(
     const choices = parseChoices(q.choices);
     const reflection = isReflectionQuestion(q.correctAnswer, choices);
     const existing = answerByQuestion.get(q.id);
+    const answered = existing != null;
 
     return {
       id: q.id,
@@ -394,9 +406,9 @@ export async function getAttemptAction(
           ? q.difficulty
           : undefined,
       isReflection: reflection,
-      explanation: q.explanation,
-      // Hide correct key until answered (and still only for feedback)
-      correctAnswer: existing ? q.correctAnswer : null,
+      // Hide explanation + correct key until answered (prevents cheating via payload)
+      explanation: answered ? q.explanation : null,
+      correctAnswer: answered ? q.correctAnswer : null,
       existingAnswer: existing
         ? {
             selectedKey: existing.selectedKey,

@@ -25,7 +25,7 @@ export default async function AssessmentsPage({
   searchParams,
 }: AssessmentsPageProps) {
   await requireUser();
-  const { attemptId, view } = await searchParams;
+  const { attemptId } = await searchParams;
 
   let attemptDetail = null;
   if (attemptId) {
@@ -35,14 +35,12 @@ export default async function AssessmentsPage({
     }
   }
 
+  // Results only for completed attempts (ignore view=results while in progress)
   const showResults =
-    attemptDetail != null &&
-    (attemptDetail.status === "completed" || view === "results");
+    attemptDetail != null && attemptDetail.status === "completed";
 
   const showWorkspace =
-    attemptDetail != null &&
-    attemptDetail.status === "in_progress" &&
-    view !== "results";
+    attemptDetail != null && attemptDetail.status === "in_progress";
 
   const { categories, seedHint } =
     !showWorkspace && !showResults
