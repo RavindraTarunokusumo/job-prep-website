@@ -8,6 +8,7 @@ import {
   rewriteResumeBullet,
 } from "@/lib/ai/resume-review";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { requireAiConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 import { assertResumeHasContent } from "@/lib/resume/content";
 import { parseResumeReviewResult } from "@/lib/validation/resume-review";
@@ -28,6 +29,8 @@ export async function runResumeReviewAction(
   documentId: string
 ): Promise<{ ok: true; reviewId: string } | { ok: false; error: string }> {
   const user = await requireUser();
+  const consent = await requireAiConsent(user.id);
+  if (!consent.ok) return consent;
 
   const doc = await getOwnedDocument(user.id, documentId);
   if (!doc) {
@@ -118,7 +121,9 @@ export async function rewriteResumeBulletAction(input: {
 }): Promise<
   { ok: true; suggestions: string[] } | { ok: false; error: string }
 > {
-  await requireUser();
+  const user = await requireUser();
+  const consent = await requireAiConsent(user.id);
+  if (!consent.ok) return consent;
 
   const original = input.original?.trim();
   if (!original) {

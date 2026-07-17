@@ -8,18 +8,51 @@ datasource db {
 }
 
 model User {
-  id                String              @id @db.Uuid
-  email             String              @unique
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
-  profile           Profile?
-  resumeDocuments   ResumeDocument[]
-  resumeReviews     ResumeReview[]
-  jobDescriptions   JobDescription[]
-  jobMatchAnalyses  JobMatchAnalysis[]
-  preparationPlans  PreparationPlan[]
-  applicationDrafts ApplicationDraft[]
-  interviewSessions InterviewSession[]
+  id                 String              @id @db.Uuid
+  email              String              @unique
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  profile            Profile?
+  resumeDocuments    ResumeDocument[]
+  resumeReviews      ResumeReview[]
+  jobDescriptions    JobDescription[]
+  jobMatchAnalyses   JobMatchAnalysis[]
+  preparationPlans   PreparationPlan[]
+  applicationDrafts  ApplicationDraft[]
+  assessmentAttempts AssessmentAttempt[]
+  interviewSessions  InterviewSession[]
+  consents           UserConsent[]
+  dataRequests       DataRequest[]
+}
+
+model UserConsent {
+  id         String   @id @default(cuid())
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // upload | ai_processing
+  kind       String
+  // copy version string e.g. "2026-07-17"
+  version    String
+  acceptedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  @@unique([userId, kind, version])
+  @@index([userId])
+}
+
+model DataRequest {
+  id        String   @id @default(cuid())
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // export | deletion
+  type      String
+  // pending | completed | rejected
+  status    String   @default("pending")
+  note      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model ResumeDocument {
@@ -188,6 +221,81 @@ model ApplicationDraft {
   @@index([userId, type])
   @@index([jobDescriptionId])
   @@index([resumeDocumentId])
+}
+
+// Global practice content (not user-owned). Status/disclaimer fields are strings.
+model AssessmentCategory {
+  id             String               @id @default(cuid())
+  slug           String               @unique
+  name           String
+  description    String?              @db.Text
+  sortOrder      Int                  @default(0)
+  // e.g. practice_only — UI disclaimer framing (not clinical / not employment screening)
+  disclaimerKind String               @default("practice_only")
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  questions      AssessmentQuestion[]
+  attempts       AssessmentAttempt[]
+}
+
+model AssessmentQuestion {
+  id            String              @id @default(cuid())
+  categoryId    String
+  category      AssessmentCategory  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  prompt        String              @db.Text
+  // [{ key, label }] for MCQ; null/empty for free-text reflection
+  choices       Json?
+  // Null for reflection items (no single correct answer)
+  correctAnswer String?
+  explanation   String?             @db.Text
+  // easy | medium | hard (optional)
+  difficulty    String?
+  sortOrder     Int                 @default(0)
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  answers       AssessmentAnswer[]
+
+  @@index([categoryId])
+}
+
+// User-owned practice run against a global category
+model AssessmentAttempt {
+  id          String             @id @default(cuid())
+  userId      String             @db.Uuid
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId  String
+  category    AssessmentCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  // in_progress | completed
+  status      String
+  score       Int?
+  maxScore    Int?
+  summary     Json?
+  startedAt   DateTime           @default(now())
+  completedAt DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  answers     AssessmentAnswer[]
+
+  @@index([userId])
+  @@index([categoryId])
+  @@index([userId, categoryId])
+}
+
+model AssessmentAnswer {
+  id          String             @id @default(cuid())
+  attemptId   String
+  attempt     AssessmentAttempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId  String
+  question    AssessmentQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedKey String?
+  freeText    String?            @db.Text
+  // Null for reflection items
+  isCorrect   Boolean?
+  createdAt   DateTime           @default(now())
+
+  @@unique([attemptId, questionId])
+  @@index([attemptId])
+  @@index([questionId])
 }
 
 model InterviewSession {

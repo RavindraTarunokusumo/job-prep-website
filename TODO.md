@@ -1,6 +1,7 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 17 July 2026 (Wave 1 Autopilot — Phase 6 + parallel JOB-13 / JOB-16)  
+**Last updated:** 17 July 2026 (Wave 1 — Phase 6 interview PR; JOB-13/16 merged)
+**Branch:** `feat/phase-6-mock-interview`
 **Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
 **Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)  
 **Product promise:** Upload your CV, choose your target role, get a personalized job-preparation plan.  

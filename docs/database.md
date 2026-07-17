@@ -20,6 +20,14 @@ Migrations: `web/prisma/migrations/`
 | `ApplicationDraft` | Cover letters and short application messages; `type`/`status`/`tone`/`length` as strings; optional `sections`/`meta` JSON; version lineage via `supersedesId` + `version`; zod in `web/lib/validation/application-draft.ts` |
 | `InterviewSession` | Text mock interview run; `status` as string (`active` \| `completed` \| `abandoned`); role/experience snapshot; optional resume/JD/plan-item ids; question-generation `model`; zod session/turn schemas in `web/lib/validation/interview.ts` |
 | `InterviewTurn` | Ordered question/answer turn in a session; `kind` as string (`primary` \| `follow_up`); optional `category`, `parentTurnId`, answer timestamps; optional `feedback` JSON + `feedbackModel` (JOB-12) |
+| `AssessmentCategory` | Global aptitude practice categories (`slug` unique; `disclaimerKind` string, default `practice_only`); not user-owned |
+| `AssessmentQuestion` | Global bank items per category; `choices` JSON `[{key,label}]`; `correctAnswer` nullable for reflection; optional `difficulty` string |
+| `AssessmentAttempt` | User-owned practice run (`status`: `in_progress` \| `completed`); optional `score`/`maxScore`/`summary` JSON; `startedAt`/`completedAt` |
+| `AssessmentAnswer` | One answer per question per attempt (`@@unique([attemptId, questionId])`); `selectedKey` and/or `freeText`; `isCorrect` nullable for reflection |
+| `UserConsent` | User acknowledgments for upload and AI processing; `kind` is `upload` \| `ai_processing`; `version` matches `CONSENT_COPY_VERSION` in `web/lib/legal/copy.ts`; unique on `(userId, kind, version)` |
+| `DataRequest` | User export/deletion requests from Settings; `type` is `export` \| `deletion`; `status` is `pending` \| `completed` \| `rejected` (default `pending`); optional `note` for operators; MVP does **not** auto-delete storage — rows are for operator handling. Immediate export JSON is metadata-only (profile + document meta + recent analysis ids; no file bytes) via `requestDataExportAction` |
+
+Zod enums/payloads for category slugs, attempt status, choices, and question payloads live in `web/lib/validation/assessment.ts`.
 
 ### Prisma client in Next.js dev
 
