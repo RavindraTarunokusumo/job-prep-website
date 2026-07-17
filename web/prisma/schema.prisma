@@ -20,6 +20,7 @@ model User {
   preparationPlans   PreparationPlan[]
   applicationDrafts  ApplicationDraft[]
   assessmentAttempts AssessmentAttempt[]
+  interviewSessions  InterviewSession[]
   consents           UserConsent[]
   dataRequests       DataRequest[]
 }
@@ -295,4 +296,52 @@ model AssessmentAnswer {
   @@unique([attemptId, questionId])
   @@index([attemptId])
   @@index([questionId])
+}
+
+model InterviewSession {
+  id                    String          @id @default(cuid())
+  userId                String          @db.Uuid
+  user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // active | completed | abandoned
+  status                String
+  targetRole            String
+  experienceLevel       String?
+  targetIndustry        String?
+  resumeDocumentId      String?
+  jobDescriptionId      String?
+  preparationPlanItemId String?
+  title                 String?
+  model                 String?
+  errorMessage          String?
+  startedAt             DateTime        @default(now())
+  completedAt           DateTime?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  turns                 InterviewTurn[]
+
+  @@index([userId])
+  @@index([userId, status])
+}
+
+model InterviewTurn {
+  id            String           @id @default(cuid())
+  sessionId     String
+  session       InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  // primary | follow_up
+  kind          String
+  // behavioral | motivation | competency | role_specific | follow_up
+  category      String?
+  orderIndex    Int
+  question      String           @db.Text
+  answer        String?          @db.Text
+  answeredAt    DateTime?
+  parentTurnId  String?
+  // InterviewFeedback JSON (JOB-12)
+  feedback      Json?
+  feedbackModel String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([sessionId])
+  @@index([sessionId, orderIndex])
 }
