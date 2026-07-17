@@ -18,6 +18,8 @@ Migrations: `web/prisma/migrations/`
 | `PreparationPlan` | Personalized prep plan with source snapshot IDs for staleness detection |
 | `PreparationPlanItem` | Checklist items (`category`, `status`, `priority`, optional `href` deep link) |
 | `ApplicationDraft` | Cover letters and short application messages; `type`/`status`/`tone`/`length` as strings; optional `sections`/`meta` JSON; version lineage via `supersedesId` + `version`; zod in `web/lib/validation/application-draft.ts` |
+| `InterviewSession` | Text mock interview run; `status` as string (`active` \| `completed` \| `abandoned`); role/experience snapshot; optional resume/JD/plan-item ids; question-generation `model`; zod session/turn schemas in `web/lib/validation/interview.ts` |
+| `InterviewTurn` | Ordered question/answer turn in a session; `kind` as string (`primary` \| `follow_up`); optional `category`, `parentTurnId`, answer timestamps; optional `feedback` JSON + `feedbackModel` (JOB-12) |
 
 ### Prisma client in Next.js dev
 
