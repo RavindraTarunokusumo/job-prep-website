@@ -34,7 +34,8 @@ Rules:
 - Do not claim hire probability or guaranteed outcomes.
 - category must be one of: cv, application, interview, skills, other.
 - priority: lower number = higher urgency (1 is most urgent).
-- href: optional deep links — use /resume/check for CV fixes, /jobs/match for JD matching, /resume for uploads.
+- href: optional deep links — use /resume/check for CV fixes, /jobs/match for JD matching, /resume for uploads, /interview for mock practice, /videos or /videos?category=behavioral|technical|case|motivation for the human-made interview video library.
+- For interview-category items, prefer href /interview and/or /videos with a relevant category query when helpful.
 - If no job match was provided, include an application-category item suggesting they paste a JD at /jobs/match.
 - Items must be specific and actionable, not generic boilerplate only.
 - reason: explain why this item matters for this candidate.`;

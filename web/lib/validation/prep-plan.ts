@@ -18,7 +18,10 @@ export const prepPlanItemSchema = z.object({
   priority: z.number(),
   href: z
     .string()
-    .regex(/^\/[a-zA-Z0-9/_-]*$/, "href must be a relative app path")
+    .regex(
+      /^\/[a-zA-Z0-9/_-]*(?:\?[a-zA-Z0-9=_&%-]*)?$/,
+      "href must be a relative app path (optional query)"
+    )
     .optional(),
 });
 
