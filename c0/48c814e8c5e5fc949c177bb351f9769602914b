@@ -1,0 +1,5 @@
+Task: JOB-70 Report tests
+Summary: Unit tests for deterministic aggregator; mark Phase 8c tasks complete.
+Docs: TODO.md
+TODO: Phase 8c / 15.4 JOB-70
+Validation: web lint typecheck test build
