@@ -1,0 +1,5 @@
+Task: JOB-68 Report generation service
+Summary: Aggregate sources, optional narrative, generate/list/get actions with ownership.
+Docs: N/A
+TODO: Phase 8c / 15.2 JOB-68
+Validation: web lint typecheck test build
