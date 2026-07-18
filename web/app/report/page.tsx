@@ -18,11 +18,6 @@ import {
 } from "@/app/actions/performance-report";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
 import { hasConsent } from "@/lib/legal/consent";
-import { prisma } from "@/lib/prisma";
-import {
-  safeParsePerformanceReportSections,
-  type PerformanceReportSections,
-} from "@/lib/validation/performance-report";
 
 type ReportPageProps = {
   searchParams: Promise<{ reportId?: string }>;
@@ -47,64 +42,18 @@ export default async function ReportPage({ searchParams }: ReportPageProps) {
       ? await getPerformanceReportAction(reportId)
       : null;
 
-  // Default to latest ready report when no id provided
-  if ((!selected || !selected.ok) && reports.length > 0) {
+  const invalidReportId =
+    reportId != null && (!selected || !selected.ok);
+
+  // Default to latest ready report only when no id was requested
+  if (!reportId && reports.length > 0) {
     const latestReady =
       reports.find((r) => r.status === "ready") ?? reports[0];
     selected = await getPerformanceReportAction(latestReady.id);
   }
 
-  // Lightweight latest for empty-state messaging
-  let latestFromDb: {
-    id: string;
-    title: string;
-    status: string;
-    version: number;
-    summary: string | null;
-    sections: PerformanceReportSections | null;
-    meta: unknown;
-    resumeReviewId: string | null;
-    jobMatchAnalysisId: string | null;
-    interviewSessionId: string | null;
-    preparationPlanId: string | null;
-    model: string | null;
-    errorMessage: string | null;
-    createdAt: string;
-    updatedAt: string;
-  } | null = null;
-
-  if ((!selected || !selected.ok) && reports.length === 0) {
-    const row = await prisma.performanceReport.findFirst({
-      where: { userId: user.id },
-      orderBy: { createdAt: "desc" },
-    });
-    if (row) {
-      latestFromDb = {
-        id: row.id,
-        title: row.title,
-        status: row.status,
-        version: row.version,
-        summary: row.summary,
-        sections: row.sections
-          ? safeParsePerformanceReportSections(row.sections)
-          : null,
-        meta: row.meta,
-        resumeReviewId: row.resumeReviewId,
-        jobMatchAnalysisId: row.jobMatchAnalysisId,
-        interviewSessionId: row.interviewSessionId,
-        preparationPlanId: row.preparationPlanId,
-        model: row.model,
-        errorMessage: row.errorMessage,
-        createdAt: row.createdAt.toISOString(),
-        updatedAt: row.updatedAt.toISOString(),
-      };
-    }
-  }
-
   const activeReport =
-    selected && selected.ok
-      ? selected.report
-      : latestFromDb;
+    selected && selected.ok ? selected.report : null;
 
   const selectedId = activeReport?.id ?? null;
 
@@ -186,7 +135,18 @@ export default async function ReportPage({ searchParams }: ReportPageProps) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              {activeReport ? (
+              {invalidReportId ? (
+                <p className="text-sm text-muted-foreground">
+                  That report was not found or you do not have access.{" "}
+                  <Link
+                    href="/report"
+                    className="font-semibold text-brand-blue hover:underline"
+                  >
+                    View your latest report
+                  </Link>{" "}
+                  or generate a new one.
+                </p>
+              ) : activeReport ? (
                 <ReportView report={activeReport} />
               ) : (
                 <p className="text-sm text-muted-foreground">

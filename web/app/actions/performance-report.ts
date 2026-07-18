@@ -52,7 +52,7 @@ async function gatherSources(userId: string): Promise<GatheredSources> {
     profile,
     resumeReviewRow,
     jobMatchRow,
-    interviewRow,
+    interviewRows,
     assessmentRows,
     prepPlanRow,
   ] = await Promise.all([
@@ -87,9 +87,12 @@ async function gatherSources(userId: string): Promise<GatheredSources> {
         result: true,
       },
     }),
-    prisma.interviewSession.findFirst({
+    // Prefer a completed session that actually has coaching feedback
+    // (latest completed may lack feedback if scoring was skipped).
+    prisma.interviewSession.findMany({
       where: { userId, status: "completed" },
       orderBy: { completedAt: "desc" },
+      take: 12,
       select: {
         id: true,
         title: true,
@@ -166,19 +169,20 @@ async function gatherSources(userId: string): Promise<GatheredSources> {
   }
 
   let interview: GatheredSources["interview"] = null;
-  if (interviewRow) {
-    const turnFeedbacks = interviewRow.turns
+  for (const session of interviewRows) {
+    const turnFeedbacks = session.turns
       .map((t) => safeParseInterviewFeedback(t.feedback))
       .filter((f): f is NonNullable<typeof f> => f != null)
       .map(interviewFeedbackToGathered);
 
     if (turnFeedbacks.length > 0) {
       interview = {
-        id: interviewRow.id,
-        title: interviewRow.title,
-        targetRole: interviewRow.targetRole,
+        id: session.id,
+        title: session.title,
+        targetRole: session.targetRole,
         turnFeedbacks,
       };
+      break;
     }
   }
 
