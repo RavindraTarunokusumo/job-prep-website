@@ -48,6 +48,7 @@ export default async function DashboardPage() {
     latestMatch,
     activePlan,
     latestCoverLetter,
+    latestReport,
     eventCountRows,
   ] = await Promise.all([
     prisma.resumeReview.findFirst({
@@ -70,6 +71,11 @@ export default async function DashboardPage() {
       where: { userId: user.id, type: "cover_letter" },
       orderBy: { updatedAt: "desc" },
       select: { id: true, title: true, status: true },
+    }),
+    prisma.performanceReport.findFirst({
+      where: { userId: user.id, status: "ready" },
+      orderBy: { createdAt: "desc" },
+      select: { id: true, title: true, version: true, createdAt: true },
     }),
     prisma.analyticsEvent.groupBy({
       by: ["name"],
@@ -237,6 +243,41 @@ export default async function DashboardPage() {
                 className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
               >
                 {latestCoverLetter ? "Open draft" : "Write letter"}
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">
+                Performance report
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Compiled readiness snapshot
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {latestReport ? (
+                <div className="space-y-1">
+                  <p className="truncate text-sm font-semibold text-foreground">
+                    {latestReport.title}
+                  </p>
+                  <Badge variant="secondary" className="text-xs">
+                    v{latestReport.version}
+                  </Badge>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">No report yet</p>
+              )}
+              <Link
+                href={
+                  latestReport
+                    ? `/report?reportId=${latestReport.id}`
+                    : "/report"
+                }
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              >
+                {latestReport ? "Open report" : "Generate report"}
               </Link>
             </CardContent>
           </Card>
