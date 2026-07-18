@@ -32,4 +32,4 @@ Example: `2026-07-15-mvp-phase-0-1-foundation-landing.md`
 | [2026-07-17-mvp-job-14-video-library.md](./2026-07-17-mvp-job-14-video-library.md) | **Accepted (merged PR #10)** | JOB-14 video library (JOB-63…66) |
 | [2026-07-17-mvp-job-16-privacy-consent.md](./2026-07-17-mvp-job-16-privacy-consent.md) | **Accepted (merged PR #8)** | JOB-16 privacy/consent (JOB-71…74) |
 | [2026-07-17-mvp-job-17-metrics.md](./2026-07-17-mvp-job-17-metrics.md) | **Accepted (merged PR #11)** | JOB-17 metrics (JOB-75…78) |
-| [2026-07-18-mvp-job-15-performance-report.md](./2026-07-18-mvp-job-15-performance-report.md) | **Accepted (Autopilot)** | JOB-15 compiled performance report (JOB-67…70) |
+| [2026-07-18-mvp-job-15-performance-report.md](./2026-07-18-mvp-job-15-performance-report.md) | **Accepted (merged PR #12)**** | JOB-15 compiled performance report (JOB-67…70) |
