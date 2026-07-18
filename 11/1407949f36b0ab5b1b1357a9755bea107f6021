@@ -1,0 +1,5 @@
+Task: Docs typo fix
+Summary: Remove extra asterisks on JOB-15 specs README row.
+Docs: docs/specs/README.md
+TODO: N/A
+Validation: docs only
