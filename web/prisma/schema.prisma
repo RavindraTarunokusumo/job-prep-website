@@ -20,10 +20,11 @@ model User {
   preparationPlans   PreparationPlan[]
   applicationDrafts  ApplicationDraft[]
   assessmentAttempts AssessmentAttempt[]
-  interviewSessions  InterviewSession[]
-  consents           UserConsent[]
-  dataRequests       DataRequest[]
-  analyticsEvents    AnalyticsEvent[]
+  interviewSessions   InterviewSession[]
+  performanceReports  PerformanceReport[]
+  consents            UserConsent[]
+  dataRequests        DataRequest[]
+  analyticsEvents     AnalyticsEvent[]
 }
 
 model AnalyticsEvent {
@@ -359,6 +360,34 @@ model InterviewTurn {
 
   @@index([sessionId])
   @@index([sessionId, orderIndex])
+}
+
+// Compiled readiness report (JOB-15). Status is a string: generating | ready | failed.
+// Coaching guidance only — never hire/no-hire predictions.
+model PerformanceReport {
+  id                   String   @id @default(cuid())
+  userId               String   @db.Uuid
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // generating | ready | failed
+  status               String
+  version              Int      @default(1)
+  title                String
+  summary              String?  @db.Text
+  // PerformanceReportSections JSON (zod: performanceReportSectionsSchema)
+  sections             Json?
+  // optional provenance (assessment attempt ids, narrative source, etc.)
+  meta                 Json?
+  resumeReviewId       String?
+  jobMatchAnalysisId   String?
+  interviewSessionId   String?
+  preparationPlanId    String?
+  model                String?
+  errorMessage         String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, createdAt])
 }
 
 // Global curated interview video library (not user-owned). Human-made / external hosts only.

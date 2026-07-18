@@ -29,8 +29,9 @@ Migrations: `web/prisma/migrations/`
 | `UserConsent` | User acknowledgments for upload and AI processing; `kind` is `upload` \| `ai_processing`; `version` matches `CONSENT_COPY_VERSION` in `web/lib/legal/copy.ts`; unique on `(userId, kind, version)` |
 | `DataRequest` | User export/deletion requests from Settings; `type` is `export` \| `deletion`; `status` is `pending` \| `completed` \| `rejected` (default `pending`); optional `note` for operators; MVP does **not** auto-delete storage — rows are for operator handling. Immediate export JSON is metadata-only (profile + document meta + recent analysis ids; no file bytes) via `requestDataExportAction` |
 | `AnalyticsEvent` | First-party product metrics (JOB-17); `userId` optional UUID FK (SET NULL on user delete); `name` event key from `web/lib/analytics/events.ts`; `props` JSON scalars only (ids, scores, rating — **never** resume/JD/answer body text); `createdAt`. Indexes on `userId`, `name`, `createdAt`, `(userId, name)`. Taxonomy: [analytics-taxonomy.md](./analytics-taxonomy.md) |
+| `PerformanceReport` | Compiled readiness report (JOB-15); user-owned; `status` string (`generating` \| `ready` \| `failed`); `version` Int increments on regenerate (prior rows kept); `title`, optional `summary` Text; `sections` JSON validated by `performanceReportSectionsSchema` in `web/lib/validation/performance-report.ts`; optional `meta` JSON (e.g. assessment attempt ids); optional provenance ids `resumeReviewId`, `jobMatchAnalysisId`, `interviewSessionId`, `preparationPlanId` (string ids, not hard FKs); optional `model` / `errorMessage`. Indexes on `userId`, `(userId, createdAt)`. Coaching only — no hire/no-hire predictions |
 
-Zod enums/payloads for category slugs, attempt status, choices, and question payloads live in `web/lib/validation/assessment.ts`.
+Zod enums/payloads for category slugs, attempt status, choices, and question payloads live in `web/lib/validation/assessment.ts`. Report section keys and narrative schemas live in `web/lib/validation/performance-report.ts`.
 
 ### Prisma client in Next.js dev
 
