@@ -1,0 +1,5 @@
+Task: JOB-83 progress and comparison
+Summary: compare/trends pure helpers, history aggregation action, /progress UI, tests.
+Docs: docs/specs/2026-07-26-job-81-84-workspace-evidence-progress-cv.md
+TODO: T3 — JOB-83 Progress & comparison
+Validation: npm run lint, typecheck, test (progress-compare)
