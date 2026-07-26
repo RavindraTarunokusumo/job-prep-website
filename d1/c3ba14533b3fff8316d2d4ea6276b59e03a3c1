@@ -1,0 +1,5 @@
+Task: JOB-81 application tracker
+Summary: Domain stage/urgency helpers, CRUD actions, /applications UI, unit tests.
+Docs: docs/specs/2026-07-26-job-81-84-workspace-evidence-progress-cv.md
+TODO: T1 — JOB-81 Application tracker
+Validation: npm run lint, typecheck, test (application-stage)
