@@ -26,6 +26,10 @@ const AUTH_ONLY_PREFIXES = [
   "/videos",
   "/report",
   "/settings",
+  "/applications",
+  "/evidence",
+  "/progress",
+  "/cv",
 ];
 
 function isAuthOnlyPath(pathname: string): boolean {

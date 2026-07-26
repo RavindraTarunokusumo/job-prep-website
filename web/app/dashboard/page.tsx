@@ -283,6 +283,90 @@ export default async function DashboardPage() {
           </Card>
 
           <ValidationMetricsCard counts={eventCounts} />
+
+          <Card className="shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">
+                Applications
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Job-search workspace
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                Track stages, next actions, and deadlines
+              </p>
+              <Link
+                href="/applications"
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              >
+                Open workspace
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">
+                Evidence & STAR
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Verified career facts
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                Confirm evidence and build interview stories
+              </p>
+              <Link
+                href="/evidence"
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              >
+                Open bank
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">Progress</CardTitle>
+              <CardDescription className="text-xs">
+                History & comparison
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                Longitudinal readiness trends
+              </p>
+              <Link
+                href="/progress"
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              >
+                View progress
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-sm">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-semibold">CV editor</CardTitle>
+              <CardDescription className="text-xs">
+                Versions & PDF export
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-muted-foreground">
+                Structured CV with rewrite guards
+              </p>
+              <Link
+                href="/cv"
+                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              >
+                Open editor
+              </Link>
+            </CardContent>
+          </Card>
         </div>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
