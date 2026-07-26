@@ -1,0 +1,5 @@
+Task: Skeptic gap fixes JOB-81/82
+Summary: Removed STAR invent placeholders; added application update/attach UI + tests; pure seed persist path.
+Docs: N/A
+TODO: skeptic panel fixes
+Validation: npm run lint, typecheck, test (209), build; full-suite twice
