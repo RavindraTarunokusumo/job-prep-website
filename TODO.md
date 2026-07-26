@@ -48,7 +48,7 @@
 - [x] Full suite + commit + git note
 
 ### T5 — Ship
-- [ ] Push branch + notes; open PR; review workflow; Linear updates; JSON report
+- [x] Push branch + notes; open PR; review workflow; Linear updates; JSON report
 
 ---
 
