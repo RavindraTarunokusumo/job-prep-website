@@ -317,13 +317,9 @@ export async function createStarStoryAction(
     if (evidenceId) {
       const evidence = await ownedEvidence(user.id, evidenceId);
       if (!evidence) return { ok: false, error: "Linked evidence not found." };
-      if (d.requireConfirmedEvidence || evidence.verification !== "confirmed") {
-        // Strict path when requireConfirmedEvidence; also refuse inventing from non-confirmed when linking for seed
-        if (d.requireConfirmedEvidence) {
-          const gate = assertStarFromConfirmedEvidence(evidence);
-          if (!gate.ok) return { ok: false, error: gate.error };
-        }
-      }
+      // Linked evidence must be user-confirmed (product rule: no invented experience).
+      const gate = assertStarFromConfirmedEvidence(evidence);
+      if (!gate.ok) return { ok: false, error: gate.error };
     }
 
     // Optional seed-from-evidence when only evidenceId provided with empty STAR fields is handled by caller;

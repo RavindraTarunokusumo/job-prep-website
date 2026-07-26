@@ -33,6 +33,136 @@ type Props = {
   loadError?: string | null;
 };
 
+type EditorProps = {
+  selected: CvVersionDetail;
+  pending: boolean;
+  onSave: (summary: string, skills: string, versionName: string) => void;
+  onDuplicate: () => void;
+  onExport: () => void;
+};
+
+/**
+ * Keyed by selected version id so local fields remount when switching versions
+ * (avoids stale summary/skills wiping another version on save).
+ */
+function CvEditorForm({
+  selected,
+  pending,
+  onSave,
+  onDuplicate,
+  onExport,
+}: EditorProps) {
+  const [summary, setSummary] = useState(selected.content.summary ?? "");
+  const [skills, setSkills] = useState(
+    (selected.content.skills ?? []).join(", ")
+  );
+  const [versionName, setVersionName] = useState("v2");
+
+  return (
+    <Card className="shadow-sm">
+      <CardHeader>
+        <CardTitle className="text-base font-semibold">
+          Editor — {selected.name}
+        </CardTitle>
+        <CardDescription>
+          Apply rewrites carefully: verified employers and dates are protected
+          from silent mutation.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {selected.outdated ? (
+          <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm">
+            Source profile or confirmed evidence changed since this version was
+            saved.
+          </p>
+        ) : null}
+        <div className="space-y-1.5">
+          <Label htmlFor="cv-summary">Summary</Label>
+          <Textarea
+            id="cv-summary"
+            value={summary}
+            onChange={(e) => setSummary(e.target.value)}
+            rows={3}
+            disabled={pending}
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="cv-skills">Skills (comma-separated)</Label>
+          <Input
+            id="cv-skills"
+            value={skills}
+            onChange={(e) => setSkills(e.target.value)}
+            disabled={pending}
+          />
+        </div>
+        <div className="space-y-1.5">
+          <Label>Experience (read-only preview)</Label>
+          <ul className="space-y-2 text-sm">
+            {selected.content.experience.length === 0 ? (
+              <li className="text-muted-foreground">No experience rows.</li>
+            ) : (
+              selected.content.experience.map((e, i) => (
+                <li
+                  key={i}
+                  className="rounded-lg border border-border px-3 py-2"
+                >
+                  <span className="font-semibold">
+                    {e.title ?? "Role"} — {e.company ?? "Company"}
+                  </span>
+                  {e.verified ? (
+                    <Badge className="ml-2" variant="secondary">
+                      verified
+                    </Badge>
+                  ) : null}
+                  {e.description ? (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {e.description}
+                    </p>
+                  ) : null}
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+        <div className="flex flex-wrap items-end gap-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="ver-name">Save as version name</Label>
+            <Input
+              id="ver-name"
+              value={versionName}
+              onChange={(e) => setVersionName(e.target.value)}
+              disabled={pending}
+            />
+          </div>
+          <Button
+            type="button"
+            disabled={pending}
+            onClick={() => onSave(summary, skills, versionName)}
+          >
+            Save version
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={pending}
+            onClick={onDuplicate}
+          >
+            Duplicate
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={pending}
+            onClick={onExport}
+          >
+            Export PDF
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function CvWorkspace({
   documents,
   versions,
@@ -42,11 +172,6 @@ export function CvWorkspace({
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const [summary, setSummary] = useState(selected?.content.summary ?? "");
-  const [skills, setSkills] = useState(
-    (selected?.content.skills ?? []).join(", ")
-  );
-  const [versionName, setVersionName] = useState("v2");
 
   function refresh(qs?: string) {
     router.push(qs ? `/cv?${qs}` : "/cv");
@@ -65,7 +190,7 @@ export function CvWorkspace({
     });
   }
 
-  function onSaveVersion() {
+  function onSaveVersion(summary: string, skills: string, versionName: string) {
     if (!selected) return;
     setError(null);
     startTransition(async () => {
@@ -98,7 +223,10 @@ export function CvWorkspace({
     startTransition(async () => {
       const res = await duplicateCvVersionAction(selected.id);
       if (!res.ok) setError(res.error);
-      else refresh(`documentId=${selected.documentId}&versionId=${res.versionId}`);
+      else
+        refresh(
+          `documentId=${selected.documentId}&versionId=${res.versionId}`
+        );
     });
   }
 
@@ -195,103 +323,14 @@ export function CvWorkspace({
 
       {selected ? (
         <>
-          <Card className="shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-base font-semibold">
-                Editor — {selected.name}
-              </CardTitle>
-              <CardDescription>
-                Apply rewrites carefully: verified employers and dates are
-                protected from silent mutation.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {selected.outdated ? (
-                <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm">
-                  Source profile or confirmed evidence changed since this
-                  version was saved.
-                </p>
-              ) : null}
-              <div className="space-y-1.5">
-                <Label htmlFor="cv-summary">Summary</Label>
-                <Textarea
-                  id="cv-summary"
-                  value={summary}
-                  onChange={(e) => setSummary(e.target.value)}
-                  rows={3}
-                  disabled={pending}
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="cv-skills">Skills (comma-separated)</Label>
-                <Input
-                  id="cv-skills"
-                  value={skills}
-                  onChange={(e) => setSkills(e.target.value)}
-                  disabled={pending}
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label>Experience (read-only preview)</Label>
-                <ul className="space-y-2 text-sm">
-                  {selected.content.experience.length === 0 ? (
-                    <li className="text-muted-foreground">No experience rows.</li>
-                  ) : (
-                    selected.content.experience.map((e, i) => (
-                      <li
-                        key={i}
-                        className="rounded-lg border border-border px-3 py-2"
-                      >
-                        <span className="font-semibold">
-                          {e.title ?? "Role"} — {e.company ?? "Company"}
-                        </span>
-                        {e.verified ? (
-                          <Badge className="ml-2" variant="secondary">
-                            verified
-                          </Badge>
-                        ) : null}
-                        {e.description ? (
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            {e.description}
-                          </p>
-                        ) : null}
-                      </li>
-                    ))
-                  )}
-                </ul>
-              </div>
-              <div className="flex flex-wrap items-end gap-3">
-                <div className="space-y-1.5">
-                  <Label htmlFor="ver-name">Save as version name</Label>
-                  <Input
-                    id="ver-name"
-                    value={versionName}
-                    onChange={(e) => setVersionName(e.target.value)}
-                    disabled={pending}
-                  />
-                </div>
-                <Button type="button" disabled={pending} onClick={onSaveVersion}>
-                  Save version
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={pending}
-                  onClick={onDuplicate}
-                >
-                  Duplicate
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={pending}
-                  onClick={onExport}
-                >
-                  Export PDF
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+          <CvEditorForm
+            key={selected.id}
+            selected={selected}
+            pending={pending}
+            onSave={onSaveVersion}
+            onDuplicate={onDuplicate}
+            onExport={onExport}
+          />
 
           <Card className="shadow-sm">
             <CardHeader>

@@ -148,7 +148,8 @@ export function buildPdfBytes(
   const lines = buildTextLines(content, sectionConfig);
   const fontSize = 11;
   const leading = 14;
-  const startY = 800;
+  // MediaBox height is 792; keep first baseline inside the page.
+  const startY = 770;
   const startX = 50;
 
   let stream = "BT\n/F1 " + fontSize + " Tf\n";

@@ -66,6 +66,17 @@ describe("rewrite guards", () => {
     }
   });
 
+  it("refuses silent mutation of verified description", () => {
+    const content = sampleCv(true);
+    const r = applyRewriteSuggestion(content, {
+      path: "experience.0.description",
+      proposedText: "Invented responsibilities",
+      force: false,
+    });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.error).toMatch(/verified/i);
+  });
+
   it("allows verified field change only with force", () => {
     const content = sampleCv(true);
     const r = applyRewriteSuggestion(content, {

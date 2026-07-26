@@ -360,30 +360,31 @@ export async function saveCvVersionAction(input: {
     const fp = await currentFingerprint(user.id);
     const setCurrent = input.setCurrent !== false;
 
-    if (setCurrent) {
-      await prisma.cvVersion.updateMany({
-        where: { documentId: doc.id, userId: user.id },
-        data: { isCurrent: false },
+    const version = await prisma.$transaction(async (tx) => {
+      if (setCurrent) {
+        await tx.cvVersion.updateMany({
+          where: { documentId: doc.id, userId: user.id },
+          data: { isCurrent: false },
+        });
+      }
+      const created = await tx.cvVersion.create({
+        data: {
+          documentId: doc.id,
+          userId: user.id,
+          name: input.name.trim() || "Version",
+          content: content as unknown as Prisma.InputJsonValue,
+          sectionConfig: sectionConfig as unknown as Prisma.InputJsonValue,
+          jobDescriptionId: input.jobDescriptionId ?? null,
+          jobApplicationId: input.jobApplicationId ?? null,
+          sourceFingerprint: fp,
+          isCurrent: setCurrent,
+        },
       });
-    }
-
-    const version = await prisma.cvVersion.create({
-      data: {
-        documentId: doc.id,
-        userId: user.id,
-        name: input.name.trim() || "Version",
-        content: content as unknown as Prisma.InputJsonValue,
-        sectionConfig: sectionConfig as unknown as Prisma.InputJsonValue,
-        jobDescriptionId: input.jobDescriptionId ?? null,
-        jobApplicationId: input.jobApplicationId ?? null,
-        sourceFingerprint: fp,
-        isCurrent: setCurrent,
-      },
-    });
-
-    await prisma.cvDocument.update({
-      where: { id: doc.id },
-      data: { updatedAt: new Date() },
+      await tx.cvDocument.update({
+        where: { id: doc.id },
+        data: { updatedAt: new Date() },
+      });
+      return created;
     });
 
     revalidatePath("/cv");
@@ -408,23 +409,24 @@ export async function duplicateCvVersionAction(
     const cloned = duplicateVersionContent(content);
     const fp = await currentFingerprint(user.id);
 
-    await prisma.cvVersion.updateMany({
-      where: { documentId: v.documentId, userId: user.id },
-      data: { isCurrent: false },
-    });
-
-    const created = await prisma.cvVersion.create({
-      data: {
-        documentId: v.documentId,
-        userId: user.id,
-        name: newName?.trim() || `${v.name} (copy)`,
-        content: cloned as unknown as Prisma.InputJsonValue,
-        sectionConfig: v.sectionConfig as Prisma.InputJsonValue,
-        jobDescriptionId: v.jobDescriptionId,
-        jobApplicationId: v.jobApplicationId,
-        sourceFingerprint: fp,
-        isCurrent: true,
-      },
+    const created = await prisma.$transaction(async (tx) => {
+      await tx.cvVersion.updateMany({
+        where: { documentId: v.documentId, userId: user.id },
+        data: { isCurrent: false },
+      });
+      return tx.cvVersion.create({
+        data: {
+          documentId: v.documentId,
+          userId: user.id,
+          name: newName?.trim() || `${v.name} (copy)`,
+          content: cloned as unknown as Prisma.InputJsonValue,
+          sectionConfig: v.sectionConfig as Prisma.InputJsonValue,
+          jobDescriptionId: v.jobDescriptionId,
+          jobApplicationId: v.jobApplicationId,
+          sourceFingerprint: fp,
+          isCurrent: true,
+        },
+      });
     });
 
     revalidatePath("/cv");

@@ -74,14 +74,20 @@ export function applyRewriteSuggestion(
     };
   }
 
-  // Also protect when rewriting entire verified entry description that encodes facts
+  // Protect verified entry description/name (evidence facts are often merged here).
+  // Bullet rewrites remain allowed via array index paths.
   if (
     protect &&
     !suggestion.force &&
     parent.verified === true &&
     (leaf === "description" || leaf === "name")
   ) {
-    // Allow bullet rewrites under verified experience; block company-level name swaps via description only for education institution already covered
+    return {
+      ok: false,
+      error:
+        "Refusing to silently alter a verified description or name. Accept with force or edit manually.",
+      content,
+    };
   }
 
   if (Array.isArray(parent) && /^\d+$/.test(leaf)) {
