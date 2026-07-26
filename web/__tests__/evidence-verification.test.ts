@@ -4,6 +4,7 @@ import {
   canConfirmEvidence,
   listConfirmedEvidence,
   listReadyStars,
+  starPersistFieldsFromSeed,
   transitionVerification,
 } from "@/lib/evidence/verification";
 import {
@@ -112,5 +113,52 @@ describe("assertStarFromConfirmedEvidence", () => {
         { readiness: "ready" },
       ])
     ).toHaveLength(1);
+  });
+});
+
+describe("starPersistFieldsFromSeed (shipped createStarFromEvidenceAction path)", () => {
+  it("leaves empty task/action/result empty — no invent filler prompts", () => {
+    const gate = assertStarFromConfirmedEvidence({
+      id: "1",
+      title: "Latency work",
+      verification: "confirmed",
+      organization: "Acme",
+      roleTitle: "Engineer",
+      responsibilities: "",
+      achievements: "",
+      metrics: "",
+    });
+    expect(gate.ok).toBe(true);
+    if (!gate.ok) return;
+
+    // Same mapping used by createStarFromEvidenceAction before prisma.create
+    const fields = starPersistFieldsFromSeed(gate.seed);
+    expect(fields.task).toBe("");
+    expect(fields.action).toBe("");
+    expect(fields.result).toBe("");
+    expect(fields.readiness).toBe("draft");
+    expect(fields.task).not.toMatch(/Describe the task/i);
+    expect(fields.action).not.toMatch(/Describe the actions/i);
+    expect(fields.result).not.toMatch(/Describe the outcome/i);
+    expect(fields.situation).toContain("Engineer");
+    expect(fields.situation).toContain("Acme");
+  });
+
+  it("preserves only user-provided achievements/metrics without inventing numbers", () => {
+    const gate = assertStarFromConfirmedEvidence({
+      id: "2",
+      title: "API project",
+      verification: "confirmed",
+      responsibilities: "Own reliability",
+      achievements: "Reduced p95",
+      metrics: "",
+    });
+    expect(gate.ok).toBe(true);
+    if (!gate.ok) return;
+    const fields = starPersistFieldsFromSeed(gate.seed);
+    expect(fields.task).toBe("Own reliability");
+    expect(fields.action).toBe("Reduced p95");
+    expect(fields.result).toBe("Reduced p95");
+    expect(fields.result).not.toMatch(/\d+%/);
   });
 });

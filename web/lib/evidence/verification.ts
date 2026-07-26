@@ -103,16 +103,55 @@ export function assertStarFromConfirmedEvidence(evidence: EvidenceLike): {
   const metrics = evidence.metrics?.trim() || "";
 
   // Seed only from existing user-provided text — empty strings stay empty
-  // rather than inventing outcomes.
+  // rather than inventing outcomes, metrics, or filler prompts.
+  const hasOrg = Boolean(evidence.organization?.trim());
+  const hasRole = Boolean(evidence.roleTitle?.trim());
+  let situation = "";
+  if (hasRole || hasOrg) {
+    situation = `While working as ${role} at ${org}.`;
+  } else if (evidence.title.trim()) {
+    // Context from the user-provided title only — no fabricated employers/roles.
+    situation = evidence.title.trim();
+  }
+
   return {
     ok: true,
     seed: {
       title: evidence.title,
-      situation: `While working as ${role} at ${org}.`,
-      task: responsibilities || "",
-      action: achievements || responsibilities || "",
+      situation,
+      task: responsibilities,
+      action: achievements,
       result: [achievements, metrics].filter(Boolean).join(" ").trim(),
     },
+  };
+}
+
+/**
+ * Map a confirmed-evidence seed into STAR persist fields.
+ * Never invents filler task/action/result copy — empty stays empty.
+ * Callers that need DB non-null strings may pass empty strings through as-is.
+ */
+export function starPersistFieldsFromSeed(seed: {
+  title: string;
+  situation: string;
+  task: string;
+  action: string;
+  result: string;
+}): {
+  title: string;
+  situation: string;
+  task: string;
+  action: string;
+  result: string;
+  readiness: "draft";
+} {
+  return {
+    title: seed.title,
+    situation: seed.situation,
+    task: seed.task,
+    action: seed.action,
+    result: seed.result,
+    readiness: "draft",
   };
 }
 

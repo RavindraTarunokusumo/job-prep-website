@@ -8,8 +8,14 @@ import {
   stageLabel,
 } from "@/lib/applications/stage";
 import {
+  buildApplicationUpdatePayload,
+  emptyToNullId,
+  hasAttachments,
+} from "@/lib/applications/update-fields";
+import {
   applicationStageSchema,
   createApplicationSchema,
+  updateApplicationSchema,
 } from "@/lib/validation/application";
 
 describe("applicationStageSchema", () => {
@@ -43,6 +49,72 @@ describe("createApplicationSchema", () => {
         role: "Engineer",
       }).success
     ).toBe(true);
+  });
+});
+
+describe("update + attach payload (workspace edit path)", () => {
+  it("buildApplicationUpdatePayload includes next action and all attach IDs", () => {
+    const payload = buildApplicationUpdatePayload("app-1", {
+      nextAction: "Follow up recruiter",
+      nextActionDue: "2026-08-01T12:00:00.000Z",
+      notes: "Warm intro",
+      jobDescriptionId: "jd-1",
+      jobMatchAnalysisId: "match-1",
+      applicationDraftId: "draft-1",
+      interviewSessionId: "int-1",
+      preparationPlanId: "plan-1",
+    });
+    expect(payload).toEqual({
+      id: "app-1",
+      nextAction: "Follow up recruiter",
+      nextActionDue: "2026-08-01T12:00:00.000Z",
+      notes: "Warm intro",
+      jobDescriptionId: "jd-1",
+      jobMatchAnalysisId: "match-1",
+      applicationDraftId: "draft-1",
+      interviewSessionId: "int-1",
+      preparationPlanId: "plan-1",
+    });
+    expect(updateApplicationSchema.safeParse(payload).success).toBe(true);
+  });
+
+  it("empty attach strings clear to null", () => {
+    expect(emptyToNullId("")).toBeNull();
+    expect(emptyToNullId("  ")).toBeNull();
+    expect(emptyToNullId("abc")).toBe("abc");
+    const payload = buildApplicationUpdatePayload("app-2", {
+      nextAction: null,
+      nextActionDue: null,
+      notes: null,
+      jobDescriptionId: "",
+      jobMatchAnalysisId: "  ",
+      applicationDraftId: null,
+      interviewSessionId: null,
+      preparationPlanId: null,
+    });
+    expect(payload.jobDescriptionId).toBeNull();
+    expect(payload.jobMatchAnalysisId).toBeNull();
+  });
+
+  it("hasAttachments detects linked prep records", () => {
+    expect(
+      hasAttachments({
+        jobDescriptionId: null,
+        jobMatchAnalysisId: "m1",
+        applicationDraftId: null,
+        interviewSessionId: null,
+        preparationPlanId: null,
+      })
+    ).toBe(true);
+    expect(
+      hasAttachments({
+        jobDescriptionId: null,
+        jobMatchAnalysisId: null,
+        applicationDraftId: null,
+        interviewSessionId: null,
+        preparationPlanId: null,
+      })
+    ).toBe(false);
   });
 });
 

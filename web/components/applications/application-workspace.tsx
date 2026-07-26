@@ -6,8 +6,14 @@ import {
   archiveApplicationAction,
   createApplicationAction,
   moveApplicationStageAction,
+  updateApplicationAction,
   type ApplicationListItem,
 } from "@/app/actions/application";
+import {
+  buildApplicationUpdatePayload,
+  fieldsFromApplication,
+  hasAttachments,
+} from "@/lib/applications/update-fields";
 import { applicationStages } from "@/lib/validation/application";
 import { stageLabel } from "@/lib/applications/stage";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +27,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 type Props = {
   applications: ApplicationListItem[];
@@ -28,6 +35,176 @@ type Props = {
   upcoming: ApplicationListItem[];
   loadError?: string | null;
 };
+
+function toLocalInputValue(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  // datetime-local expects YYYY-MM-DDTHH:mm
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+type EditFormProps = {
+  app: ApplicationListItem;
+  pending: boolean;
+  onSave: (payload: ReturnType<typeof buildApplicationUpdatePayload>) => void;
+  onCancel: () => void;
+};
+
+function ApplicationEditForm({ app, pending, onSave, onCancel }: EditFormProps) {
+  const initial = fieldsFromApplication(app);
+  const [nextAction, setNextAction] = useState(initial.nextAction ?? "");
+  const [nextActionDue, setNextActionDue] = useState(
+    toLocalInputValue(initial.nextActionDue)
+  );
+  const [notes, setNotes] = useState(initial.notes ?? "");
+  const [jobDescriptionId, setJobDescriptionId] = useState(
+    initial.jobDescriptionId ?? ""
+  );
+  const [jobMatchAnalysisId, setJobMatchAnalysisId] = useState(
+    initial.jobMatchAnalysisId ?? ""
+  );
+  const [applicationDraftId, setApplicationDraftId] = useState(
+    initial.applicationDraftId ?? ""
+  );
+  const [interviewSessionId, setInterviewSessionId] = useState(
+    initial.interviewSessionId ?? ""
+  );
+  const [preparationPlanId, setPreparationPlanId] = useState(
+    initial.preparationPlanId ?? ""
+  );
+
+  function submit(e: React.FormEvent) {
+    e.preventDefault();
+    const dueIso = nextActionDue
+      ? new Date(nextActionDue).toISOString()
+      : null;
+    onSave(
+      buildApplicationUpdatePayload(app.id, {
+        nextAction: nextAction || null,
+        nextActionDue: dueIso,
+        notes: notes || null,
+        jobDescriptionId: jobDescriptionId || null,
+        jobMatchAnalysisId: jobMatchAnalysisId || null,
+        applicationDraftId: applicationDraftId || null,
+        interviewSessionId: interviewSessionId || null,
+        preparationPlanId: preparationPlanId || null,
+      })
+    );
+  }
+
+  return (
+    <form
+      onSubmit={submit}
+      className="mt-3 grid gap-3 rounded-lg border border-border bg-muted/10 p-3 sm:grid-cols-2"
+    >
+      <div className="space-y-1.5 sm:col-span-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Update application
+        </p>
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor={`next-${app.id}`}>Next action</Label>
+        <Input
+          id={`next-${app.id}`}
+          value={nextAction}
+          onChange={(e) => setNextAction(e.target.value)}
+          disabled={pending}
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor={`due-${app.id}`}>Deadline</Label>
+        <Input
+          id={`due-${app.id}`}
+          type="datetime-local"
+          value={nextActionDue}
+          onChange={(e) => setNextActionDue(e.target.value)}
+          disabled={pending}
+        />
+      </div>
+      <div className="space-y-1.5 sm:col-span-2">
+        <Label htmlFor={`notes-${app.id}`}>Notes</Label>
+        <Textarea
+          id={`notes-${app.id}`}
+          value={notes}
+          onChange={(e) => setNotes(e.target.value)}
+          disabled={pending}
+          rows={2}
+        />
+      </div>
+      <div className="space-y-1.5 sm:col-span-2">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          Attach prep records (IDs)
+        </p>
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor={`jd-${app.id}`}>Job description ID</Label>
+        <Input
+          id={`jd-${app.id}`}
+          value={jobDescriptionId}
+          onChange={(e) => setJobDescriptionId(e.target.value)}
+          disabled={pending}
+          placeholder="optional"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor={`match-${app.id}`}>Job match analysis ID</Label>
+        <Input
+          id={`match-${app.id}`}
+          value={jobMatchAnalysisId}
+          onChange={(e) => setJobMatchAnalysisId(e.target.value)}
+          disabled={pending}
+          placeholder="optional"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor={`draft-${app.id}`}>Application draft ID</Label>
+        <Input
+          id={`draft-${app.id}`}
+          value={applicationDraftId}
+          onChange={(e) => setApplicationDraftId(e.target.value)}
+          disabled={pending}
+          placeholder="optional"
+        />
+      </div>
+      <div className="space-y-1.5">
+        <Label htmlFor={`int-${app.id}`}>Interview session ID</Label>
+        <Input
+          id={`int-${app.id}`}
+          value={interviewSessionId}
+          onChange={(e) => setInterviewSessionId(e.target.value)}
+          disabled={pending}
+          placeholder="optional"
+        />
+      </div>
+      <div className="space-y-1.5 sm:col-span-2">
+        <Label htmlFor={`plan-${app.id}`}>Preparation plan ID</Label>
+        <Input
+          id={`plan-${app.id}`}
+          value={preparationPlanId}
+          onChange={(e) => setPreparationPlanId(e.target.value)}
+          disabled={pending}
+          placeholder="optional"
+        />
+      </div>
+      <div className="flex flex-wrap gap-2 sm:col-span-2">
+        <Button type="submit" size="sm" disabled={pending}>
+          {pending ? "Saving…" : "Save updates"}
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          disabled={pending}
+          onClick={onCancel}
+        >
+          Cancel
+        </Button>
+      </div>
+    </form>
+  );
+}
 
 export function ApplicationWorkspace({
   applications,
@@ -42,6 +219,7 @@ export function ApplicationWorkspace({
   const [role, setRole] = useState("");
   const [nextAction, setNextAction] = useState("");
   const [nextActionDue, setNextActionDue] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   function refresh() {
     router.refresh();
@@ -86,6 +264,19 @@ export function ApplicationWorkspace({
       const result = await archiveApplicationAction(id);
       if (!result.ok) setError(result.error);
       else refresh();
+    });
+  }
+
+  function onUpdate(payload: ReturnType<typeof buildApplicationUpdatePayload>) {
+    setError(null);
+    startTransition(async () => {
+      const result = await updateApplicationAction(payload);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      setEditingId(null);
+      refresh();
     });
   }
 
@@ -217,7 +408,8 @@ export function ApplicationWorkspace({
             Applications
           </CardTitle>
           <CardDescription>
-            Active pipeline. Change stage or archive when done.
+            Active pipeline. Edit next actions, attach prep records, change
+            stage, or archive.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -228,66 +420,94 @@ export function ApplicationWorkspace({
             </p>
           ) : (
             <ul className="divide-y divide-border">
-              {applications.map((app) => (
-                <li
-                  key={app.id}
-                  className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-start sm:justify-between"
-                >
-                  <div className="min-w-0 space-y-1">
-                    <p className="font-semibold text-foreground">
-                      {app.role}{" "}
-                      <span className="font-normal text-muted-foreground">
-                        at {app.company}
-                      </span>
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge variant="outline">{stageLabel(app.stage)}</Badge>
-                      {app.nextAction ? (
-                        <span className="text-xs text-muted-foreground">
-                          Next: {app.nextAction}
-                          {app.nextActionDue
-                            ? ` · ${new Date(app.nextActionDue).toLocaleString()}`
-                            : ""}
-                        </span>
-                      ) : null}
+              {applications.map((app) => {
+                const attached = hasAttachments(fieldsFromApplication(app));
+                return (
+                  <li key={app.id} className="py-4 first:pt-0 last:pb-0">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div className="min-w-0 space-y-1">
+                        <p className="font-semibold text-foreground">
+                          {app.role}{" "}
+                          <span className="font-normal text-muted-foreground">
+                            at {app.company}
+                          </span>
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          <Badge variant="outline">
+                            {stageLabel(app.stage)}
+                          </Badge>
+                          {attached ? (
+                            <Badge variant="secondary">Linked prep</Badge>
+                          ) : null}
+                          {app.nextAction ? (
+                            <span className="text-xs text-muted-foreground">
+                              Next: {app.nextAction}
+                              {app.nextActionDue
+                                ? ` · ${new Date(app.nextActionDue).toLocaleString()}`
+                                : ""}
+                            </span>
+                          ) : null}
+                        </div>
+                        {app.notes ? (
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {app.notes}
+                          </p>
+                        ) : null}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <select
+                          className="h-8 rounded-lg border border-border bg-background px-2 text-sm"
+                          value={app.stage}
+                          disabled={pending}
+                          onChange={(e) => onStage(app.id, e.target.value)}
+                          aria-label={`Stage for ${app.company}`}
+                        >
+                          {applicationStages.map((s) => (
+                            <option key={s} value={s}>
+                              {stageLabel(s)}
+                            </option>
+                          ))}
+                        </select>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          disabled={pending}
+                          onClick={() =>
+                            setEditingId((cur) =>
+                              cur === app.id ? null : app.id
+                            )
+                          }
+                        >
+                          {editingId === app.id ? "Close" : "Edit / attach"}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          disabled={pending}
+                          onClick={() => onArchive(app.id)}
+                        >
+                          Archive
+                        </Button>
+                      </div>
                     </div>
-                    {app.notes ? (
-                      <p className="text-xs text-muted-foreground line-clamp-2">
-                        {app.notes}
-                      </p>
+                    {editingId === app.id ? (
+                      <ApplicationEditForm
+                        key={app.id}
+                        app={app}
+                        pending={pending}
+                        onSave={onUpdate}
+                        onCancel={() => setEditingId(null)}
+                      />
                     ) : null}
-                  </div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <select
-                      className="h-8 rounded-lg border border-border bg-background px-2 text-sm"
-                      value={app.stage}
-                      disabled={pending}
-                      onChange={(e) => onStage(app.id, e.target.value)}
-                      aria-label={`Stage for ${app.company}`}
-                    >
-                      {applicationStages.map((s) => (
-                        <option key={s} value={s}>
-                          {stageLabel(s)}
-                        </option>
-                      ))}
-                    </select>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      disabled={pending}
-                      onClick={() => onArchive(app.id)}
-                    >
-                      Archive
-                    </Button>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           )}
         </CardContent>
       </Card>
-
     </div>
   );
 }

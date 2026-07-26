@@ -6,6 +6,7 @@ import {
   canConfirmEvidence,
   listConfirmedEvidence,
   listReadyStars,
+  starPersistFieldsFromSeed,
   transitionVerification,
 } from "@/lib/evidence/verification";
 import { requireUser } from "@/lib/auth/session";
@@ -355,16 +356,18 @@ export async function createStarFromEvidenceAction(
     if (!evidence) return { ok: false, error: "Evidence not found." };
     const gate = assertStarFromConfirmedEvidence(evidence);
     if (!gate.ok) return { ok: false, error: gate.error };
+    // Persist only known facts — never invent placeholder STAR copy.
+    const fields = starPersistFieldsFromSeed(gate.seed);
     const row = await prisma.starStory.create({
       data: {
         userId: user.id,
         evidenceId: evidence.id,
-        title: gate.seed.title,
-        situation: gate.seed.situation,
-        task: gate.seed.task || "Describe the task you owned.",
-        action: gate.seed.action || "Describe the actions you took.",
-        result: gate.seed.result || "Describe the outcome using only known facts.",
-        readiness: "draft",
+        title: fields.title,
+        situation: fields.situation,
+        task: fields.task,
+        action: fields.action,
+        result: fields.result,
+        readiness: fields.readiness,
       },
     });
     revalidatePath("/evidence");
