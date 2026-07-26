@@ -1,0 +1,5 @@
+Task: JOB-81–84 middleware and dashboard links
+Summary: Added auth-only prefixes and dashboard entry cards for new feature routes.
+Docs: N/A
+TODO: T5 — Ship (nav wiring)
+Validation: npm run lint, typecheck, build
