@@ -25,6 +25,11 @@ model User {
   consents            UserConsent[]
   dataRequests        DataRequest[]
   analyticsEvents     AnalyticsEvent[]
+  jobApplications     JobApplication[]
+  careerEvidence      CareerEvidence[]
+  starStories         StarStory[]
+  cvDocuments         CvDocument[]
+  cvVersions          CvVersion[]
 }
 
 model AnalyticsEvent {
@@ -409,4 +414,123 @@ model InterviewVideo {
   updatedAt         DateTime @updatedAt
 
   @@index([published])
+}
+
+
+// JOB-81 — Application tracker
+model JobApplication {
+  id                 String    @id @default(cuid())
+  userId             String    @db.Uuid
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  company            String
+  role               String
+  // interested | preparing | applied | interview | offer | rejected | withdrawn
+  stage              String    @default("interested")
+  sourceUrl          String?
+  location           String?
+  appliedAt          DateTime?
+  closingDate        DateTime?
+  nextAction         String?
+  nextActionDue      DateTime?
+  contactName        String?
+  contactEmail       String?
+  notes              String?   @db.Text
+  // active | archived
+  status             String    @default("active")
+  jobDescriptionId   String?
+  jobMatchAnalysisId String?
+  applicationDraftId String?
+  interviewSessionId String?
+  preparationPlanId  String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([userId, nextActionDue])
+  @@index([userId, stage])
+}
+
+// JOB-82 — Career evidence + STAR bank
+model CareerEvidence {
+  id               String      @id @default(cuid())
+  userId           String      @db.Uuid
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title            String
+  // employment | education | volunteering | freelance | project | competition | other
+  sourceType       String
+  organization     String?
+  roleTitle        String?
+  startDate        String?
+  endDate          String?
+  responsibilities String?     @db.Text
+  achievements     String?     @db.Text
+  metrics          String?     @db.Text
+  // imported | inferred | unconfirmed | confirmed | archived
+  verification     String      @default("unconfirmed")
+  sourceNote       String?
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  starStories      StarStory[]
+
+  @@index([userId])
+  @@index([userId, verification])
+}
+
+model StarStory {
+  id         String          @id @default(cuid())
+  userId     String          @db.Uuid
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  evidenceId String?
+  evidence   CareerEvidence? @relation(fields: [evidenceId], references: [id], onDelete: SetNull)
+  title      String
+  situation  String          @db.Text
+  task       String          @db.Text
+  action     String          @db.Text
+  result     String          @db.Text
+  // draft | ready | archived
+  readiness  String          @default("draft")
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@index([userId])
+  @@index([userId, readiness])
+  @@index([evidenceId])
+}
+
+// JOB-84 — Structured CV editor + versions
+model CvDocument {
+  id        String      @id @default(cuid())
+  userId    String      @db.Uuid
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  // active | archived
+  status    String      @default("active")
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  versions  CvVersion[]
+
+  @@index([userId])
+  @@index([userId, status])
+}
+
+model CvVersion {
+  id                String     @id @default(cuid())
+  documentId        String
+  document          CvDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId            String     @db.Uuid
+  user              User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name              String
+  content           Json
+  sectionConfig     Json?
+  jobDescriptionId  String?
+  jobApplicationId  String?
+  sourceFingerprint String?
+  isCurrent         Boolean    @default(false)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  @@index([documentId])
+  @@index([userId])
+  @@index([userId, isCurrent])
 }
