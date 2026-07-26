@@ -58,7 +58,7 @@ The canonical contract for delegating any unit of work — implementation tasks 
 
 **Invoke** (headless, single-turn, no TUI):
 ```bash
-HOME=/root grok -p "<self-contained prompt>" -m grok-composer-2.5-fast --effort <LEVEL> --yolo --output-format json
+HOME=/root grok -p "/goal <self-contained prompt>" -m grok-composer-2.5-fast --effort <LEVEL> --yolo --output-format json
 ```
 - `-p` / `--single`: headless single-turn mode; creates an ephemeral chat session.
 - `-m` / `--model`: always `grok-composer-2.5-fast` (Composer 2.5) for implementation and review tasks unless the user names another model.
@@ -69,13 +69,13 @@ HOME=/root grok -p "<self-contained prompt>" -m grok-composer-2.5-fast --effort 
 
 **Long-running handoffs:** scaffold, large UI, and review sessions often exceed default shell timeouts. **Do not kill** the process on timeout — run the handoff in the background (or with an extended timeout) and poll until the JSON result is available. Treat an incomplete handoff as failed only if the process exits non-zero or produces no `sessionId`/usable `text`.
 
-**Prompt** must be self-contained — the subagent starts cold with no session context: point it at the exact spec/plan section or PR number, name the precise file scope, and state the boundaries. For implementation, forbid all git operations (the main agent commits), require it to run the **full** `web/` self-check before reporting:
+**Prompt** must be self-contained — the subagent starts cold with no session context: point it at the exact spec/plan section or PR number, name the precise file scope, and state the boundaries. For implementation, the prompt **must begin with `/goal`** (so the handoff reads `HOME=/root grok -p "/goal <task instructions>" …`); forbid all git operations (the main agent commits), require it to run the **full** `web/` self-check before reporting:
 
 ```bash
 cd web && npm run lint && npm run typecheck && npm test && npm run build
 ```
 
-(not just the task's own tests — this surfaces cross-task breakage before the round-trip back), and require a single trailing newline on every file. For review, let the invoked skill post its PENDING GitHub review as a side-effect, and set `NO_COLOR=1` (or feed `gh … --json`) so ANSI codes in `gh` output don't break inline-comment line matching. The orchestrator's own full-suite gate ([Workflow Rule 10](#workflow-rules)) still runs regardless.
+(not just the task's own tests — this surfaces cross-task breakage before the round-trip back), and require a single trailing newline on every file. For review, the prompt begins with the review skill command (`/security-review`, `/bundled:review`) — not `/goal`; let the invoked skill post its PENDING GitHub review as a side-effect, and set `NO_COLOR=1` (or feed `gh … --json`) so ANSI codes in `gh` output don't break inline-comment line matching. The orchestrator's own full-suite gate ([Workflow Rule 10](#workflow-rules)) still runs regardless.
 
 **Capture + process** the JSON `text` and `sessionId`:
 - *Implementation:* review the diff, normalize output, then validate per [Workflow Rule 10](#workflow-rules) (full suite + typecheck + lint) and commit with specific staging + a [git note](#git-notes).
