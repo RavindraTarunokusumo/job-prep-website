@@ -1,0 +1,5 @@
+Task: JOB-82 evidence and STAR bank
+Summary: Verification rules, STAR-from-confirmed, actions, /evidence UI, unit tests.
+Docs: docs/specs/2026-07-26-job-81-84-workspace-evidence-progress-cv.md
+TODO: T2 — JOB-82 Evidence & STAR
+Validation: npm run lint, typecheck, test (evidence-verification)
