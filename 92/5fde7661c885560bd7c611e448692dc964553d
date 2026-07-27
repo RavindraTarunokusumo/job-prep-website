@@ -1,0 +1,5 @@
+Task: JOB-85 unit tests
+Summary: Vitest coverage for ontology schemas, normalize/merge, trusted retrieval and snapshots.
+Docs: N/A
+TODO: JOB-85 85.4
+Validation: npm run lint && typecheck && test (187) && build
