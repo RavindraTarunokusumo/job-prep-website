@@ -1,0 +1,5 @@
+Task: JOB-86 mapper
+Summary: mapRequirementsToEvidence pure matcher + zod + unit tests.
+Docs: docs/specs/2026-07-27-mvp-job-86-requirement-evidence-mapping.md
+TODO: JOB-86
+Validation: vitest requirement-mapping
