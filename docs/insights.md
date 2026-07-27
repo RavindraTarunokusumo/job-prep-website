@@ -152,3 +152,38 @@ Workflow lessons above were folded into `AGENTS.md` / `CLAUDE.md`:
 - Reflection written; harness proposals above for user approval before AGENTS/CLAUDE edit.
 
 
+
+## 2026-07-27 — JOB-85…92 Autopilot closeout (workflow/harness only)
+
+### Tools & commands
+
+- Linear product backlog lived in **Todo**, not the named **Backlog** status; enumeration must query both unstarted states.
+- `gh pr create` may lack `--json`; capture URL from text output and re-query with `gh pr view --json`.
+- Merge with `gh pr merge N --merge` preserves per-commit SHAs and git notes; always push `refs/notes/commits` separately.
+- Local root `main` can be ahead with unpushed docs-only commits + untracked `.grok` — Post-PR/Reflection **must** use a fresh worktree from `origin/main` only; never stage root main dirt.
+- Grok model pin `grok-composer-2.5-fast` unavailable; `HOME=/root grok models` listed only `grok-4.5`. Review handoffs used `-m grok-4.5`.
+- Long review handoffs need extended wait; capture `sessionId` and delete `~/.grok/sessions/**/<sessionId>` after processing.
+- PENDING GitHub reviews on intermediate tips go stale when tip moves — re-run tip review before merge; process merge-blocking bugs before `gh pr merge`.
+
+### Skills / review
+
+- Bundled `/bundled:review` correctly flagged fair-use double-counting (multi-step AI under one product action), readiness including rejected mappings, webhook scan/race, and FK IDOR on optional match rewrites.
+- Reception protocol: verify against code, fix merge-blockers, re-run full suite, push, then merge — do not merge on PENDING alone.
+
+### Recurring failure modes
+
+- Fair-use meters must count **product actions** (analyses, sessions), not raw LLM sub-calls.
+- Domain helpers without server-action wiring fail adversarial “dead code” checks even when unit tests pass.
+- Soft-archive + unique constraints: prefer non-unique DB indexes + app dedupe, or unique only when soft-delete renames keys.
+
+### Worth improving (harness proposals)
+
+1. Document: “Linear Backlog enumeration = status Backlog **and** Todo (unstarted).”
+2. Document: “Before merge, re-review current head if prior PENDING review predates tip commits.”
+3. Document: “Post-PR/Reflection always `git worktree add … origin/main`; never use dirty local main.”
+4. Model pin fallback already proposed previously — reaffirm after catalog-only `grok-4.5` environment.
+
+### Applied this session
+
+- PR #14 merge commit `65fa7e2`; Post-PR archive `3450a3b` on main; Linear JOB-85…92 Done after merge verification.
+- Reflection commit follows on main (this section).
