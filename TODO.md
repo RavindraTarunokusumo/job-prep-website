@@ -1,58 +1,55 @@
 # TODO — MVP Implementation Plan
 
-**Last updated:** 27 July 2026 (Autopilot JOB-85…92 outcome-first wave)  
+**Last updated:** 27 July 2026 (Autopilot JOB-85…92)  
 **Branch:** `feat/job-85-92-outcome-first`  
 **Worktree:** `.worktree/autopilot-job-85-92`  
-**Base:** `origin/main` @ `2fc20d1`  
-**Team:** [Job Prep Website](https://linear.app/job-prep-website) (`JOB`)  
-**Project:** [MVP Roadmap — Personalized Job Preparation Plan](https://linear.app/job-prep-website/project/mvp-roadmap-personalized-job-preparation-plan-85cc64bbf88e)
+**Base:** `origin/main` @ `2fc20d1`
 
-| Source | Link / path |
-|--------|-------------|
-| Specs | `docs/specs/2026-07-27-mvp-job-85-career-evidence-ontology.md` (+ per-issue as landed) |
-| Plans | `docs/superpowers/plans/2026-07-27-job-85-career-evidence-ontology.md` |
-| Ontology | `docs/ontology.md` |
-| Out of agent scope | **JOB-79**, **JOB-80** (finance workbook) |
-| Excluded (Done / prior PR) | **JOB-81…84** |
+## Active work
 
-## Active work — dependency order
+PR open for JOB-85…92 domain contracts + models. Not Done until merged.
 
-### JOB-85 — Shared career evidence ontology (In Progress)
+### JOB-85 — Shared career evidence ontology
 
-- [x] **85.1** Spec + plan + ontology doc + TODO (this file)
-- [x] **85.2** Prisma models + migration + database.md
-- [x] **85.3** Validation schemas + normalize/retrieval/snapshot helpers
-- [x] **85.4** Unit tests for schema, normalize, trusted retrieval
-- [ ] **85.5** Full suite validate; commit(s) + notes; Linear evidence comment
+- [x] Spec/plan/ontology docs
+- [x] Prisma models + migration
+- [x] Validation + retrieval helpers
+- [x] Unit tests + full suite
 
-### JOB-86 — Job requirement→evidence mapping (blocked by 85)
+### JOB-86 — Requirement→evidence mapping
 
-- [ ] Spec/plan → model + match service → UI hooks → tests
+- [x] Spec/plan
+- [x] RequirementEvidenceMatch model
+- [x] Deterministic mapper + tests
 
-### JOB-87 — Application-specific readiness model (blocked by 86)
+### JOB-87 — Application readiness model
 
-- [ ] Spec/plan → scoring + storage → UI → tests
+- [x] ApplicationReadinessScore + computeApplicationReadiness + tests
 
-### JOB-88 — Gap-driven mock interviews (blocked by 86)
+### JOB-88 — Gap-driven mock interviews
 
-- [ ] Spec/plan → question selection + session wiring → tests
+- [x] generateGapDrivenQuestions + rehearsal plan + tests
 
-### JOB-89 — Application outcomes & rejection learning
+### JOB-89 — Application outcomes
 
-- [ ] Spec/plan → outcome model + capture UI + insights → tests
+- [x] ApplicationOutcome model + insights + tests
 
 ### JOB-90 — Model routing & cost telemetry
 
-- [ ] Spec/plan → routing config + telemetry → tests
+- [x] routing helpers + AiUsageEvent model + tests
 
-### JOB-91 — Subscription entitlements & Sprint Pass
+### JOB-91 — Subscription entitlements
 
-- [ ] Spec/plan → plans/entitlements + checks (+ webhook stubs) → tests
+- [x] Plan/Subscription/Entitlement/Billing models + checkEntitlement + tests
 
-### JOB-92 — End-to-end application journey tests (blocked by 86–89)
+### JOB-92 — E2E journey tests
 
-- [ ] Fixtures + journey tests + release checklist
+- [x] Fixture-driven journey covering ontology→mapping→readiness→interview→outcomes
 
-## Completed (archived)
+## Out of agent scope
 
-- Phases 0–6 / JOB-13…17 / JOB-15 — see `docs/iterations/archive/`
+- JOB-79, JOB-80
+
+## Excluded
+
+- JOB-81…84 (Done / PR #13)
