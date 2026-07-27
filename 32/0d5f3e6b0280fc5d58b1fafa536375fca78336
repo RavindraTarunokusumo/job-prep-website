@@ -1,0 +1,5 @@
+Task: Wire JOB-85–92 into app paths
+Summary: Server actions, pages, AI routing/telemetry, entitlements, gap-driven interview, confirm/reject mappings; tests drive shipped wiring.
+Docs: docs/specs/2026-07-27-mvp-job-87-92-outcome-first-batch.md, docs/specs/2026-07-27-mvp-job-86-requirement-evidence-mapping.md
+TODO: skeptic gap closure
+Validation: lint, typecheck, test 230, build (routes evidence/readiness/outcomes/billing)
