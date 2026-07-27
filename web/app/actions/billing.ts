@@ -38,8 +38,26 @@ export async function activateSprintPassAction(): Promise<
   ActionOk<{ endsAt: string; subscriptionId: string }> | ActionErr
 > {
   const user = await requireUser();
-  const plan = await ensurePlan("sprint_pass");
   const now = new Date();
+  // Prevent unlimited stacked stub Sprint Passes while one is still active.
+  const existingActive = await prisma.subscription.findFirst({
+    where: {
+      userId: user.id,
+      status: "active",
+      currentPeriodEnd: { gt: now },
+      plan: { code: "sprint_pass" },
+    },
+    orderBy: { currentPeriodEnd: "desc" },
+  });
+  if (existingActive?.currentPeriodEnd) {
+    return {
+      ok: true,
+      endsAt: existingActive.currentPeriodEnd.toISOString(),
+      subscriptionId: existingActive.id,
+    };
+  }
+
+  const plan = await ensurePlan("sprint_pass");
   const durationDays = DEFAULT_PLANS.sprint_pass.config.durationDays ?? 30;
   const { endsAt } = sprintPassWindow(now, durationDays);
 
@@ -139,29 +157,40 @@ export async function processBillingWebhookAction(form: {
     subscriptionId = sub.id;
   }
 
-  const seen = await prisma.billingEvent.findMany({
-    where: { providerEventId: { not: null } },
-    select: { providerEventId: true },
-    take: 5000,
+  // Targeted idempotency — do not scan a capped window of events.
+  const prior = await prisma.billingEvent.findFirst({
+    where: { providerEventId: form.providerEventId },
+    select: { id: true },
   });
-  const seenIds = new Set(
-    seen.map((e) => e.providerEventId).filter((id): id is string => Boolean(id)),
+  const decision = shouldApplyWebhookEvent(
+    form.providerEventId,
+    new Set(prior ? [form.providerEventId] : []),
   );
-
-  const decision = shouldApplyWebhookEvent(form.providerEventId, seenIds);
   if (!decision.apply) {
     return { ok: true, applied: false, reason: decision.reason };
   }
 
-  await prisma.billingEvent.create({
-    data: {
-      userId,
-      subscriptionId,
-      type: form.type || "webhook",
-      providerEventId: form.providerEventId,
-      payload: form.payload ? (form.payload as object) : undefined,
-    },
-  });
+  try {
+    await prisma.billingEvent.create({
+      data: {
+        userId,
+        subscriptionId,
+        type: form.type || "webhook",
+        providerEventId: form.providerEventId,
+        payload: form.payload ? (form.payload as object) : undefined,
+      },
+    });
+  } catch (error) {
+    // Unique race on providerEventId — treat as duplicate.
+    const code =
+      error && typeof error === "object" && "code" in error
+        ? String((error as { code?: string }).code)
+        : "";
+    if (code === "P2002") {
+      return { ok: true, applied: false, reason: "duplicate" };
+    }
+    throw error;
+  }
 
   return { ok: true, applied: true, reason: decision.reason };
 }

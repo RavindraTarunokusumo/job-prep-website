@@ -29,9 +29,14 @@ export async function generateReadinessScoreAction(form: {
     }
   }
 
+  // Exclude rejected mappings so they cannot inflate coverage/strength.
   const matches = jobDescriptionId
     ? await prisma.requirementEvidenceMatch.findMany({
-        where: { userId: user.id, jobDescriptionId },
+        where: {
+          userId: user.id,
+          jobDescriptionId,
+          userReview: { not: "rejected" },
+        },
       })
     : [];
 
@@ -41,8 +46,13 @@ export async function generateReadinessScoreAction(form: {
       orderBy: { createdAt: "desc" },
       select: { overallScore: true, createdAt: true },
     }),
+    // Prefer interviews linked to this job when scoring a specific application.
     prisma.interviewSession.findFirst({
-      where: { userId: user.id, status: "completed" },
+      where: {
+        userId: user.id,
+        status: "completed",
+        ...(jobDescriptionId ? { jobDescriptionId } : {}),
+      },
       orderBy: { updatedAt: "desc" },
       select: {
         id: true,

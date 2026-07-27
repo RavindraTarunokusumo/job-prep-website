@@ -48,18 +48,37 @@ export async function getSubscriptionSnapshot(
   };
 }
 
+/**
+ * Count billable product actions for fair-use — one analysis counts once even
+ * if it triggers multiple AI sub-calls (extraction + matching).
+ */
 async function countUsageToday(
   userId: string,
   feature: FeatureKey,
   dayStart: Date,
 ): Promise<number> {
-  // Mock interviews include gap-driven (non-AI) starts — count sessions.
   if (feature === "mock_interview") {
     return prisma.interviewSession.count({
       where: { userId, startedAt: { gte: dayStart } },
     });
   }
+  if (feature === "job_match") {
+    return prisma.jobMatchAnalysis.count({
+      where: { userId, createdAt: { gte: dayStart } },
+    });
+  }
+  if (feature === "resume_review") {
+    return prisma.resumeReview.count({
+      where: { userId, createdAt: { gte: dayStart } },
+    });
+  }
+  if (feature === "performance_report") {
+    return prisma.performanceReport.count({
+      where: { userId, createdAt: { gte: dayStart } },
+    });
+  }
 
+  // Fallback: AI usage rows (single workflow tag, not multi-step double-count).
   const workflow = featureToWorkflow(feature);
   if (workflow) {
     return prisma.aiUsageEvent.count({

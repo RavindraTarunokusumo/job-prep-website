@@ -87,12 +87,28 @@ describe("server action wiring to domain contracts", () => {
     expect(src).toContain("verifyBillingWebhookSecret");
     expect(src).toContain("BILLING_WEBHOOK_SECRET");
     expect(src).not.toMatch(/userId\?:\s*string/);
+    expect(src).toContain("P2002");
+    expect(src).toContain('findFirst');
   });
 
-  it("fair-use is enforced in requireFeatureEntitlement", () => {
+  it("fair-use is enforced in requireFeatureEntitlement without double-counting job_match AI steps", () => {
     const src = readSrc("lib/billing/require-entitlement.ts");
     expect(src).toContain("isWithinFairUse");
     expect(src).toContain("fairUseLimitFor");
+    expect(src).toContain("jobMatchAnalysis.count");
+    expect(src).toContain("resumeReview.count");
+  });
+
+  it("match review verifies FK ownership", () => {
+    const src = readSrc("app/actions/matching.ts");
+    expect(src).toContain("careerEvidence.findUnique");
+    expect(src).toContain("skill.findUnique");
+    expect(src).toContain("starStory.findUnique");
+  });
+
+  it("readiness excludes rejected mappings", () => {
+    const src = readSrc("app/actions/readiness.ts");
+    expect(src).toContain('userReview: { not: "rejected" }');
   });
 
   it("product pages exist for evidence, readiness, outcomes, billing", () => {

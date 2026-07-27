@@ -127,6 +127,35 @@ export async function reviewRequirementMatchAction(
     return { ok: false, error: "Match not found or access denied." };
   }
 
+  // Ownership checks on optional FK rewrites (prevent IDOR linking others' rows).
+  if (parsed.data.evidenceId) {
+    const evidence = await prisma.careerEvidence.findUnique({
+      where: { id: parsed.data.evidenceId },
+      select: { userId: true },
+    });
+    if (!evidence || evidence.userId !== user.id) {
+      return { ok: false, error: "Evidence not found or access denied." };
+    }
+  }
+  if (parsed.data.skillId) {
+    const skill = await prisma.skill.findUnique({
+      where: { id: parsed.data.skillId },
+      select: { userId: true },
+    });
+    if (!skill || skill.userId !== user.id) {
+      return { ok: false, error: "Skill not found or access denied." };
+    }
+  }
+  if (parsed.data.starStoryId) {
+    const story = await prisma.starStory.findUnique({
+      where: { id: parsed.data.starStoryId },
+      select: { userId: true },
+    });
+    if (!story || story.userId !== user.id) {
+      return { ok: false, error: "STAR story not found or access denied." };
+    }
+  }
+
   await prisma.requirementEvidenceMatch.update({
     where: { id: existing.id },
     data: {
