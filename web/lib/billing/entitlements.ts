@@ -97,6 +97,9 @@ export type SubscriptionSnapshot = {
 /**
  * Server-side entitlement check. Client cannot bypass — always call from actions.
  * No token balances are exposed.
+ *
+ * MVP: plan features only. Callers should also enforce EntitlementGrant rows and
+ * fairUsePerDay counters at the action layer when those tables are populated.
  */
 export function checkEntitlement(
   feature: FeatureKey,

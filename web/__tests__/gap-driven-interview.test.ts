@@ -45,4 +45,27 @@ describe("generateGapDrivenQuestions", () => {
   it("handles sparse matches without throwing", () => {
     expect(generateGapDrivenQuestions([])).toEqual([]);
   });
+
+  it("does not ground unlinked gaps on an unrelated STAR story", () => {
+    const questions = generateGapDrivenQuestions(
+      [
+        {
+          matchType: "gap",
+          importance: "required",
+          requirementKey: "requiredSkills:kubernetes",
+          requirementText: "Kubernetes",
+        },
+      ],
+      [
+        {
+          id: "story-unrelated",
+          title: "Customer support win",
+          readiness: "ready",
+          verification: "confirmed",
+        },
+      ],
+    );
+    expect(questions).toHaveLength(1);
+    expect(questions[0].groundingStoryId).toBeNull();
+  });
 });

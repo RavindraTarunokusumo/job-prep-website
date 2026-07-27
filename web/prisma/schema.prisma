@@ -451,7 +451,9 @@ model Skill {
   updatedAt      DateTime           @updatedAt
   evidenceLinks  EvidenceSkillLink[]
 
-  @@unique([userId, normalizedName])
+  // Uniqueness for active skills is enforced in app (mergeDuplicateSkills /
+  // planSkillsFromProfile). DB unique would block re-create after soft-archive.
+  @@index([userId, normalizedName])
   @@index([userId])
   @@index([userId, verification])
 }

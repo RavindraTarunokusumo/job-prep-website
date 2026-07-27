@@ -123,7 +123,7 @@ CREATE TABLE "EvidenceSkillLink" (
 -- CreateIndex
 CREATE INDEX "Skill_userId_idx" ON "Skill"("userId");
 CREATE INDEX "Skill_userId_verification_idx" ON "Skill"("userId", "verification");
-CREATE UNIQUE INDEX "Skill_userId_normalizedName_key" ON "Skill"("userId", "normalizedName");
+CREATE INDEX "Skill_userId_normalizedName_idx" ON "Skill"("userId", "normalizedName");
 
 CREATE INDEX "CareerEvidence_userId_idx" ON "CareerEvidence"("userId");
 CREATE INDEX "CareerEvidence_userId_verification_idx" ON "CareerEvidence"("userId", "verification");

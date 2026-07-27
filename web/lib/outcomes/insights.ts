@@ -10,6 +10,8 @@ const MIN_SAMPLE = 3;
 
 /**
  * Aggregate rates without claiming causation. Insights require sufficient sample size.
+ * Callers should pass one latest-stage row per application (not full stage history)
+ * to avoid double-counting.
  */
 export function aggregateOutcomeInsights(rows: OutcomeRow[]): OutcomeInsight[] {
   const n = rows.length;
@@ -27,9 +29,9 @@ export function aggregateOutcomeInsights(rows: OutcomeRow[]): OutcomeInsight[] {
   const count = (pred: (r: OutcomeRow) => boolean) => rows.filter(pred).length;
   const rateOrNull = (c: number) => (n >= MIN_SAMPLE ? c / n : null);
 
-  const interview = count((r) =>
-    ["interview", "final", "offer", "rejected"].includes(r.stage),
-  );
+  // Interview progress: reached interview or later positive stages only.
+  // Rejected is tracked separately — not all rejections imply an interview.
+  const interview = count((r) => ["interview", "final", "offer"].includes(r.stage));
   const offer = count((r) => r.stage === "offer" || r.outcome === "offer");
   const rejected = count((r) => r.stage === "rejected");
   const noResponse = count((r) => r.stage === "no_response");

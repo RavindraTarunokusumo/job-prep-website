@@ -46,8 +46,11 @@ export function generateGapDrivenQuestions(
 
   const questions: GapQuestion[] = [];
   for (const target of targets) {
+    // Only ground on an explicitly linked STAR — never borrow an unrelated story.
     const story =
-      readyStories.find((s) => s.id === target.starStoryId) ?? readyStories[0] ?? null;
+      (target.starStoryId
+        ? readyStories.find((s) => s.id === target.starStoryId)
+        : undefined) ?? null;
     const isTechnical =
       /sql|api|python|java|typescript|kubernetes|docker|system|code/i.test(
         target.requirementText,

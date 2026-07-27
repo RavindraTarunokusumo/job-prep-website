@@ -75,7 +75,7 @@ function evidenceCorpus(snapshot: OntologySnapshot): {
     trustedEvidence: snapshot.evidence.filter((e) => e.verification === "confirmed"),
     allEvidence: snapshot.evidence.filter((e) => e.verification !== "archived"),
     readyStories: snapshot.stories.filter(
-      (s) => s.readiness === "ready" && s.verification !== "inferred",
+      (s) => s.readiness === "ready" && s.verification === "confirmed",
     ),
   };
 }
