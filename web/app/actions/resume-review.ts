@@ -8,6 +8,7 @@ import {
   rewriteResumeBullet,
 } from "@/lib/ai/resume-review";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { requireFeatureEntitlement } from "@/lib/billing/require-entitlement";
 import { requireAiConsent } from "@/lib/legal/consent";
 import { prisma } from "@/lib/prisma";
 import { assertResumeHasContent } from "@/lib/resume/content";
@@ -29,6 +30,8 @@ export async function runResumeReviewAction(
   documentId: string
 ): Promise<{ ok: true; reviewId: string } | { ok: false; error: string }> {
   const user = await requireUser();
+  const entitlement = await requireFeatureEntitlement(user.id, "resume_review");
+  if (!entitlement.ok) return { ok: false, error: entitlement.error };
   const consent = await requireAiConsent(user.id);
   if (!consent.ok) return consent;
 
@@ -75,6 +78,7 @@ export async function runResumeReviewAction(
       experienceLevel: profile.experienceLevel,
       resumeText,
       parsedJson: doc.parsedData ?? undefined,
+      userId: user.id,
     });
 
     const validated = parseResumeReviewResult(result);

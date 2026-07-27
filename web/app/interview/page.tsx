@@ -25,7 +25,7 @@ import { prisma } from "@/lib/prisma";
 import { safeParseInterviewFeedback } from "@/lib/validation/interview";
 
 type InterviewPageProps = {
-  searchParams: Promise<{ sessionId?: string }>;
+  searchParams: Promise<{ sessionId?: string; jobId?: string }>;
 };
 
 export default async function InterviewPage({
@@ -33,7 +33,8 @@ export default async function InterviewPage({
 }: InterviewPageProps) {
   const user = await requireUser();
   const profile = await getProfileForUser(user.id);
-  const { sessionId: requestedSessionId } = await searchParams;
+  const { sessionId: requestedSessionId, jobId: preferredJobId } =
+    await searchParams;
 
   const [parsedResumes, jobRows, sessionRows, aiConsentAccepted] =
     await Promise.all([
@@ -226,6 +227,7 @@ export default async function InterviewPage({
                 targetRole={profile?.targetRole ?? null}
                 onboardingComplete={onboardingComplete}
                 session={sessionSnapshot}
+                initialJobDescriptionId={preferredJobId ?? null}
               />
               {showStartAlongside ? (
                 <div className="border-t border-border pt-6">
@@ -239,6 +241,7 @@ export default async function InterviewPage({
                     targetRole={profile?.targetRole ?? null}
                     onboardingComplete={onboardingComplete}
                     session={null}
+                    initialJobDescriptionId={preferredJobId ?? null}
                   />
                 </div>
               ) : null}

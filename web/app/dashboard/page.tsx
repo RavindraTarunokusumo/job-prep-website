@@ -287,6 +287,30 @@ export default async function DashboardPage() {
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
           <Link
+            href="/evidence"
+            className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+          >
+            Evidence
+          </Link>
+          <Link
+            href="/readiness"
+            className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+          >
+            Readiness
+          </Link>
+          <Link
+            href="/outcomes"
+            className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+          >
+            Outcomes
+          </Link>
+          <Link
+            href="/billing"
+            className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
+          >
+            Billing
+          </Link>
+          <Link
             href="/"
             className="inline-flex items-center justify-center rounded-xl border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
           >

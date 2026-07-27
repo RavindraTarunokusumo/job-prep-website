@@ -60,6 +60,8 @@ type SessionWorkspaceProps = {
   targetRole: string | null;
   onboardingComplete: boolean;
   session: SessionSnapshot | null;
+  /** Prefer this JD for gap-driven practice when starting a new session. */
+  initialJobDescriptionId?: string | null;
 };
 
 function jobLabel(job: JobOption): string {
@@ -77,11 +79,13 @@ function StartForm({
   jobs,
   targetRole,
   onboardingComplete,
+  initialJobDescriptionId,
 }: {
   resumes: ResumeOption[];
   jobs: JobOption[];
   targetRole: string | null;
   onboardingComplete: boolean;
+  initialJobDescriptionId?: string | null;
 }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -89,7 +93,11 @@ function StartForm({
   const [resumeDocumentId, setResumeDocumentId] = useState(
     resumes[0]?.id ?? ""
   );
-  const [jobDescriptionId, setJobDescriptionId] = useState("");
+  const [jobDescriptionId, setJobDescriptionId] = useState(
+    initialJobDescriptionId && jobs.some((j) => j.id === initialJobDescriptionId)
+      ? initialJobDescriptionId
+      : "",
+  );
 
   function handleStart() {
     setError(null);
@@ -97,6 +105,7 @@ function StartForm({
       const result = await startInterviewSessionAction({
         resumeDocumentId: resumeDocumentId || undefined,
         jobDescriptionId: jobDescriptionId || undefined,
+        gapDriven: Boolean(jobDescriptionId),
       });
       if (!result.ok) {
         setError(result.error);
@@ -542,6 +551,7 @@ export function SessionWorkspace({
   targetRole,
   onboardingComplete,
   session,
+  initialJobDescriptionId,
 }: SessionWorkspaceProps) {
   if (!session) {
     return (
@@ -550,6 +560,7 @@ export function SessionWorkspace({
         jobs={jobs}
         targetRole={targetRole}
         onboardingComplete={onboardingComplete}
+        initialJobDescriptionId={initialJobDescriptionId}
       />
     );
   }

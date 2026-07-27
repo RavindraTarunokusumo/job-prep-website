@@ -25,6 +25,21 @@ model User {
   consents            UserConsent[]
   dataRequests        DataRequest[]
   analyticsEvents     AnalyticsEvent[]
+  // JOB-85 ontology
+  skills              Skill[]
+  careerEvidence      CareerEvidence[]
+  achievements        Achievement[]
+  starStories         StarStory[]
+  senioritySignals    SenioritySignal[]
+  targetRoles         TargetRole[]
+  evidenceSkillLinks  EvidenceSkillLink[]
+  requirementMatches  RequirementEvidenceMatch[]
+  readinessScores     ApplicationReadinessScore[]
+  applicationOutcomes ApplicationOutcome[]
+  aiUsageEvents       AiUsageEvent[]
+  subscriptions       Subscription[]
+  entitlementGrants   EntitlementGrant[]
+  billingEvents       BillingEvent[]
 }
 
 model AnalyticsEvent {
@@ -144,6 +159,7 @@ model JobDescription {
   updatedAt     DateTime           @updatedAt
   matchAnalyses     JobMatchAnalysis[]
   applicationDrafts ApplicationDraft[]
+  requirementMatches RequirementEvidenceMatch[]
 
   @@index([userId])
 }
@@ -409,4 +425,339 @@ model InterviewVideo {
   updatedAt         DateTime @updatedAt
 
   @@index([published])
+}
+
+// ---------------------------------------------------------------------------
+// JOB-85 — Shared career evidence ontology
+// verification: imported | inferred | unconfirmed | confirmed | archived
+// ---------------------------------------------------------------------------
+
+model Skill {
+  id             String             @id @default(cuid())
+  userId         String             @db.Uuid
+  user           User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String
+  // lowercased trimmed key for dedupe
+  normalizedName String
+  // technical | soft | domain | tool | language | other
+  category       String?
+  verification   String             @default("unconfirmed")
+  confidence     Float              @default(0.5)
+  // profile | resume | user | match | other
+  sourceType     String?
+  sourceId       String?
+  version        Int                @default(1)
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  evidenceLinks  EvidenceSkillLink[]
+
+  // Uniqueness for active skills is enforced in app (mergeDuplicateSkills /
+  // planSkillsFromProfile). DB unique would block re-create after soft-archive.
+  @@index([userId, normalizedName])
+  @@index([userId])
+  @@index([userId, verification])
+}
+
+model CareerEvidence {
+  id               String             @id @default(cuid())
+  userId           String             @db.Uuid
+  user             User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title            String
+  // employment | education | volunteering | freelance | project | competition | other
+  sourceType       String
+  organization     String?
+  roleTitle        String?
+  startDate        String?
+  endDate          String?
+  responsibilities String?            @db.Text
+  achievements     String?            @db.Text
+  metrics          String?            @db.Text
+  verification     String             @default("unconfirmed")
+  confidence       Float              @default(0.5)
+  provenance       Json?
+  sourceNote       String?
+  version          Int                @default(1)
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  achievementItems Achievement[]
+  starStories      StarStory[]
+  skillLinks       EvidenceSkillLink[]
+
+  @@index([userId])
+  @@index([userId, verification])
+}
+
+model Achievement {
+  id           String         @id @default(cuid())
+  evidenceId   String
+  evidence     CareerEvidence @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+  userId       String         @db.Uuid
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  statement    String         @db.Text
+  metricLabel  String?
+  metricValue  String?
+  verification String         @default("unconfirmed")
+  confidence   Float          @default(0.5)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([evidenceId])
+  @@index([userId])
+}
+
+model StarStory {
+  id           String          @id @default(cuid())
+  userId       String          @db.Uuid
+  user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  evidenceId   String?
+  evidence     CareerEvidence? @relation(fields: [evidenceId], references: [id], onDelete: SetNull)
+  title        String
+  situation    String          @db.Text
+  task         String          @db.Text
+  action       String          @db.Text
+  result       String          @db.Text
+  // draft | ready | archived
+  readiness    String          @default("draft")
+  verification String          @default("unconfirmed")
+  confidence   Float           @default(0.5)
+  version      Int             @default(1)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([userId])
+  @@index([userId, readiness])
+  @@index([evidenceId])
+}
+
+model SenioritySignal {
+  id           String   @id @default(cuid())
+  userId       String   @db.Uuid
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // years_experience | level_label | scope | team_size | other
+  kind         String
+  value        String
+  verification String   @default("unconfirmed")
+  confidence   Float    @default(0.5)
+  sourceType   String?
+  sourceId     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, kind])
+}
+
+model TargetRole {
+  id         String   @id @default(cuid())
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title      String
+  industry   String?
+  priority   Int      @default(0)
+  // profile | user
+  sourceType String?
+  isPrimary  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, isPrimary])
+}
+
+model EvidenceSkillLink {
+  evidenceId String
+  skillId    String
+  userId     String         @db.Uuid
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  evidence   CareerEvidence @relation(fields: [evidenceId], references: [id], onDelete: Cascade)
+  skill      Skill          @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  // primary | secondary | mentioned
+  strength   String         @default("mentioned")
+  createdAt  DateTime       @default(now())
+
+  @@id([evidenceId, skillId])
+  @@index([userId])
+  @@index([skillId])
+}
+
+
+// JOB-86 — requirement to evidence mapping
+model RequirementEvidenceMatch {
+  id               String          @id @default(cuid())
+  userId           String          @db.Uuid
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescriptionId String
+  jobDescription   JobDescription  @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+  requirementKey   String
+  requirementText  String
+  // required | preferred | other
+  importance       String
+  // strong | partial | keyword_only | transferable | gap
+  matchType        String
+  evidenceStrength Int             @default(0)
+  confidence       Float           @default(0.5)
+  explanation      String          @db.Text
+  evidenceId       String?
+  skillId          String?
+  starStoryId      String?
+  // suggested | confirmed | rejected | replaced
+  userReview       String          @default("suggested")
+  safeAction       String?         @db.Text
+  version          Int             @default(1)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@unique([userId, jobDescriptionId, requirementKey])
+  @@index([userId])
+  @@index([jobDescriptionId])
+  @@index([userId, jobDescriptionId])
+  @@index([userId, userReview])
+}
+
+
+// JOB-87 application readiness score
+model ApplicationReadinessScore {
+  id                 String   @id @default(cuid())
+  userId             String   @db.Uuid
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescriptionId   String?
+  // optional application id when tracker exists
+  jobApplicationId   String?
+  // ready | partial | sparse
+  confidenceBand     String
+  // dimension scores JSON validated by readinessDimensionsSchema
+  dimensions         Json
+  overallScore       Int?
+  explanations       Json?
+  sourceTimestamps   Json?
+  version            Int      @default(1)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, jobDescriptionId])
+}
+
+// JOB-89 application outcomes
+model ApplicationOutcome {
+  id                 String    @id @default(cuid())
+  userId             String    @db.Uuid
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescriptionId   String?
+  jobApplicationId   String?
+  // screening | interview | final | offer | rejected | withdrawn | no_response | applied
+  stage              String
+  outcome            String?
+  stageDate          DateTime?
+  employerFeedback   String?   @db.Text
+  userInterpretation String?   @db.Text
+  perceivedBlockers  String?   @db.Text
+  // factual | interpretation | ai_inference labels in meta
+  meta               Json?
+  isSensitive        Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([userId, stage])
+}
+
+// JOB-90 AI usage / cost telemetry
+model AiUsageEvent {
+  id            String   @id @default(cuid())
+  userId        String?  @db.Uuid
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  workflow      String
+  taskClass     String
+  model         String
+  promptVersion String?
+  inputTokens   Int?
+  outputTokens  Int?
+  estimatedCost Float?
+  latencyMs     Int?
+  retries       Int      @default(0)
+  success       Boolean  @default(true)
+  validationOk  Boolean?
+  // never store raw CV/JD content
+  meta          Json?
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([workflow])
+  @@index([model])
+  @@index([createdAt])
+  @@index([userId, workflow])
+}
+
+// JOB-91 subscription entitlements
+model ProductPlan {
+  id           String         @id @default(cuid())
+  // free | sprint_pass | pro | org
+  code         String         @unique
+  name         String
+  // configuration JSON: entitlements, durationDays, priceCents
+  config       Json
+  active       Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id                 String    @id @default(cuid())
+  userId             String    @db.Uuid
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId             String
+  plan               ProductPlan @relation(fields: [planId], references: [id])
+  // active | past_due | canceled | expired
+  status             String
+  provider           String    @default("stub")
+  providerCustomerId String?
+  providerSubId      String?
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  billingEvents      BillingEvent[]
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([providerSubId])
+}
+
+model EntitlementGrant {
+  id        String    @id @default(cuid())
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // feature key e.g. mock_interview | cv_rewrite | unlimited_match
+  feature   String
+  source    String
+  // active | expired | revoked
+  status    String    @default("active")
+  startsAt  DateTime  @default(now())
+  endsAt    DateTime?
+  meta      Json?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([userId, feature, status])
+}
+
+model BillingEvent {
+  id             String        @id @default(cuid())
+  userId         String?       @db.Uuid
+  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  subscriptionId String?
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  // checkout | invoice_paid | invoice_failed | canceled | renewed | webhook_duplicate
+  type           String
+  providerEventId String?
+  payload        Json?
+  createdAt      DateTime      @default(now())
+
+  @@unique([providerEventId])
+  @@index([userId])
+  @@index([subscriptionId])
 }

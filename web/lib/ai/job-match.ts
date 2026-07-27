@@ -31,12 +31,16 @@ Rules:
 - Be specific: reference actual skills, keywords, and gaps from the inputs.`;
 
 export async function extractJobRequirements(
-  rawText: string
+  rawText: string,
+  options: { userId?: string | null } = {},
 ): Promise<JobRequirements> {
   const { object } = await generateObjectWithFallback<JobRequirements>({
     schema: jobRequirementsSchema,
     system: EXTRACT_SYSTEM_PROMPT,
     prompt: `Job description text:\n\n${rawText}`,
+    workflow: "job_match",
+    taskClass: "extraction",
+    userId: options.userId,
   });
   return object;
 }
@@ -48,6 +52,7 @@ export type ScoreJobMatchInput = {
   experienceLevel: string;
   skills: string[];
   certifications: string[];
+  userId?: string | null;
 };
 
 export async function scoreJobMatch(
@@ -70,6 +75,9 @@ export async function scoreJobMatch(
     schema: jobMatchResultSchema,
     system: MATCH_SYSTEM_PROMPT,
     prompt: parts.join("\n"),
+    workflow: "job_match",
+    taskClass: "matching",
+    userId: input.userId,
   });
   return object;
 }

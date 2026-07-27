@@ -13,6 +13,7 @@ export type ReviewInput = {
   experienceLevel: string;
   resumeText: string;
   parsedJson?: unknown;
+  userId?: string | null;
 };
 
 const bulletRewriteSchema = z.object({
@@ -65,6 +66,9 @@ export async function generateResumeReview(
     schema: resumeReviewResultSchema,
     system: REVIEW_SYSTEM_PROMPT,
     prompt: buildReviewPrompt(input),
+    workflow: "resume_review",
+    taskClass: "feedback",
+    userId: input.userId,
   });
   return object;
 }
