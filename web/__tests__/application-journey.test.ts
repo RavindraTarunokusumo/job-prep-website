@@ -161,10 +161,11 @@ describe("application journey fixtures", () => {
     ]);
     expect(insights.find((i) => i.label === "offer_rate")?.rate).toBe(0.25);
 
-    // Entitlement gate for mock interview (server-side decision function)
-    expect(checkEntitlement("mock_interview", null).allowed).toBe(false);
+    // Entitlement gate — free includes mock_interview; unlimited_match is paid
+    expect(checkEntitlement("mock_interview", null).allowed).toBe(true);
+    expect(checkEntitlement("unlimited_match", null).allowed).toBe(false);
     expect(
-      checkEntitlement("mock_interview", {
+      checkEntitlement("unlimited_match", {
         planCode: "pro",
         status: "active",
         currentPeriodEnd: null,

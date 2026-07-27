@@ -88,6 +88,8 @@ export async function generateInterviewQuestions(
       ...input,
       targetRole,
     }),
+    workflow: "mock_interview",
+    taskClass: "interview_generation",
   });
 
   return parseQuestionSet(object);

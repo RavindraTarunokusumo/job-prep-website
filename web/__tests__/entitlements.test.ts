@@ -13,8 +13,14 @@ describe("checkEntitlement", () => {
     expect(d.planCode).toBe("free");
   });
 
-  it("denies mock interview on free", () => {
+  it("allows mock interview on free with fair-use (MVP prep core)", () => {
     const d = checkEntitlement("mock_interview", null);
+    expect(d.allowed).toBe(true);
+    expect(d.planCode).toBe("free");
+  });
+
+  it("denies unlimited_match on free", () => {
+    const d = checkEntitlement("unlimited_match", null);
     expect(d.allowed).toBe(false);
     expect(d.reason).toBe("plan_lacks_feature");
   });
@@ -29,15 +35,24 @@ describe("checkEntitlement", () => {
     expect(d.allowed).toBe(true);
   });
 
-  it("falls back to free after expiry", () => {
+  it("falls back to free features after expiry", () => {
     const ends = new Date("2026-07-01T00:00:00.000Z");
-    const d = checkEntitlement(
+    const mock = checkEntitlement(
       "mock_interview",
       { planCode: "sprint_pass", status: "active", currentPeriodEnd: ends },
       new Date("2026-07-15T00:00:00.000Z"),
     );
-    expect(d.allowed).toBe(false);
-    expect(d.reason).toBe("subscription_expired");
+    expect(mock.reason).toBe("subscription_expired");
+    expect(mock.planCode).toBe("free");
+    expect(mock.allowed).toBe(true); // free still includes mock_interview
+
+    const unlimited = checkEntitlement(
+      "unlimited_match",
+      { planCode: "pro", status: "active", currentPeriodEnd: ends },
+      new Date("2026-07-15T00:00:00.000Z"),
+    );
+    expect(unlimited.allowed).toBe(false);
+    expect(unlimited.reason).toBe("subscription_expired");
   });
 });
 

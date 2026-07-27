@@ -27,10 +27,20 @@ export const DEFAULT_PLANS: Record<PlanCode, { name: string; config: PlanConfig 
   free: {
     name: "Free",
     config: {
-      features: ["resume_review", "job_match", "performance_report"],
+      // Core prep workflows stay available; fair-use limits apply at action layer.
+      features: [
+        "resume_review",
+        "job_match",
+        "mock_interview",
+        "performance_report",
+      ],
       durationDays: null,
       priceCents: 0,
-      fairUsePerDay: { resume_review: 3, job_match: 5 },
+      fairUsePerDay: {
+        resume_review: 3,
+        job_match: 5,
+        mock_interview: 3,
+      },
     },
   },
   sprint_pass: {

@@ -37,6 +37,8 @@ export async function extractJobRequirements(
     schema: jobRequirementsSchema,
     system: EXTRACT_SYSTEM_PROMPT,
     prompt: `Job description text:\n\n${rawText}`,
+    workflow: "job_match",
+    taskClass: "extraction",
   });
   return object;
 }
@@ -70,6 +72,8 @@ export async function scoreJobMatch(
     schema: jobMatchResultSchema,
     system: MATCH_SYSTEM_PROMPT,
     prompt: parts.join("\n"),
+    workflow: "job_match",
+    taskClass: "matching",
   });
   return object;
 }

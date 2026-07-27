@@ -64,6 +64,13 @@ export function mapRequirementsToEvidence(
 - Inferred facts never become confirmed via mapping.  
 - Unit tests cover multi-requirement, sparse profile, ownership-shaped drafts.
 
+## Product surfaces (in scope)
+
+- `generateRequirementMatchesAction` / `reviewRequirementMatchAction` / `listRequirementMatchesAction`
+- Auto-persist mappings after successful job match analysis
+- `/readiness` match review list (confirm / reject)
+- Ownership: all actions scope by `userId`
+
 ## Out of scope
 
-Full application workspace UI (PR #13); minimal list action + pure core is enough for this wave.
+Full JOB-81 application tracker workspace UI (PR #13).

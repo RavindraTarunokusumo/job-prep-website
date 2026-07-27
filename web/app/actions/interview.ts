@@ -12,11 +12,19 @@ import {
   getInterviewQuestionsModelId,
 } from "@/lib/ai/interview-questions";
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
+import { requireFeatureEntitlement } from "@/lib/billing/require-entitlement";
+import {
+  buildRehearsalPlan,
+  generateGapDrivenQuestions,
+} from "@/lib/interview/gap-driven";
 import { requireAiConsent } from "@/lib/legal/consent";
+import { mapRequirementsToEvidence } from "@/lib/matching";
+import { loadUserOntologySnapshot } from "@/lib/ontology/load-snapshot";
 import { prisma } from "@/lib/prisma";
 import { getResumeTextContent } from "@/lib/resume/content";
 import { ANALYTICS_EVENTS } from "@/lib/analytics/events";
 import { trackEvent } from "@/lib/analytics/track";
+import { parseJobRequirements } from "@/lib/validation/job-match";
 import type { InterviewFeedback } from "@/lib/validation/interview";
 
 const EXCERPT_MAX_CHARS = 8_000;
@@ -67,8 +75,13 @@ export async function startInterviewSessionAction(form: {
   resumeDocumentId?: string;
   jobDescriptionId?: string;
   preparationPlanItemId?: string;
+  /** When true with a jobDescriptionId, prefer gap-driven questions (JOB-88). */
+  gapDriven?: boolean;
 }): Promise<StartResult> {
   const user = await requireUser();
+
+  const entitlement = await requireFeatureEntitlement(user.id, "mock_interview");
+  if (!entitlement.ok) return { ok: false, error: entitlement.error };
 
   const consent = await requireAiConsent(user.id);
   if (!consent.ok) return consent;
@@ -117,36 +130,150 @@ export async function startInterviewSessionAction(form: {
 
   let jobDescriptionId: string | null = null;
   let jdExcerpt: string | null = null;
+  let ownedJob: Awaited<ReturnType<typeof getOwnedJobDescription>> = null;
 
   if (form.jobDescriptionId) {
-    const job = await getOwnedJobDescription(user.id, form.jobDescriptionId);
-    if (!job) {
+    ownedJob = await getOwnedJobDescription(user.id, form.jobDescriptionId);
+    if (!ownedJob) {
       return { ok: false, error: "Job description not found or access denied." };
     }
-    const jobText = job.rawText?.trim();
+    const jobText = ownedJob.rawText?.trim();
     if (!jobText) {
       return {
         ok: false,
         error: "Job description has no text content.",
       };
     }
-    jobDescriptionId = job.id;
+    jobDescriptionId = ownedJob.id;
     jdExcerpt = toExcerpt(jobText);
   }
 
   const preparationPlanItemId =
     form.preparationPlanItemId?.trim() || null;
 
-  try {
-    const questionSet = await generateInterviewQuestions({
-      targetRole,
-      experienceLevel: profile.experienceLevel,
-      targetIndustry: profile.targetIndustry,
-      resumeExcerpt,
-      jdExcerpt,
-    });
+  // Default to gap-driven when a specific application JD is selected (JOB-88).
+  const useGapDriven =
+    Boolean(jobDescriptionId && ownedJob) && form.gapDriven !== false;
 
-    const model = getInterviewQuestionsModelId();
+  try {
+    type QuestionRow = {
+      category: string;
+      question: string;
+      sourceRequirementKey?: string;
+    };
+    let title: string;
+    let questions: QuestionRow[] = [];
+    let model = getInterviewQuestionsModelId();
+    let rehearsalSummary: string | null = null;
+
+    if (useGapDriven && ownedJob) {
+      let matches = await prisma.requirementEvidenceMatch.findMany({
+        where: { userId: user.id, jobDescriptionId: ownedJob.id },
+      });
+
+      if (matches.length === 0 && ownedJob.extracted) {
+        try {
+          const requirements = parseJobRequirements(ownedJob.extracted);
+          const snapshot = await loadUserOntologySnapshot(user.id);
+          const drafts = mapRequirementsToEvidence(
+            ownedJob.id,
+            user.id,
+            requirements,
+            snapshot,
+          );
+          if (drafts.length > 0) {
+            await prisma.requirementEvidenceMatch.createMany({
+              data: drafts.map((d) => ({
+                userId: d.userId,
+                jobDescriptionId: d.jobDescriptionId,
+                requirementKey: d.requirementKey,
+                requirementText: d.requirementText,
+                importance: d.importance,
+                matchType: d.matchType,
+                evidenceStrength: d.evidenceStrength,
+                confidence: d.confidence,
+                explanation: d.explanation,
+                evidenceId: d.evidenceId ?? null,
+                skillId: d.skillId ?? null,
+                starStoryId: d.starStoryId ?? null,
+                userReview: d.userReview,
+                safeAction: d.safeAction ?? null,
+                version: d.version,
+              })),
+            });
+            matches = await prisma.requirementEvidenceMatch.findMany({
+              where: { userId: user.id, jobDescriptionId: ownedJob.id },
+            });
+          }
+        } catch {
+          // Fall through to generic questions if mapping fails
+        }
+      }
+
+      const stories = await prisma.starStory.findMany({
+        where: { userId: user.id },
+        select: {
+          id: true,
+          title: true,
+          readiness: true,
+          verification: true,
+        },
+      });
+
+      const gapQuestions = generateGapDrivenQuestions(
+        matches.map((m) => ({
+          matchType: m.matchType as
+            | "strong"
+            | "partial"
+            | "keyword_only"
+            | "transferable"
+            | "gap",
+          importance: m.importance as "required" | "preferred" | "other",
+          requirementText: m.requirementText,
+          requirementKey: m.requirementKey,
+          starStoryId: m.starStoryId,
+        })),
+        stories.map((s) => ({
+          id: s.id,
+          title: s.title,
+          readiness: s.readiness as "draft" | "ready" | "archived",
+          verification: s.verification as
+            | "imported"
+            | "inferred"
+            | "unconfirmed"
+            | "confirmed"
+            | "archived",
+        })),
+      );
+
+      if (gapQuestions.length > 0) {
+        const plan = buildRehearsalPlan(gapQuestions);
+        rehearsalSummary = plan.summary;
+        title = `Gap practice — ${targetRole}`;
+        model = "gap-driven-deterministic";
+        questions = gapQuestions.map((q) => ({
+          category: q.category,
+          question: `[${q.sourceRequirementKey}] ${q.prompt}`,
+          sourceRequirementKey: q.sourceRequirementKey,
+        }));
+      }
+    }
+
+    if (questions.length === 0) {
+      const questionSet = await generateInterviewQuestions({
+        targetRole,
+        experienceLevel: profile.experienceLevel,
+        targetIndustry: profile.targetIndustry,
+        resumeExcerpt,
+        jdExcerpt,
+      });
+      title = questionSet.title;
+      model = getInterviewQuestionsModelId();
+      questions = questionSet.questions.map((q) => ({
+        category: q.category,
+        question: q.question,
+      }));
+    }
 
     const session = await prisma.$transaction(async (tx) => {
       const created = await tx.interviewSession.create({
@@ -159,13 +286,13 @@ export async function startInterviewSessionAction(form: {
           resumeDocumentId,
           jobDescriptionId,
           preparationPlanItemId,
-          title: questionSet.title,
+          title,
           model,
         },
       });
 
       await tx.interviewTurn.createMany({
-        data: questionSet.questions.map((q, index) => ({
+        data: questions.map((q, index) => ({
           sessionId: created.id,
           kind: "primary",
           category: q.category,
@@ -183,7 +310,11 @@ export async function startInterviewSessionAction(form: {
     await trackEvent({
       userId: user.id,
       name: ANALYTICS_EVENTS.MOCK_INTERVIEW_START,
-      props: { sessionId: session.id },
+      props: {
+        sessionId: session.id,
+        gapDriven: useGapDriven && questions.some((q) => q.sourceRequirementKey),
+        rehearsal: rehearsalSummary ? 1 : 0,
+      },
     });
 
     return { ok: true, sessionId: session.id };
