@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
  * models, a stale client can be missing delegates (e.g. resumeDocument).
  * Bump PRISMA_CLIENT_VERSION when the schema gains models used at runtime.
  */
-const PRISMA_CLIENT_VERSION = "2026-07-18-job15-performance-report";
+const PRISMA_CLIENT_VERSION = "2026-07-27-job85-career-evidence-ontology";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
@@ -32,6 +32,9 @@ function hasRequiredDelegates(client: PrismaClient): boolean {
     analyticsEvent?: { findMany?: unknown };
     interviewVideo?: { findMany?: unknown };
     performanceReport?: { findMany?: unknown };
+    skill?: { findMany?: unknown };
+    careerEvidence?: { findMany?: unknown };
+    starStory?: { findMany?: unknown };
   };
   return (
     typeof extended.resumeDocument?.findMany === "function" &&
@@ -45,7 +48,10 @@ function hasRequiredDelegates(client: PrismaClient): boolean {
     typeof extended.interviewSession?.findMany === "function" &&
     typeof extended.analyticsEvent?.findMany === "function" &&
     typeof extended.interviewVideo?.findMany === "function" &&
-    typeof extended.performanceReport?.findMany === "function"
+    typeof extended.performanceReport?.findMany === "function" &&
+    typeof extended.skill?.findMany === "function" &&
+    typeof extended.careerEvidence?.findMany === "function" &&
+    typeof extended.starStory?.findMany === "function"
   );
 }
 

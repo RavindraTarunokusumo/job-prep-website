@@ -30,8 +30,15 @@ Migrations: `web/prisma/migrations/`
 | `DataRequest` | User export/deletion requests from Settings; `type` is `export` \| `deletion`; `status` is `pending` \| `completed` \| `rejected` (default `pending`); optional `note` for operators; MVP does **not** auto-delete storage — rows are for operator handling. Immediate export JSON is metadata-only (profile + document meta + recent analysis ids; no file bytes) via `requestDataExportAction` |
 | `AnalyticsEvent` | First-party product metrics (JOB-17); `userId` optional UUID FK (SET NULL on user delete); `name` event key from `web/lib/analytics/events.ts`; `props` JSON scalars only (ids, scores, rating — **never** resume/JD/answer body text); `createdAt`. Indexes on `userId`, `name`, `createdAt`, `(userId, name)`. Taxonomy: [analytics-taxonomy.md](./analytics-taxonomy.md) |
 | `PerformanceReport` | Compiled readiness report (JOB-15); user-owned; `status` string (`generating` \| `ready` \| `failed`); `version` Int increments on regenerate (prior rows kept); `title`, optional `summary` Text; `sections` JSON validated by `performanceReportSectionsSchema` in `web/lib/validation/performance-report.ts`; optional `meta` JSON (e.g. assessment attempt ids); optional provenance ids `resumeReviewId`, `jobMatchAnalysisId`, `interviewSessionId`, `preparationPlanId` (string ids, not hard FKs); optional `model` / `errorMessage`. Indexes on `userId`, `(userId, createdAt)`. Coaching only — no hire/no-hire predictions |
+| `Skill` | JOB-85 ontology; user-owned normalized skill (`name`, `normalizedName` unique per user); `category` optional; `verification` ladder; `confidence` 0–1; optional `sourceType`/`sourceId`; `version`. Zod in `web/lib/validation/ontology.ts` |
+| `CareerEvidence` | JOB-85 career fact; `sourceType` employment/education/…; body fields; `verification`/`confidence`/`provenance` JSON; `version`. Links to achievements, STAR, skills |
+| `Achievement` | Structured outcome under `CareerEvidence`; `statement` + optional metric fields; verification ladder |
+| `StarStory` | STAR bank entry; optional `evidenceId`; `readiness` draft/ready/archived; verification + confidence |
+| `SenioritySignal` | years/level/scope signals with verification |
+| `TargetRole` | Role/industry targets with `priority` and `isPrimary` |
+| `EvidenceSkillLink` | M:N evidence↔skill with `strength` primary/secondary/mentioned |
 
-Zod enums/payloads for category slugs, attempt status, choices, and question payloads live in `web/lib/validation/assessment.ts`. Report section keys and narrative schemas live in `web/lib/validation/performance-report.ts`.
+Ontology diagram and retrieval rules: [ontology.md](./ontology.md). Zod enums/payloads for category slugs, attempt status, choices, and question payloads live in `web/lib/validation/assessment.ts`. Report section keys and narrative schemas live in `web/lib/validation/performance-report.ts`. Ontology schemas live in `web/lib/validation/ontology.ts`; pure helpers in `web/lib/ontology/`.
 
 ### Prisma client in Next.js dev
 
