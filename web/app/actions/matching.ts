@@ -2,7 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth/session";
-import { mapRequirementsToEvidence } from "@/lib/matching";
+import {
+  filterDraftsForRemap,
+  mapRequirementsToEvidence,
+  remapDeleteReviews,
+} from "@/lib/matching";
 import { loadUserOntologySnapshot } from "@/lib/ontology/load-snapshot";
 import { prisma } from "@/lib/prisma";
 import {
@@ -61,17 +65,23 @@ export async function generateRequirementMatchesAction(form: {
     snapshot,
   );
 
+  const existing = await prisma.requirementEvidenceMatch.findMany({
+    where: { userId: user.id, jobDescriptionId: job.id },
+    select: { requirementKey: true, userReview: true },
+  });
+  const toInsert = filterDraftsForRemap(drafts, existing);
+
   await prisma.$transaction(async (tx) => {
     await tx.requirementEvidenceMatch.deleteMany({
       where: {
         userId: user.id,
         jobDescriptionId: job.id,
-        userReview: "suggested",
+        userReview: { in: remapDeleteReviews() },
       },
     });
-    if (drafts.length > 0) {
+    if (toInsert.length > 0) {
       await tx.requirementEvidenceMatch.createMany({
-        data: drafts.map((d: RequirementMatchDraft) => ({
+        data: toInsert.map((d: RequirementMatchDraft) => ({
           userId: d.userId,
           jobDescriptionId: d.jobDescriptionId,
           requirementKey: d.requirementKey,
@@ -88,6 +98,7 @@ export async function generateRequirementMatchesAction(form: {
           safeAction: d.safeAction ?? null,
           version: d.version,
         })),
+        skipDuplicates: true,
       });
     }
   });
@@ -96,7 +107,7 @@ export async function generateRequirementMatchesAction(form: {
   revalidatePath("/readiness");
   revalidatePath("/interview");
 
-  return { ok: true, count: drafts.length, jobDescriptionId: job.id };
+  return { ok: true, count: toInsert.length, jobDescriptionId: job.id };
 }
 
 /** User confirm / reject / replace a suggested mapping (ownership enforced). */

@@ -607,6 +607,7 @@ model RequirementEvidenceMatch {
   createdAt        DateTime        @default(now())
   updatedAt        DateTime        @updatedAt
 
+  @@unique([userId, jobDescriptionId, requirementKey])
   @@index([userId])
   @@index([jobDescriptionId])
   @@index([userId, jobDescriptionId])

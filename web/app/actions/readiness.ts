@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
+import { averageInterviewFeedbackScore } from "@/lib/readiness/interview-score";
 import { computeApplicationReadiness } from "@/lib/readiness/score";
 
 type ActionOk<T> = { ok: true } & T;
@@ -43,7 +44,11 @@ export async function generateReadinessScoreAction(form: {
     prisma.interviewSession.findFirst({
       where: { userId: user.id, status: "completed" },
       orderBy: { updatedAt: "desc" },
-      select: { id: true, updatedAt: true },
+      select: {
+        id: true,
+        updatedAt: true,
+        turns: { select: { feedback: true } },
+      },
     }),
     prisma.preparationPlan.findFirst({
       where: { userId: user.id, status: "active" },
@@ -57,6 +62,11 @@ export async function generateReadinessScoreAction(form: {
     prepCompletion = done / activePlan.items.length;
   }
 
+  // Real feedback scores only — never invent a default interview score.
+  const interviewScore = latestInterview
+    ? averageInterviewFeedbackScore(latestInterview.turns.map((t) => t.feedback))
+    : null;
+
   const record = computeApplicationReadiness({
     userId: user.id,
     jobDescriptionId,
@@ -68,7 +78,7 @@ export async function generateReadinessScoreAction(form: {
     })),
     cvScore: latestReview?.overallScore ?? null,
     prepCompletion,
-    interviewScore: latestInterview ? 60 : null,
+    interviewScore,
     sourceTimestamps: {
       resumeReview: latestReview?.createdAt.toISOString() ?? "",
       interview: latestInterview?.updatedAt.toISOString() ?? "",

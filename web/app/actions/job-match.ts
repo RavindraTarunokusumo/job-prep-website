@@ -10,7 +10,11 @@ import {
 import { getProfileForUser, requireUser } from "@/lib/auth/session";
 import { requireFeatureEntitlement } from "@/lib/billing/require-entitlement";
 import { requireAiConsent } from "@/lib/legal/consent";
-import { mapRequirementsToEvidence } from "@/lib/matching";
+import {
+  filterDraftsForRemap,
+  mapRequirementsToEvidence,
+  remapDeleteReviews,
+} from "@/lib/matching";
 import { loadUserOntologySnapshot } from "@/lib/ontology/load-snapshot";
 import { prisma } from "@/lib/prisma";
 import { assertResumeHasContent } from "@/lib/resume/content";
@@ -116,7 +120,9 @@ export async function analyzeJobDescriptionAction(form: {
   });
 
   try {
-    const requirements = await extractJobRequirements(rawText);
+    const requirements = await extractJobRequirements(rawText, {
+      userId: user.id,
+    });
     const validatedRequirements = parseJobRequirements(requirements);
 
     await prisma.jobDescription.update({
@@ -135,6 +141,7 @@ export async function analyzeJobDescriptionAction(form: {
       experienceLevel: profile.experienceLevel,
       skills: profile.skills,
       certifications: profile.certifications,
+      userId: user.id,
     });
 
     const validatedMatch = parseJobMatchResult(matchResult);
@@ -159,33 +166,41 @@ export async function analyzeJobDescriptionAction(form: {
         validatedRequirements,
         snapshot,
       );
-      if (drafts.length > 0) {
+      const existing = await prisma.requirementEvidenceMatch.findMany({
+        where: { userId: user.id, jobDescriptionId: job.id },
+        select: { requirementKey: true, userReview: true },
+      });
+      const toInsert = filterDraftsForRemap(drafts, existing);
+      if (toInsert.length > 0 || existing.some((e) => e.userReview === "suggested" || e.userReview === "rejected")) {
         await prisma.requirementEvidenceMatch.deleteMany({
           where: {
             userId: user.id,
             jobDescriptionId: job.id,
-            userReview: "suggested",
+            userReview: { in: remapDeleteReviews() },
           },
         });
-        await prisma.requirementEvidenceMatch.createMany({
-          data: drafts.map((d) => ({
-            userId: d.userId,
-            jobDescriptionId: d.jobDescriptionId,
-            requirementKey: d.requirementKey,
-            requirementText: d.requirementText,
-            importance: d.importance,
-            matchType: d.matchType,
-            evidenceStrength: d.evidenceStrength,
-            confidence: d.confidence,
-            explanation: d.explanation,
-            evidenceId: d.evidenceId ?? null,
-            skillId: d.skillId ?? null,
-            starStoryId: d.starStoryId ?? null,
-            userReview: d.userReview,
-            safeAction: d.safeAction ?? null,
-            version: d.version,
-          })),
-        });
+        if (toInsert.length > 0) {
+          await prisma.requirementEvidenceMatch.createMany({
+            data: toInsert.map((d) => ({
+              userId: d.userId,
+              jobDescriptionId: d.jobDescriptionId,
+              requirementKey: d.requirementKey,
+              requirementText: d.requirementText,
+              importance: d.importance,
+              matchType: d.matchType,
+              evidenceStrength: d.evidenceStrength,
+              confidence: d.confidence,
+              explanation: d.explanation,
+              evidenceId: d.evidenceId ?? null,
+              skillId: d.skillId ?? null,
+              starStoryId: d.starStoryId ?? null,
+              userReview: d.userReview,
+              safeAction: d.safeAction ?? null,
+              version: d.version,
+            })),
+            skipDuplicates: true,
+          });
+        }
       }
     } catch (mapError) {
       console.warn("[job-match] requirement mapping failed", mapError);

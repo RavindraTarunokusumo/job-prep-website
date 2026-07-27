@@ -266,6 +266,7 @@ export async function startInterviewSessionAction(form: {
         targetIndustry: profile.targetIndustry,
         resumeExcerpt,
         jdExcerpt,
+        userId: user.id,
       });
       title = questionSet.title;
       model = getInterviewQuestionsModelId();

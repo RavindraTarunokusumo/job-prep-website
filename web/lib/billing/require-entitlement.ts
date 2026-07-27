@@ -6,6 +6,12 @@ import {
   type PlanCode,
   type SubscriptionSnapshot,
 } from "@/lib/billing/entitlements";
+import {
+  fairUseLimitFor,
+  featureToWorkflow,
+  isWithinFairUse,
+  utcDayStart,
+} from "@/lib/billing/fair-use";
 
 /**
  * Load the user's active subscription (if any) and run server-side entitlement check.
@@ -42,13 +48,43 @@ export async function getSubscriptionSnapshot(
   };
 }
 
+async function countUsageToday(
+  userId: string,
+  feature: FeatureKey,
+  dayStart: Date,
+): Promise<number> {
+  // Mock interviews include gap-driven (non-AI) starts — count sessions.
+  if (feature === "mock_interview") {
+    return prisma.interviewSession.count({
+      where: { userId, startedAt: { gte: dayStart } },
+    });
+  }
+
+  const workflow = featureToWorkflow(feature);
+  if (workflow) {
+    return prisma.aiUsageEvent.count({
+      where: {
+        userId,
+        workflow,
+        success: true,
+        createdAt: { gte: dayStart },
+      },
+    });
+  }
+  return 0;
+}
+
 export async function requireFeatureEntitlement(
   userId: string,
   feature: FeatureKey,
   now: Date = new Date(),
-): Promise<EntitlementDecision & { ok: true } | { ok: false; error: string; decision: EntitlementDecision }> {
+): Promise<
+  | (EntitlementDecision & { ok: true; fairUseRemaining: number | null })
+  | { ok: false; error: string; decision: EntitlementDecision }
+> {
   const snapshot = await getSubscriptionSnapshot(userId, now);
-  const decision = checkEntitlement(feature, snapshot, now);
+  let decision = checkEntitlement(feature, snapshot, now);
+  const planCode: PlanCode = decision.planCode;
 
   // Active EntitlementGrant rows can unlock a feature beyond plan defaults.
   if (!decision.allowed) {
@@ -61,8 +97,7 @@ export async function requireFeatureEntitlement(
       },
     });
     if (grant) {
-      return {
-        ok: true,
+      decision = {
         allowed: true,
         reason: "entitlement_grant",
         planCode: decision.planCode,
@@ -80,5 +115,24 @@ export async function requireFeatureEntitlement(
     };
   }
 
-  return { ok: true, ...decision };
+  // Fair-use daily limits from plan config (JOB-91).
+  const limit = fairUseLimitFor(planCode, feature);
+  if (limit != null) {
+    const used = await countUsageToday(userId, feature, utcDayStart(now));
+    const fair = isWithinFairUse(used, limit);
+    if (!fair.allowed) {
+      return {
+        ok: false,
+        error: `Daily fair-use limit reached for ${feature} (${limit}/day on ${planCode}). Try again tomorrow or upgrade.`,
+        decision: {
+          ...decision,
+          allowed: false,
+          reason: fair.reason,
+        },
+      };
+    }
+    return { ok: true, ...decision, fairUseRemaining: fair.remaining };
+  }
+
+  return { ok: true, ...decision, fairUseRemaining: null };
 }

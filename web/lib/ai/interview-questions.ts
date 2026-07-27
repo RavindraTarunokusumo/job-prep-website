@@ -14,6 +14,7 @@ export type InterviewQuestionsInput = {
   targetIndustry?: string | null;
   resumeExcerpt?: string | null;
   jdExcerpt?: string | null;
+  userId?: string | null;
 };
 
 const INTERVIEW_QUESTIONS_SYSTEM_PROMPT = `You are an expert interview coach creating a practice mock interview question set for a job seeker.
@@ -90,6 +91,7 @@ export async function generateInterviewQuestions(
     }),
     workflow: "mock_interview",
     taskClass: "interview_generation",
+    userId: input.userId,
   });
 
   return parseQuestionSet(object);

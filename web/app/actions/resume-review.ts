@@ -78,6 +78,7 @@ export async function runResumeReviewAction(
       experienceLevel: profile.experienceLevel,
       resumeText,
       parsedJson: doc.parsedData ?? undefined,
+      userId: user.id,
     });
 
     const validated = parseResumeReviewResult(result);

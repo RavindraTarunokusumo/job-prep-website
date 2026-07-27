@@ -60,6 +60,41 @@ describe("server action wiring to domain contracts", () => {
     expect(src).toContain("aiUsageEvent.create");
   });
 
+  it("AI callers pass userId into generateObjectWithFallback for per-user telemetry", () => {
+    expect(readSrc("lib/ai/job-match.ts")).toContain("userId: options.userId");
+    expect(readSrc("lib/ai/job-match.ts")).toContain("userId: input.userId");
+    expect(readSrc("lib/ai/interview-questions.ts")).toContain("userId: input.userId");
+    expect(readSrc("lib/ai/resume-review.ts")).toContain("userId: input.userId");
+    expect(readSrc("app/actions/job-match.ts")).toContain("userId: user.id");
+    expect(readSrc("app/actions/interview.ts")).toContain("userId: user.id");
+    expect(readSrc("app/actions/resume-review.ts")).toContain("userId: user.id");
+  });
+
+  it("readiness derives interview score from feedback not a constant", () => {
+    const src = readSrc("app/actions/readiness.ts");
+    expect(src).toContain("averageInterviewFeedbackScore");
+    expect(src).not.toMatch(/interviewScore:\s*latestInterview\s*\?\s*60/);
+  });
+
+  it("matching remap uses filterDraftsForRemap (no confirmed duplicates)", () => {
+    const src = readSrc("app/actions/matching.ts");
+    expect(src).toContain("filterDraftsForRemap");
+    expect(src).toContain("remapDeleteReviews");
+  });
+
+  it("billing webhook requires secret and does not take client userId", () => {
+    const src = readSrc("app/actions/billing.ts");
+    expect(src).toContain("verifyBillingWebhookSecret");
+    expect(src).toContain("BILLING_WEBHOOK_SECRET");
+    expect(src).not.toMatch(/userId\?:\s*string/);
+  });
+
+  it("fair-use is enforced in requireFeatureEntitlement", () => {
+    const src = readSrc("lib/billing/require-entitlement.ts");
+    expect(src).toContain("isWithinFairUse");
+    expect(src).toContain("fairUseLimitFor");
+  });
+
   it("product pages exist for evidence, readiness, outcomes, billing", () => {
     for (const page of [
       "app/evidence/page.tsx",

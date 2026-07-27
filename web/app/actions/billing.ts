@@ -9,6 +9,7 @@ import {
   type PlanCode,
 } from "@/lib/billing/entitlements";
 import { getSubscriptionSnapshot } from "@/lib/billing/require-entitlement";
+import { verifyBillingWebhookSecret } from "@/lib/billing/webhook-auth";
 import { prisma } from "@/lib/prisma";
 
 type ActionOk<T> = { ok: true } & T;
@@ -97,19 +98,45 @@ export async function getBillingStatusAction(): Promise<
 }
 
 /**
- * Stub billing webhook with idempotent provider event handling (JOB-91).
- * In production, verify signatures before calling this logic.
+ * Billing webhook processor (JOB-91).
+ *
+ * Security:
+ * - Requires BILLING_WEBHOOK_SECRET match (never open to anonymous clients).
+ * - Does **not** accept client-supplied userId; user is resolved only from
+ *   an existing Subscription row when subscriptionId is provided.
  */
 export async function processBillingWebhookAction(form: {
   providerEventId: string;
   type: string;
-  userId?: string;
+  /** Existing subscription id — ownership resolved from DB, not client userId. */
   subscriptionId?: string;
+  /** Shared secret; must equal process.env.BILLING_WEBHOOK_SECRET. */
+  secret: string;
   payload?: { [key: string]: string | number | boolean | null };
 }): Promise<ActionOk<{ applied: boolean; reason: string }> | ActionErr> {
-  // Webhooks are unauthenticated by design; only process known event shapes.
+  const auth = verifyBillingWebhookSecret(
+    form.secret,
+    process.env.BILLING_WEBHOOK_SECRET,
+  );
+  if (!auth.ok) return { ok: false, error: auth.error };
+
   if (!form.providerEventId?.trim()) {
     return { ok: false, error: "Missing providerEventId." };
+  }
+
+  // Resolve user only from trusted subscription row.
+  let userId: string | null = null;
+  let subscriptionId: string | null = form.subscriptionId?.trim() || null;
+  if (subscriptionId) {
+    const sub = await prisma.subscription.findUnique({
+      where: { id: subscriptionId },
+      select: { id: true, userId: true },
+    });
+    if (!sub) {
+      return { ok: false, error: "Unknown subscription." };
+    }
+    userId = sub.userId;
+    subscriptionId = sub.id;
   }
 
   const seen = await prisma.billingEvent.findMany({
@@ -123,24 +150,13 @@ export async function processBillingWebhookAction(form: {
 
   const decision = shouldApplyWebhookEvent(form.providerEventId, seenIds);
   if (!decision.apply) {
-    await prisma.billingEvent.create({
-      data: {
-        userId: form.userId ?? null,
-        subscriptionId: form.subscriptionId ?? null,
-        type: "webhook_duplicate",
-        providerEventId: `${form.providerEventId}:dup:${Date.now()}`,
-        payload: form.payload
-          ? (form.payload as object)
-          : { original: form.providerEventId },
-      },
-    }).catch(() => undefined);
     return { ok: true, applied: false, reason: decision.reason };
   }
 
   await prisma.billingEvent.create({
     data: {
-      userId: form.userId ?? null,
-      subscriptionId: form.subscriptionId ?? null,
+      userId,
+      subscriptionId,
       type: form.type || "webhook",
       providerEventId: form.providerEventId,
       payload: form.payload ? (form.payload as object) : undefined,
