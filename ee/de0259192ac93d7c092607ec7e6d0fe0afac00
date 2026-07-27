@@ -1,0 +1,5 @@
+Task: JOB-92 journey tests
+Summary: application-journey tests wire real domain functions; batch specs/TODO.
+Docs: docs/specs/2026-07-27-mvp-job-87-92-outcome-first-batch.md
+TODO: JOB-92
+Validation: npm test 217 + lint + typecheck + build
