@@ -38,6 +38,13 @@ Migrations: `web/prisma/migrations/`
 | `TargetRole` | Role/industry targets with `priority` and `isPrimary` |
 | `EvidenceSkillLink` | M:N evidence↔skill with `strength` primary/secondary/mentioned |
 
+
+| `RequirementEvidenceMatch` | JOB-86 JD requirement → evidence/skill/STAR mapping; `matchType` strong/partial/keyword_only/transferable/gap; `userReview` suggested/confirmed/rejected/replaced; never auto-confirms inferred facts |
+| `ApplicationReadinessScore` | JOB-87 dimension scores JSON; `confidenceBand` ready/partial/sparse; coaching only |
+| `ApplicationOutcome` | JOB-89 stage/outcome history; separates employerFeedback vs userInterpretation; sensitive by default |
+| `AiUsageEvent` | JOB-90 workflow/model/token/cost telemetry without raw content |
+| `ProductPlan` / `Subscription` / `EntitlementGrant` / `BillingEvent` | JOB-91 configuration-driven entitlements and billing event log |
+
 Ontology diagram and retrieval rules: [ontology.md](./ontology.md). Zod enums/payloads for category slugs, attempt status, choices, and question payloads live in `web/lib/validation/assessment.ts`. Report section keys and narrative schemas live in `web/lib/validation/performance-report.ts`. Ontology schemas live in `web/lib/validation/ontology.ts`; pure helpers in `web/lib/ontology/`.
 
 ### Prisma client in Next.js dev

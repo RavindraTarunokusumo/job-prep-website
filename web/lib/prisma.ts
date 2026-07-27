@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
  * models, a stale client can be missing delegates (e.g. resumeDocument).
  * Bump PRISMA_CLIENT_VERSION when the schema gains models used at runtime.
  */
-const PRISMA_CLIENT_VERSION = "2026-07-27-job85-career-evidence-ontology";
+const PRISMA_CLIENT_VERSION = "2026-07-27-job85-92-outcome-first";
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;

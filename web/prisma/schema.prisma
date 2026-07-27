@@ -33,6 +33,13 @@ model User {
   senioritySignals    SenioritySignal[]
   targetRoles         TargetRole[]
   evidenceSkillLinks  EvidenceSkillLink[]
+  requirementMatches  RequirementEvidenceMatch[]
+  readinessScores     ApplicationReadinessScore[]
+  applicationOutcomes ApplicationOutcome[]
+  aiUsageEvents       AiUsageEvent[]
+  subscriptions       Subscription[]
+  entitlementGrants   EntitlementGrant[]
+  billingEvents       BillingEvent[]
 }
 
 model AnalyticsEvent {
@@ -152,6 +159,7 @@ model JobDescription {
   updatedAt     DateTime           @updatedAt
   matchAnalyses     JobMatchAnalysis[]
   applicationDrafts ApplicationDraft[]
+  requirementMatches RequirementEvidenceMatch[]
 
   @@index([userId])
 }
@@ -568,4 +576,185 @@ model EvidenceSkillLink {
   @@id([evidenceId, skillId])
   @@index([userId])
   @@index([skillId])
+}
+
+
+// JOB-86 — requirement to evidence mapping
+model RequirementEvidenceMatch {
+  id               String          @id @default(cuid())
+  userId           String          @db.Uuid
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescriptionId String
+  jobDescription   JobDescription  @relation(fields: [jobDescriptionId], references: [id], onDelete: Cascade)
+  requirementKey   String
+  requirementText  String
+  // required | preferred | other
+  importance       String
+  // strong | partial | keyword_only | transferable | gap
+  matchType        String
+  evidenceStrength Int             @default(0)
+  confidence       Float           @default(0.5)
+  explanation      String          @db.Text
+  evidenceId       String?
+  skillId          String?
+  starStoryId      String?
+  // suggested | confirmed | rejected | replaced
+  userReview       String          @default("suggested")
+  safeAction       String?         @db.Text
+  version          Int             @default(1)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([userId])
+  @@index([jobDescriptionId])
+  @@index([userId, jobDescriptionId])
+  @@index([userId, userReview])
+}
+
+
+// JOB-87 application readiness score
+model ApplicationReadinessScore {
+  id                 String   @id @default(cuid())
+  userId             String   @db.Uuid
+  user               User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescriptionId   String?
+  // optional application id when tracker exists
+  jobApplicationId   String?
+  // ready | partial | sparse
+  confidenceBand     String
+  // dimension scores JSON validated by readinessDimensionsSchema
+  dimensions         Json
+  overallScore       Int?
+  explanations       Json?
+  sourceTimestamps   Json?
+  version            Int      @default(1)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, jobDescriptionId])
+}
+
+// JOB-89 application outcomes
+model ApplicationOutcome {
+  id                 String    @id @default(cuid())
+  userId             String    @db.Uuid
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobDescriptionId   String?
+  jobApplicationId   String?
+  // screening | interview | final | offer | rejected | withdrawn | no_response | applied
+  stage              String
+  outcome            String?
+  stageDate          DateTime?
+  employerFeedback   String?   @db.Text
+  userInterpretation String?   @db.Text
+  perceivedBlockers  String?   @db.Text
+  // factual | interpretation | ai_inference labels in meta
+  meta               Json?
+  isSensitive        Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([userId, stage])
+}
+
+// JOB-90 AI usage / cost telemetry
+model AiUsageEvent {
+  id            String   @id @default(cuid())
+  userId        String?  @db.Uuid
+  user          User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  workflow      String
+  taskClass     String
+  model         String
+  promptVersion String?
+  inputTokens   Int?
+  outputTokens  Int?
+  estimatedCost Float?
+  latencyMs     Int?
+  retries       Int      @default(0)
+  success       Boolean  @default(true)
+  validationOk  Boolean?
+  // never store raw CV/JD content
+  meta          Json?
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+  @@index([workflow])
+  @@index([model])
+  @@index([createdAt])
+  @@index([userId, workflow])
+}
+
+// JOB-91 subscription entitlements
+model ProductPlan {
+  id           String         @id @default(cuid())
+  // free | sprint_pass | pro | org
+  code         String         @unique
+  name         String
+  // configuration JSON: entitlements, durationDays, priceCents
+  config       Json
+  active       Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  subscriptions Subscription[]
+}
+
+model Subscription {
+  id                 String    @id @default(cuid())
+  userId             String    @db.Uuid
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planId             String
+  plan               ProductPlan @relation(fields: [planId], references: [id])
+  // active | past_due | canceled | expired
+  status             String
+  provider           String    @default("stub")
+  providerCustomerId String?
+  providerSubId      String?
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean   @default(false)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  billingEvents      BillingEvent[]
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([providerSubId])
+}
+
+model EntitlementGrant {
+  id        String    @id @default(cuid())
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  // feature key e.g. mock_interview | cv_rewrite | unlimited_match
+  feature   String
+  source    String
+  // active | expired | revoked
+  status    String    @default("active")
+  startsAt  DateTime  @default(now())
+  endsAt    DateTime?
+  meta      Json?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([userId, feature, status])
+}
+
+model BillingEvent {
+  id             String        @id @default(cuid())
+  userId         String?       @db.Uuid
+  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  subscriptionId String?
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  // checkout | invoice_paid | invoice_failed | canceled | renewed | webhook_duplicate
+  type           String
+  providerEventId String?
+  payload        Json?
+  createdAt      DateTime      @default(now())
+
+  @@unique([providerEventId])
+  @@index([userId])
+  @@index([subscriptionId])
 }
