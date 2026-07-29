@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { upsertUserFromAuth, syncOnboardingCookie } from "@/lib/auth/upsert-user";
 import { hasCompletedOnboarding } from "@/lib/auth/session";
@@ -9,6 +9,7 @@ import { ONBOARDING_COOKIE } from "@/lib/auth/cookies";
 
 export type AuthActionState = {
   error?: string;
+  success?: string;
 };
 
 function authErrorMessage(message: string): string {
@@ -102,6 +103,67 @@ export async function signIn(
     redirect(next);
   }
   redirect(complete ? "/dashboard" : "/onboarding");
+}
+
+export async function requestPasswordReset(
+  _prevState: AuthActionState,
+  formData: FormData
+): Promise<AuthActionState> {
+  const email = String(formData.get("email") ?? "").trim();
+
+  if (!email) {
+    return { error: "Email is required." };
+  }
+
+  const headerStore = await headers();
+  const origin = headerStore.get("origin");
+
+  if (!origin) {
+    return { error: "Unable to determine the application URL. Please try again." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${origin}/auth/callback?next=/update-password`,
+  });
+
+  if (error) {
+    return { error: authErrorMessage(error.message) };
+  }
+
+  return {
+    success:
+      "If an account exists for that email, a password-reset link has been sent.",
+  };
+}
+
+export async function updatePassword(
+  _prevState: AuthActionState,
+  formData: FormData
+): Promise<AuthActionState> {
+  const password = String(formData.get("password") ?? "");
+  const confirmPassword = String(formData.get("confirmPassword") ?? "");
+
+  if (!password || !confirmPassword) {
+    return { error: "Enter and confirm your new password." };
+  }
+
+  if (password !== confirmPassword) {
+    return { error: "Passwords do not match." };
+  }
+
+  if (password.length < 8) {
+    return { error: "Password must be at least 8 characters." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.updateUser({ password });
+
+  if (error) {
+    return { error: authErrorMessage(error.message) };
+  }
+
+  return { success: "Your password has been updated. You can now continue." };
 }
 
 export async function signOut(): Promise<void> {
