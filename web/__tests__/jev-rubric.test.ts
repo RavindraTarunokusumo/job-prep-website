@@ -367,3 +367,88 @@ describe("askJev transport", () => {
     expect(calls).toHaveLength(1);
   });
 });
+
+describe("askJev retry classification", () => {
+  const QUESTION = {
+    impact_evidence: {
+      type: "score" as const,
+      instructions: "i",
+      criteria: ["low", "high"],
+    },
+  };
+
+  it("retries a 5xx, which is the fault the loop exists for", async () => {
+    const { jev } = await loadRubric("test-key");
+    const { fetchImpl, calls } = stubFetch([
+      { status: 503, body: { error: "unavailable" } },
+      { status: 200, body: corpusResponse({ impact_evidence: 3 }) },
+    ]);
+
+    const answers = await jev.askJev({
+      state: "cv text",
+      questions: QUESTION,
+      fetchImpl,
+      retryDelayMs: 0,
+    });
+
+    expect(calls).toHaveLength(2);
+    expect(answers.impact_evidence.type).toBe("score");
+  });
+
+  it("retries a rejected fetch (network failure)", async () => {
+    const { jev } = await loadRubric("test-key");
+    let attempts = 0;
+    const fetchImpl = (async () => {
+      attempts += 1;
+      if (attempts === 1) {
+        throw new TypeError("fetch failed");
+      }
+      return {
+        ok: true,
+        status: 200,
+        json: async () => corpusResponse({ impact_evidence: 1 }),
+        text: async () => "",
+      };
+    }) as unknown as typeof fetch;
+
+    const answers = await jev.askJev({
+      state: "cv text",
+      questions: QUESTION,
+      fetchImpl,
+      retryDelayMs: 0,
+    });
+
+    expect(attempts).toBe(2);
+    expect(answers.impact_evidence.type).toBe("score");
+  });
+
+  it("gives up after maxRetries rather than looping forever", async () => {
+    const { jev } = await loadRubric("test-key");
+    const { fetchImpl, calls } = stubFetch([
+      { status: 503, body: { error: "unavailable" } },
+    ]);
+
+    await expect(
+      jev.askJev({
+        state: "cv text",
+        questions: QUESTION,
+        fetchImpl,
+        retryDelayMs: 0,
+        maxRetries: 2,
+      }),
+    ).rejects.toThrow(/503/);
+    expect(calls).toHaveLength(3);
+  });
+
+  it("does not retry a malformed but successful response", async () => {
+    const { jev } = await loadRubric("test-key");
+    const { fetchImpl, calls } = stubFetch([
+      { status: 200, body: { model: "jev-latest", answers: {} } },
+    ]);
+
+    await expect(
+      jev.askJev({ state: "cv text", questions: QUESTION, fetchImpl }),
+    ).rejects.toThrow();
+    expect(calls).toHaveLength(1);
+  });
+});
