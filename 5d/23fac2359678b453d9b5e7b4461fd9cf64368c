@@ -1,0 +1,5 @@
+Task: TODO bookkeeping for the parser reliability fix
+Summary: Cross off the five parser sub-items with their commit hashes and move the spec to Implemented — awaiting PR.
+Docs: TODO.md, docs/specs/2026-09-18-resume-parser-reliability-fix.md
+TODO: Active work / Resume parser reliability fix
+Validation: N/A (documentation only)
