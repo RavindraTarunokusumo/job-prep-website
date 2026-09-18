@@ -1,0 +1,5 @@
+Task: Jev unit tests
+Summary: Eighteen network-free tests over the ordinal mapping, weighted composition, five-question request construction, response validation including malformed payloads, missing-key failure, and conformance of sectionScores to the existing review schema.
+Docs: docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring — items 1-2
+Validation: npm run lint, npm run typecheck, npm test (290 passing), npm run build
