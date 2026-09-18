@@ -27,12 +27,12 @@
 
 Two specs written 18 Sep 2026, neither implemented yet:
 
-- **Resume parser reliability fix** — spec `docs/specs/2026-09-18-resume-parser-reliability-fix.md` (**Proposed**)
-  - [ ] Record `structureParser` on `ResumeDocument`; stop overloading `parseError`
-  - [ ] Surface heuristic-fallback degradation in the resume review UI
-  - [ ] Guard `isGlinerStructureEnabled()` on interpreter existence; platform-aware `resolvePythonBin()`
-  - [ ] Correct `web/.env.local` GLiNER path (or disable explicitly)
-  - [ ] Tests for all three parser states
+- **Resume parser reliability fix** — spec `docs/specs/2026-09-18-resume-parser-reliability-fix.md` (**Implemented — awaiting PR**)
+  - [x] Record `structureParser` on `ResumeDocument`; stop overloading `parseError` — `e7d7d48`, `a83aeb4`
+  - [x] Surface heuristic-fallback degradation in the resume review UI — `427cb2d`
+  - [x] Guard `isGlinerStructureEnabled()` on interpreter existence; platform-aware `resolvePythonBin()` — `2c00b24`
+  - [x] Correct `web/.env.local` GLiNER path (or disable explicitly) — `c2807cd` (path already valid on the Linux host; `.env.example` documents the default)
+  - [x] Tests for all three parser states — `b2dfd9c`
 - **Jev rubric scoring** — spec `docs/specs/2026-09-18-jev-rubric-scoring.md` (**Draft — blocked on TypeSafe API key**)
   - [ ] `lib/ai/jev.ts` System One client + telemetry reuse
   - [ ] `lib/ai/resume-rubric.ts` 5-dimension rubric + deterministic 0–100 mapping
