@@ -1,0 +1,5 @@
+Task: Vendor-accurate AI usage cost
+Summary: recordAiUsageEvent accepts an optional estimatedCostUsd override so non-OpenRouter vendors persist their real cost; Jev passes its input-only rate. Found during review of the delegated Jev implementation.
+Docs: docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring — item 1
+Validation: npm run lint, npm run typecheck, npm test, npm run build
