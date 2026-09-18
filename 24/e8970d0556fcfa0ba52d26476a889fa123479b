@@ -1,0 +1,5 @@
+Task: AI config single source of truth
+Summary: Added web/lib/ai/config.ts for primary/fallback models; reverted over-scoped return-type changes across services/actions; fallback stays in openrouter only.
+Docs: docs/architecture.md, docs/database.md
+TODO: N/A
+Validation: lint, typecheck, vitest 49

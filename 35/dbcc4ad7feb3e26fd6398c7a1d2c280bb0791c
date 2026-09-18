@@ -1,0 +1,5 @@
+Task: Lint fix for GLiNER helper
+Summary: Remove unused _meta binding in parse-with-gliner.
+Docs: N/A
+TODO: Phase 3 / GLiNER
+Validation: npm run lint

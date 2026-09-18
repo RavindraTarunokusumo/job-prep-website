@@ -1,0 +1,5 @@
+Task: JOB-33/34/35/36 resume checker
+Summary: OpenRouter client, generateObject resume review + bullet rewrite, server actions, /resume/check UI, content guards tests, ADR-003 and env docs.
+Docs: docs/architecture.md, docs/database.md
+TODO: Phase 4 / 4.2-4.5
+Validation: lint, typecheck, vitest 25, next build

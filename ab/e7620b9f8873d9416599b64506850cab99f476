@@ -1,0 +1,5 @@
+Task: Accept Phase 3 CV upload/parse spec
+Summary: Accept Phase 3 spec for resume upload, extraction, structured parse, and review UI using Supabase Storage; update TODO.
+Docs: docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md, docs/specs/README.md, TODO.md
+TODO: Phase 3 / 3.0
+Validation: N/A (docs only)

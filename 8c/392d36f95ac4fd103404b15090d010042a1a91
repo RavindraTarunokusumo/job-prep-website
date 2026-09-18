@@ -1,0 +1,5 @@
+Task: JOB-85 Prisma models
+Summary: Additive ontology tables and User relations; database.md + prisma client version bump.
+Docs: docs/database.md
+TODO: JOB-85 85.2
+Validation: prisma generate

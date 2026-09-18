@@ -1,0 +1,5 @@
+Task: Wave 2 JOB-17 metrics
+Summary: Analytics taxonomy, trackEvent hooks, user metrics card, feedback prompts.
+Docs: docs/analytics-taxonomy.md, docs/specs/2026-07-17-mvp-job-17-metrics.md
+TODO: JOB-17 / JOB-75–78
+Validation: web lint, typecheck, test, build (all pass)

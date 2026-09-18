@@ -1,0 +1,5 @@
+Task: PR #14 closeout review fixes
+Summary: Fix fair-use double-count, readiness rejected mappings, match FK IDOR, webhook idempotency/secret, Sprint Pass stack guard.
+Docs: N/A
+TODO: closeout review
+Validation: lint, typecheck, test 263, build

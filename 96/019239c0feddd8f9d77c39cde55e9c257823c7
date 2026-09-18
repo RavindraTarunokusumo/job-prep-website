@@ -1,0 +1,5 @@
+Task: JOB-16 spec + plan
+Summary: Accepted Autopilot spec/plan/TODO for privacy copy, consent gates, data requests.
+Docs: docs/specs/2026-07-17-mvp-job-16-privacy-consent.md, docs/superpowers/plans/2026-07-17-job-16-privacy-consent.md
+TODO: JOB-16 tasks 16.1-16.4
+Validation: docs only (no app code)

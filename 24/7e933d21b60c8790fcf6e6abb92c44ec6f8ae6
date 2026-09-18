@@ -1,0 +1,5 @@
+Task: PR #12 review fixes
+Summary: Interview source picks session with feedback; invalid reportId shows error.
+Docs: N/A
+TODO: JOB-15 review
+Validation: lint typecheck test build

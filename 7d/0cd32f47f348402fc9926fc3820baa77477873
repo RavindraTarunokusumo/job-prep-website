@@ -1,0 +1,5 @@
+Task: JOB-89 outcomes
+Summary: outcome schemas, splitFeedbackFields, aggregateOutcomeInsights.
+Docs: N/A
+TODO: JOB-89
+Validation: vitest outcomes-insights

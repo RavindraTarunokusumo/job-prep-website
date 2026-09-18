@@ -1,0 +1,5 @@
+Task: PR #7 review fixes
+Summary: Prevent explanation leak and re-answers; results view only for completed attempts.
+Docs: N/A
+TODO: JOB-13 review follow-up
+Validation: web lint, typecheck, test, build

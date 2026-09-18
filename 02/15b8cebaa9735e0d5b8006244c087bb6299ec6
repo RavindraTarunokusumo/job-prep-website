@@ -1,0 +1,5 @@
+Task: JOB-86–91 Prisma models
+Summary: RequirementEvidenceMatch, ApplicationReadinessScore, ApplicationOutcome, AiUsageEvent, ProductPlan/Subscription/EntitlementGrant/BillingEvent.
+Docs: docs/database.md
+TODO: JOB-86..91 models
+Validation: prisma validate/generate

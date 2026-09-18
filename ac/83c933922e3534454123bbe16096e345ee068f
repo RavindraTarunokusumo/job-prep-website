@@ -1,0 +1,5 @@
+Task: JOB-69 Performance report UI
+Summary: /report workspace with generate, list, print-friendly view; dashboard link.
+Docs: N/A
+TODO: Phase 8c / 15.3 JOB-69
+Validation: web lint typecheck test build

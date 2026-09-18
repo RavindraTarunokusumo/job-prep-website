@@ -1,0 +1,5 @@
+Task: JOB-90 routing
+Summary: resolveModelRoute + sanitizeTelemetryMeta + estimateCostUsd.
+Docs: N/A
+TODO: JOB-90
+Validation: vitest ai-routing

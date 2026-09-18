@@ -1,0 +1,5 @@
+Task: Resume storage, extract, and structure parse (JOB-26–29)
+Summary: Supabase Storage resumes bucket helpers, PDF/DOCX extraction, structured parse, and server actions for upload/save/list with ownership checks.
+Docs: docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md
+TODO: Phase 3 / 3.2–3.5
+Validation: npm run lint, typecheck, test (18), build (web/)

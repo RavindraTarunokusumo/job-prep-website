@@ -1,0 +1,5 @@
+Task: Post-PR archive Wave 1 PRs #6–#8
+Summary: Archive JOB-16, JOB-13, and Phase 6 partial (JOB-50–52); rewrite TODO for active Wave 2 work; update specs README statuses to merged PR numbers.
+Docs: docs/iterations/archive/2026-07-17-job-16-privacy-consent.md, docs/iterations/archive/2026-07-17-job-13-assessments.md, docs/iterations/archive/2026-07-17-phase-6-mock-interview-partial.md, TODO.md, docs/specs/README.md
+TODO: Post-PR Wave 1 archive / Wave 2 recommended order
+Validation: manual (docs-only; no web/ suite)

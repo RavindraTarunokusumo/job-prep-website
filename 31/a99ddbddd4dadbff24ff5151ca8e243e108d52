@@ -1,0 +1,5 @@
+Task: PR #5 review fixes — editor save/regen correctness
+Summary: Section regen applies payload to client state; save uses form content and drops stale sections when free-edited; tone/length from form on section regen.
+Docs: N/A
+TODO: Phase 5 review fix
+Validation: npm test (59), tsc --noEmit, npm run lint

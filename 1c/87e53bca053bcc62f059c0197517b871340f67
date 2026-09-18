@@ -1,0 +1,5 @@
+Task: PR #14 review fixes
+Summary: Fix false STAR grounding, ready-story filter, interview_rate definition, skill unique constraint, entitlement docs.
+Docs: N/A
+TODO: review reception
+Validation: npm run lint && typecheck && test (218)

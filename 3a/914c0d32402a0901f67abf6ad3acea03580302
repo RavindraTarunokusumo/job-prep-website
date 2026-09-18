@@ -1,0 +1,5 @@
+Task: Update agent workflow from reflection
+Summary: Fold Phase 0–1 insights into AGENTS.md/CLAUDE.md (git notes template + push, Composer 2.5 handoffs, web monorepo checks, Linear filters, merge-vs-squash) and mark insights as applied.
+Docs: AGENTS.md, CLAUDE.md, docs/insights.md, .github/git_notes_template.md
+TODO: Reflection / harness update
+Validation: N/A (docs only); diff-checked AGENTS.md vs CLAUDE.md parity

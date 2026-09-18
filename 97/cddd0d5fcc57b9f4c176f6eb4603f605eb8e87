@@ -1,0 +1,5 @@
+Task: Experimental GLiNER2 resume structuring
+Summary: Add scripts/gliner_resume_parse.py + Node sidecar, optional env toggle with heuristic fallback; document ADR-002 and side-by-side test results.
+Docs: docs/architecture.md, web/.env.example, scripts/gliner_resume_parse.py
+TODO: Phase 3 / GLiNER structure experiment
+Validation: GLiNER CLI on clean+collapsed+user CV; npm typecheck/lint/test

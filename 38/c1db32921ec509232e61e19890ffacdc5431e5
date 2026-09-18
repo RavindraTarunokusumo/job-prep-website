@@ -1,0 +1,5 @@
+Task: Post-PR archive and workflow insights
+Summary: After PR #1 merge, archive Phase 0–1 TODO snapshot, keep only active phases in TODO.md, update specs index, and record workflow lessons in docs/insights.md.
+Docs: TODO.md, docs/insights.md, docs/iterations/archive/2026-07-15-phase-0-1-foundation-landing.md, docs/specs/README.md
+TODO: Post-PR / Phase 0–1 archive
+Validation: N/A (docs only; main fast-forward post-merge)

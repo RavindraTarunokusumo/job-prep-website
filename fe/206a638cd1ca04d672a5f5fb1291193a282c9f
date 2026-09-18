@@ -1,0 +1,5 @@
+Task: ResumeDocument Prisma model (JOB-25)
+Summary: Add ResumeDocument model and migration for CV upload metadata and parsed content.
+Docs: docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md
+TODO: Phase 3 / 3.1 JOB-25
+Validation: npm run lint, typecheck, test, build (web/)

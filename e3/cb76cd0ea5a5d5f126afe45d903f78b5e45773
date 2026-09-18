@@ -1,0 +1,5 @@
+Task: JOB-87 readiness
+Summary: computeApplicationReadiness with six dimensions and sparse confidence.
+Docs: docs/specs/2026-07-27-mvp-job-87-92-outcome-first-batch.md
+TODO: JOB-87
+Validation: vitest readiness-score

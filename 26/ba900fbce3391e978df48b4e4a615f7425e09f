@@ -1,0 +1,5 @@
+Task: Merge main into Phase 6 branch
+Summary: Resolve conflicts after PR #7 and #8 — interview + assessment + privacy models.
+Docs: docs/database.md, docs/specs/README.md, TODO.md
+TODO: Phase 6 merge resolution
+Validation: suite after commit

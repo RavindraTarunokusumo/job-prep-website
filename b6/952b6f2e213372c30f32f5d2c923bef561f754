@@ -1,0 +1,5 @@
+Task: Wave 2 Phase 6 remainder JOB-53–58
+Summary: Follow-up AI + feedback scoring/UI wired into mock interview flow.
+Docs: docs/specs Phase 6 addendum if present, docs/database.md
+TODO: Phase 6 / 6.4-6.9
+Validation: web lint, typecheck, test, build (all pass)

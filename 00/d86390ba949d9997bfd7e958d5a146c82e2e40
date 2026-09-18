@@ -1,0 +1,5 @@
+Task: JOB-74 Privacy QA checklist
+Summary: Add docs/privacy-qa-checklist.md covering legal pages, upload, AI consent, practice disclaimers, data rights.
+Docs: docs/privacy-qa-checklist.md
+TODO: JOB-16 / 16.4 JOB-74
+Validation: docs only + prior suite green on branch

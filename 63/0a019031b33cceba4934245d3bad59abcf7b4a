@@ -1,0 +1,5 @@
+Task: PR #11 review fix
+Summary: Feedback action reports persist failure; key remounts prompt per entity.
+Docs: N/A
+TODO: Wave 2 metrics review
+Validation: lint typecheck test

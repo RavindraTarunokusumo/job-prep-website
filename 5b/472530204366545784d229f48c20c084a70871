@@ -1,0 +1,5 @@
+Task: JOB-71 Privacy and AI-use copy
+Summary: Centralize legal copy module and replace privacy/ai-use placeholders with real pages.
+Docs: N/A
+TODO: JOB-16 / 16.1 JOB-71
+Validation: web lint, typecheck, test, build (all pass)

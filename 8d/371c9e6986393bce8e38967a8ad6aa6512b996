@@ -1,0 +1,5 @@
+Task: JOB-60 Seed assessment question bank
+Summary: Original MCQ/reflection seed data, idempotent seeder, seed:assessments script, structure tests.
+Docs: N/A
+TODO: JOB-13 / 13.2 JOB-60
+Validation: web lint, typecheck, test, build (all pass)
