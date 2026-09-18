@@ -1,0 +1,5 @@
+Task: TODO bookkeeping for the Jev rubric work
+Summary: Cross off the four buildable Jev sub-items with commit hashes and restate the remaining item as blocked on a TypeSafe API key, with the consequence that the rubric path stays unwired and the corpus bands remain predictions.
+Docs: TODO.md, docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring
+Validation: N/A (documentation only)
