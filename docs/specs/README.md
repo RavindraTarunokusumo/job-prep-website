@@ -36,3 +36,5 @@ Example: `2026-07-15-mvp-phase-0-1-foundation-landing.md`
 | [2026-07-27-mvp-job-85-career-evidence-ontology.md](./2026-07-27-mvp-job-85-career-evidence-ontology.md) | **Accepted (merged PR #14)** | JOB-85 shared career evidence ontology |
 | [2026-07-27-mvp-job-86-requirement-evidence-mapping.md](./2026-07-27-mvp-job-86-requirement-evidence-mapping.md) | **Accepted (merged PR #14)** | JOB-86 requirement→evidence mapping |
 | [2026-07-27-mvp-job-87-92-outcome-first-batch.md](./2026-07-27-mvp-job-87-92-outcome-first-batch.md) | **Accepted (merged PR #14)** | JOB-87…92 readiness, interviews, outcomes, routing, billing, tests |
+| [2026-09-18-resume-parser-reliability-fix.md](./2026-09-18-resume-parser-reliability-fix.md) | **Proposed** | Resume structure parser silent-degradation fix (ADR-002 follow-up) |
+| [2026-09-18-jev-rubric-scoring.md](./2026-09-18-jev-rubric-scoring.md) | **Draft (blocked: API key)** | Jev `score` rubric for resume review scores + synthetic-CV evaluation |

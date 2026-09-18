@@ -25,7 +25,22 @@
 
 ## Active work
 
-**None planned** — JOB-85…92 merged. Remaining open product work (if any) lives in Linear Todo/Backlog outside this archive.
+Two specs written 18 Sep 2026, neither implemented yet:
+
+- **Resume parser reliability fix** — spec `docs/specs/2026-09-18-resume-parser-reliability-fix.md` (**Proposed**)
+  - [ ] Record `structureParser` on `ResumeDocument`; stop overloading `parseError`
+  - [ ] Surface heuristic-fallback degradation in the resume review UI
+  - [ ] Guard `isGlinerStructureEnabled()` on interpreter existence; platform-aware `resolvePythonBin()`
+  - [ ] Correct `web/.env.local` GLiNER path (or disable explicitly)
+  - [ ] Tests for all three parser states
+- **Jev rubric scoring** — spec `docs/specs/2026-09-18-jev-rubric-scoring.md` (**Draft — blocked on TypeSafe API key**)
+  - [ ] `lib/ai/jev.ts` System One client + telemetry reuse
+  - [ ] `lib/ai/resume-rubric.ts` 5-dimension rubric + deterministic 0–100 mapping
+  - [ ] Synthetic CV corpus under `web/__tests__/fixtures/cvs/`
+  - [ ] `scripts/jev-rubric-eval.ts` harness (3× reruns, confidence, cost/latency)
+  - [ ] Claude verdict against the four fixed acceptance criteria
+
+Remaining open product work (if any) lives in Linear Todo/Backlog outside this archive.
 
 Optional polish / future (not started):
 
