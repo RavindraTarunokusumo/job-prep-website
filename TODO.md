@@ -33,12 +33,12 @@ Two specs written 18 Sep 2026, neither implemented yet:
   - [x] Guard `isGlinerStructureEnabled()` on interpreter existence; platform-aware `resolvePythonBin()` — `2c00b24`
   - [x] Correct `web/.env.local` GLiNER path (or disable explicitly) — `c2807cd` (path already valid on the Linux host; `.env.example` documents the default)
   - [x] Tests for all three parser states — `b2dfd9c`
-- **Jev rubric scoring** — spec `docs/specs/2026-09-18-jev-rubric-scoring.md` (**Draft — blocked on TypeSafe API key**)
-  - [ ] `lib/ai/jev.ts` System One client + telemetry reuse
-  - [ ] `lib/ai/resume-rubric.ts` 5-dimension rubric + deterministic 0–100 mapping
-  - [ ] Synthetic CV corpus under `web/__tests__/fixtures/cvs/`
-  - [ ] `scripts/jev-rubric-eval.ts` harness (3× reruns, confidence, cost/latency)
-  - [ ] Claude verdict against the four fixed acceptance criteria
+- **Jev rubric scoring** — spec `docs/specs/2026-09-18-jev-rubric-scoring.md` (**Built, unverified — evaluation blocked on a TypeSafe API key**)
+  - [x] `lib/ai/jev.ts` System One client + telemetry reuse — `1cbc79e`, `f3d72c4`
+  - [x] `lib/ai/resume-rubric.ts` 5-dimension rubric + deterministic 0–100 mapping — `743c27c`, `1dddf05`
+  - [x] Synthetic CV corpus under `web/__tests__/fixtures/cvs/` — `5a112e4`
+  - [x] `scripts/jev-rubric-eval.ts` harness (3× reruns, confidence, cost/latency) — `a9df56e`
+  - [ ] **Blocked** — run `npm run eval:jev-rubric` and issue the verdict against the four fixed acceptance criteria. Needs a `TYPESAFE_API_KEY`; none exists. Until this passes, the rubric path stays unwired: expected bands in the corpus manifest are predictions, not measurements.
 
 Remaining open product work (if any) lives in Linear Todo/Backlog outside this archive.
 
