@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|--------|
-| **Status** | Proposed — awaiting acceptance |
+| **Status** | Accepted 18 Sep 2026 (owner instruction) — implemented |
 | **Date** | 2026-09-18 |
 | **Type** | Bug fix (live quality defect) |
 | **Refs** | ADR-002 (`docs/architecture.md`), PR #3 (`97cddd0`, `35dbcc4`) |
