@@ -18,7 +18,22 @@ const JEV_INPUT_USD_PER_MTOK = 0.042;
 
 const DEFAULT_MAX_RETRIES = 3;
 const DEFAULT_RETRY_DELAY_MS = 250;
+const DEFAULT_TIMEOUT_MS = 30_000;
 const RETRYABLE_STATUS = new Set([429, 529]);
+
+/**
+ * Retry transient faults only. 429/529 are the vendor's documented back-off
+ * codes; other 5xx and a rejected fetch (network failure, timeout) are the
+ * faults the loop actually exists for. A schema validation failure is a bad
+ * payload, not a transient fault, so it must fall straight through.
+ */
+function isRetryable(error: unknown): boolean {
+  if (error instanceof JevApiError) {
+    return RETRYABLE_STATUS.has(error.status) || error.status >= 500;
+  }
+  // fetch rejects with TypeError on network failure; AbortError on timeout.
+  return error instanceof TypeError || (error as Error)?.name === "AbortError";
+}
 
 export type JevQuestion =
   | { type: "noul"; instructions: string; criteria?: { true: string; false: string } }
@@ -90,6 +105,7 @@ export type JevRequest = {
   fetchImpl?: JevFetch;
   maxRetries?: number;
   retryDelayMs?: number;
+  timeoutMs?: number;
 };
 
 export class JevApiError extends Error {
@@ -165,6 +181,9 @@ export async function callJev(input: JevRequest): Promise<JevResponse> {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
+        // Typical vendor latency is under a second; without this a stalled
+        // connection would hang the calling request indefinitely.
+        signal: AbortSignal.timeout(input.timeoutMs ?? DEFAULT_TIMEOUT_MS),
       });
 
       if (!res.ok) {
@@ -209,9 +228,7 @@ export async function callJev(input: JevRequest): Promise<JevResponse> {
         retries: attempt,
       };
     } catch (error) {
-      const retryable =
-        error instanceof JevApiError && RETRYABLE_STATUS.has(error.status);
-      if (retryable && attempt < maxRetries) {
+      if (isRetryable(error) && attempt < maxRetries) {
         await sleep(retryDelayMs * 2 ** attempt);
         continue;
       }
