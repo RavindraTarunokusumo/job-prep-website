@@ -1,0 +1,5 @@
+Task: Remove the corpus rank/band contradiction
+Summary: 13-pair-relevance-on-target (strong) now ranks above 02-senior-engineer-vague-duties (moderate); previously the rank and band criteria contradicted each other and could not both be satisfied. Fixed pre-registration-style, before any evaluation results exist. Raised in code review of PR #16.
+Docs: docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring — item 3
+Validation: npm test (new corpus consistency test fails on the old ranking)
