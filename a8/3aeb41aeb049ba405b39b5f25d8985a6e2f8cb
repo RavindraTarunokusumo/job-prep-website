@@ -1,0 +1,5 @@
+Task: Record the effective structure parser on parse
+Summary: processResumeDocument stores structureParser (heuristic|gliner), logs GLiNER failures server-side rather than writing them to parseError, and ResumeDocumentSummary now carries a structureDegraded flag.
+Docs: docs/specs/2026-09-18-resume-parser-reliability-fix.md
+TODO: Active work / Resume parser reliability fix — items 1-2
+Validation: npm run lint, npm run typecheck, npm test, npm run build
