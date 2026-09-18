@@ -1,0 +1,5 @@
+Task: ResumeDocument.structureParser column
+Summary: Add nullable structureParser to ResumeDocument plus migration, so the parser that produced parsedData is recorded instead of overloading parseError.
+Docs: docs/specs/2026-09-18-resume-parser-reliability-fix.md
+TODO: Active work / Resume parser reliability fix — item 1
+Validation: prisma generate, npm run typecheck
