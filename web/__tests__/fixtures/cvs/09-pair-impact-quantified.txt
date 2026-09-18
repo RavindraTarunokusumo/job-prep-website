@@ -1,0 +1,27 @@
+Yusuf Demir
+QA Automation Engineer
+yusuf.demir@example.com | +90 532 555 0117 | Istanbul, Turkey
+
+SUMMARY
+QA automation engineer with 6 years testing web and mobile products. Owns test strategy,
+CI test infrastructure and release quality gates.
+
+EXPERIENCE
+
+Senior QA Automation Engineer, Selva Commerce
+Feb 2022 - Present, Istanbul
+- Rebuilt the end-to-end suite in Playwright, cutting the CI run from 52 minutes to 11.
+- Raised critical-path coverage from 38% to 84% over three quarters.
+- Reduced escaped production defects from 23 to 6 per release across 9 releases.
+- Introduced flaky-test quarantine, dropping the false-failure rate from 14% to 2%.
+
+QA Engineer, Marmara Digital
+Jan 2019 - Jan 2022, Istanbul
+- Automated 310 regression cases, removing 3 days of manual testing per release cycle.
+- Cut average defect triage time from 4.5 days to 1.2 days by adding reproduction templates.
+
+EDUCATION
+BSc Computer Engineering, Bogazici University, 2014 - 2018
+
+SKILLS
+Playwright, Cypress, TypeScript, Python, GitHub Actions, Appium, API testing

@@ -1,0 +1,39 @@
+Dana Whitlock
+Senior Backend Engineer
+dana.whitlock@example.com | +44 7700 900118 | London, UK | github.com/example-dwhitlock
+
+SUMMARY
+Senior backend engineer with 9 years building payment and ledger systems. Focused on
+throughput, correctness and on-call cost.
+
+EXPERIENCE
+
+Staff Backend Engineer, Northbeam Payments
+Mar 2021 - Present, London
+- Rebuilt the settlement pipeline in Go, raising sustained throughput from 1,200 to 9,400
+  transactions per second and cutting end-of-day close from 4h 10m to 38m.
+- Cut p99 API latency from 840ms to 210ms in one quarter by replacing per-request ledger
+  reads with a materialised balance table, verified across 14 days of production traffic.
+- Led the migration of 3.1 billion ledger rows to partitioned Postgres with zero downtime
+  and no reconciliation breaks over the following 6 months.
+- Reduced on-call pages for the payments group from 47 to 9 per month by adding idempotency
+  keys and retry budgets to the three highest-volume endpoints.
+
+Senior Software Engineer, Halverson Logistics
+Jul 2017 - Feb 2021, Manchester
+- Designed the route-assignment service handling 260,000 daily jobs; delivered 99.96%
+  availability over 2019-2020 against a 99.9% target.
+- Reduced cloud spend by GBP 412,000 per year by right-sizing 38 services and moving batch
+  work to spot capacity, measured over 12 months post-change.
+- Mentored 4 engineers, 2 of whom were promoted to senior within 18 months.
+
+Software Engineer, Trellis Health
+Aug 2016 - Jun 2017, Manchester
+- Built an appointment reminder service that lowered no-show rates from 18% to 11% across
+  22 clinics in the first 5 months.
+
+EDUCATION
+BSc Computer Science, University of Leeds, 2012 - 2016. First Class Honours.
+
+SKILLS
+Go, Java, Postgres, Kafka, Terraform, AWS, distributed systems, observability
