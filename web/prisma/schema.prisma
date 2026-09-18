@@ -99,6 +99,8 @@ model ResumeDocument {
   rawText          String?  @db.Text
   parseError       String?
   parsedData       Json?
+  /// Which parser produced parsedData: "heuristic" | "gliner". Null for rows written before this field existed.
+  structureParser  String?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   resumeReviews     ResumeReview[]
