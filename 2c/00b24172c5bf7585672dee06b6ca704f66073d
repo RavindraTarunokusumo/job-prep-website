@@ -1,0 +1,5 @@
+Task: GLiNER interpreter guard and portable path
+Summary: Platform-aware resolvePythonBin, existence-checked isGlinerStructureEnabled with a warn-once log, and a new isGlinerStructureRequested/isStructureParserDegraded pair so degradation is detectable.
+Docs: docs/specs/2026-09-18-resume-parser-reliability-fix.md
+TODO: Active work / Resume parser reliability fix — item 3
+Validation: npm run lint, npm run typecheck, npm test, npm run build
