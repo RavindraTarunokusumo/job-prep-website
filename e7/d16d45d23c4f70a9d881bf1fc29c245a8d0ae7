@@ -1,0 +1,5 @@
+Task: Correct rubric state budget and legend lookup
+Summary: MAX_STATE_CHARS lowered to 60k against a 2 chars/token worst case, and nearestLevelNote clamps into the range of the legend keys the vendor actually returned rather than an assumed 0-based range. Raised in code review of PR #16.
+Docs: docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring — item 2
+Validation: npm run lint, npm run typecheck, npm test (305 passing), npm run build
