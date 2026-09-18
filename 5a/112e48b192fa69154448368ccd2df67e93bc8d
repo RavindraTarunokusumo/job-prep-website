@@ -1,0 +1,5 @@
+Task: Synthetic CV evaluation corpus
+Summary: Fifteen invented plain-text CVs plus a manifest carrying expected band, expected rank, ambiguity flag and adversarial-pair metadata, spanning quantified/vague, sectioned/collapsed, junior/senior, ATS-hostile and near-empty cases. No real people or employers.
+Docs: docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring — item 3
+Validation: npm test (manifest/disk consistency asserted in jev-rubric.test.ts)
