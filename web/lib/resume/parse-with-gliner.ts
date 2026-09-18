@@ -7,8 +7,12 @@ import {
   type ParsedResume,
 } from "@/lib/validation/resume";
 
-/** Which parser actually produced a document's parsedData. */
-export type ResumeStructureParser = "heuristic" | "gliner";
+/**
+ * Which parser actually produced a document's parsedData. "manual" once the
+ * user has corrected and saved the fields themselves — at that point autofill
+ * quality no longer describes the stored data.
+ */
+export type ResumeStructureParser = "heuristic" | "gliner" | "manual";
 
 export type GlinerParseResult =
   | { ok: true; data: ParsedResume; raw?: unknown }

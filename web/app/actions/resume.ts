@@ -265,6 +265,9 @@ export async function saveParsedResume(
       parsedData,
       status: doc.status === "failed" ? "parsed" : doc.status,
       parseError: null,
+      // The stored fields are now the user's, so the autofill-quality notice
+      // must stop applying to them.
+      structureParser: "manual" satisfies ResumeStructureParser,
     },
   });
 
