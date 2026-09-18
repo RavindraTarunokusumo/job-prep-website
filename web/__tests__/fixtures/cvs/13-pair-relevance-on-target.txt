@@ -1,0 +1,31 @@
+Noah Feldstein
+Financial Analyst (FP&A)
+noah.feldstein@example.com | +61 412 555 0193 | Sydney, NSW
+
+SUMMARY
+Financial analyst with 5 years in FP&A for subscription businesses. Owns the rolling
+forecast, variance reporting and board pack financials.
+
+EXPERIENCE
+
+Senior Financial Analyst, Harbourline Software
+Mar 2023 - Present, Sydney
+- Rebuilt the 18-month rolling forecast model; forecast error fell from 9.4% to 3.1%.
+- Produced the monthly board pack covering ARR, churn and gross margin for 14 meetings.
+- Ran the annual budget cycle across 7 cost centres totalling AUD 62 million.
+
+Financial Analyst, Harbourline Software
+Feb 2021 - Feb 2023, Sydney
+- Automated the revenue recognition workbook, cutting month-end close by 2 days.
+- Built the cohort retention model used to set the FY23 renewal targets.
+
+Assistant Accountant, Pellham Group
+Jan 2020 - Jan 2021, Sydney
+- Managed accounts payable for 240 suppliers and reconciled 3 bank accounts monthly.
+
+EDUCATION
+BCom Finance and Accounting, University of Sydney, 2016 - 2019
+CPA Australia, completed 2022
+
+SKILLS
+Financial modelling, Excel, Anaplan, NetSuite, SQL, variance analysis, forecasting

@@ -1,0 +1,33 @@
+Marcus Feld
+Senior Backend Engineer
+marcus.feld@example.com | +44 7700 900224 | London, UK
+
+SUMMARY
+Results-driven senior engineer with 9 years of experience. Passionate about technology and
+delivering value to stakeholders in fast-paced environments.
+
+EXPERIENCE
+
+Staff Backend Engineer, Ardent Payments
+Mar 2021 - Present, London
+- Responsible for the settlement pipeline and related services.
+- Worked on improving performance of the platform.
+- Involved in database migration work alongside the platform team.
+- Participated in the on-call rotation and helped improve reliability.
+
+Senior Software Engineer, Kestrel Logistics
+Jul 2017 - Feb 2021, Manchester
+- Developed and maintained the route assignment service.
+- Helped reduce cloud costs as part of a company-wide efficiency initiative.
+- Assisted junior engineers with code reviews and onboarding.
+
+Software Engineer, Meadowvale Health
+Aug 2016 - Jun 2017, Manchester
+- Contributed to the appointment reminder service.
+- Supported the team with bug fixes and general maintenance tasks.
+
+EDUCATION
+BSc Computer Science, University of Leeds, 2012 - 2016
+
+SKILLS
+Go, Java, Postgres, Kafka, Terraform, AWS

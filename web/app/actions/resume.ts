@@ -8,7 +8,9 @@ import { extractResumeText } from "@/lib/resume/extract-text";
 import { parseResumeStructure } from "@/lib/resume/parse-structure";
 import {
   isGlinerStructureEnabled,
+  isStructureParserDegraded,
   parseResumeWithGliner,
+  type ResumeStructureParser,
 } from "@/lib/resume/parse-with-gliner";
 import {
   buildResumeStoragePath,
@@ -36,6 +38,8 @@ export type ResumeDocumentSummary = {
   byteSize: number;
   status: string;
   parseError: string | null;
+  /** True when GLiNER was configured but this document was parsed heuristically. */
+  structureDegraded: boolean;
   createdAt: string;
   updatedAt: string;
 };
@@ -48,6 +52,7 @@ function toSummary(doc: ResumeDocument): ResumeDocumentSummary {
     byteSize: doc.byteSize,
     status: doc.status,
     parseError: doc.parseError,
+    structureDegraded: isStructureParserDegraded(doc.structureParser),
     createdAt: doc.createdAt.toISOString(),
     updatedAt: doc.updatedAt.toISOString(),
   };
@@ -115,16 +120,19 @@ async function processResumeDocument(documentId: string, userId: string) {
     }
 
     let parsedData = parseResumeStructure(extracted.text);
-    let structureNote: string | null = null;
+    let structureParser: ResumeStructureParser = "heuristic";
 
-    // Optional GLiNER2 structure step (experimental). Falls back to heuristics.
+    // Optional GLiNER2 structure step. Falls back to heuristics, and the
+    // fallback is recorded on structureParser rather than hidden in parseError.
     if (isGlinerStructureEnabled()) {
       const gliner = await parseResumeWithGliner(extracted.text);
       if (gliner.ok) {
         parsedData = gliner.data;
-        structureNote = null;
+        structureParser = "gliner";
       } else {
-        structureNote = `GLiNER structure failed (${gliner.error}); used heuristic parser.`;
+        console.warn(
+          `[resume] GLiNER structure failed for document ${documentId}; used heuristic parser. ${gliner.error}`
+        );
       }
     }
 
@@ -134,7 +142,7 @@ async function processResumeDocument(documentId: string, userId: string) {
         status: "parsed",
         rawText: extracted.text,
         parsedData,
-        parseError: structureNote,
+        structureParser,
       },
     });
   } catch (error) {
@@ -257,6 +265,9 @@ export async function saveParsedResume(
       parsedData,
       status: doc.status === "failed" ? "parsed" : doc.status,
       parseError: null,
+      // The stored fields are now the user's, so the autofill-quality notice
+      // must stop applying to them.
+      structureParser: "manual" satisfies ResumeStructureParser,
     },
   });
 

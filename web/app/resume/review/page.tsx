@@ -75,6 +75,7 @@ export default async function ResumeReviewPage({
               initialData={parsedData}
               status={document.status}
               parseError={document.parseError}
+              structureDegraded={document.structureDegraded}
               rawText={document.rawText}
             />
           </CardContent>

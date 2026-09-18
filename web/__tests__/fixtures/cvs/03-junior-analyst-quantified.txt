@@ -1,0 +1,29 @@
+Priya Raman
+Junior Data Analyst
+priya.raman@example.com | +44 7700 900331 | Birmingham, UK | linkedin.com/in/example-praman
+
+SUMMARY
+Data analyst with 18 months of commercial experience in retail analytics. SQL, Python and
+dashboard delivery for merchandising teams.
+
+EXPERIENCE
+
+Data Analyst, Bellview Retail Group
+Sep 2024 - Present, Birmingham
+- Built the weekly markdown dashboard now used by 31 category managers, replacing a manual
+  spreadsheet that took 6 hours per week to assemble.
+- Identified GBP 86,000 of annual overstock in the seasonal range by segmenting 240,000 SKU
+  rows; the buying team acted on 11 of the 14 flagged lines.
+- Cut the nightly ETL run from 71 minutes to 24 minutes by rewriting three nested queries.
+
+Analytics Intern, Bellview Retail Group
+Jun 2024 - Aug 2024, Birmingham
+- Automated 9 recurring reports, saving an estimated 5 analyst-hours per week.
+- Documented 40 metric definitions that became the team's shared glossary.
+
+EDUCATION
+BSc Economics and Statistics, University of Birmingham, 2021 - 2024. 2:1.
+Dissertation on price elasticity in grocery basket data.
+
+SKILLS
+SQL, Python (pandas), dbt, Looker, Excel, statistics

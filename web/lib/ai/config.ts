@@ -15,4 +15,11 @@ export const aiConfig = {
       process.env.OPENROUTER_FALLBACK_MODEL ??
       "nvidia/nemotron-3-ultra-550b-a55b:free",
   },
+  typesafe: {
+    /** Required for Jev System One calls (server-only). */
+    apiKey: process.env.TYPESAFE_API_KEY ?? "",
+    baseURL: process.env.TYPESAFE_BASE_URL ?? "https://api.typesafe.ai/v1",
+    /** System One model id. */
+    model: process.env.JEV_MODEL ?? "jev-latest",
+  },
 } as const;

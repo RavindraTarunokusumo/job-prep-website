@@ -58,6 +58,8 @@ export async function recordAiUsageEvent(input: {
   promptVersion?: string;
   inputTokens?: number | null;
   outputTokens?: number | null;
+  /** Vendor-accurate cost. Overrides the generic token-rate estimate. */
+  estimatedCostUsd?: number | null;
   latencyMs?: number | null;
   retries?: number;
   success: boolean;
@@ -73,9 +75,10 @@ export async function recordAiUsageEvent(input: {
     inputTokens: input.inputTokens,
     outputTokens: input.outputTokens,
     estimatedCost:
-      input.inputTokens != null && input.outputTokens != null
+      input.estimatedCostUsd ??
+      (input.inputTokens != null && input.outputTokens != null
         ? estimateCostUsd(input.model, input.inputTokens, input.outputTokens)
-        : null,
+        : null),
     latencyMs: input.latencyMs,
     retries: input.retries ?? 0,
     success: input.success,

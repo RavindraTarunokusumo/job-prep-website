@@ -1,0 +1,36 @@
+Grace Amoah
+Aspiring UX Designer | Former Secondary School Teacher
+grace.amoah@example.com | +44 7700 900447 | Bristol, UK
+
+SUMMARY
+Secondary school teacher of 8 years retraining into UX design. Completed a 6-month
+certificate and three self-directed case studies.
+
+EXPERIENCE
+
+Head of Year 9, Ashcombe Academy
+Sep 2020 - Aug 2025, Bristol
+- Led a year group of 210 students and line-managed 8 form tutors.
+- Redesigned the pastoral referral process, cutting the average response time from
+  5 days to 2.
+- Ran parent consultation evenings for 180 families per term.
+
+Teacher of Geography, Ashcombe Academy
+Sep 2017 - Aug 2020, Bristol
+- Taught 5 classes per week across Key Stage 3 and 4.
+- Built the department's shared resource bank, used by 6 colleagues.
+
+UX PROJECTS
+- Redesigned a local charity's donation flow as a self-directed case study; usability
+  testing with 6 participants reduced task time in the prototype.
+- Two further concept case studies (a transport app, a recipe app) with wireframes and
+  interview notes.
+
+EDUCATION
+PGCE Secondary Geography, University of Bristol, 2016 - 2017
+BA Geography, University of Exeter, 2013 - 2016
+UX Design Certificate, online provider, 2025
+
+SKILLS
+Figma, user interviews, usability testing, wireframing, stakeholder communication,
+curriculum design

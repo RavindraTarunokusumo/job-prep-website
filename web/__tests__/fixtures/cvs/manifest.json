@@ -1,0 +1,171 @@
+{
+  "description": "Synthetic CV corpus for the Jev rubric evaluation. Every CV is invented; no real people, employers or confidential content. Equal expectedRank values are intentional ties. expectedRank must never contradict expectedBand: a fixture ranked above another must not sit in a lower band.",
+  "bands": {
+    "poor": [
+      0,
+      24
+    ],
+    "weak": [
+      25,
+      49
+    ],
+    "moderate": [
+      50,
+      69
+    ],
+    "strong": [
+      70,
+      84
+    ],
+    "excellent": [
+      85,
+      100
+    ]
+  },
+  "fixtures": [
+    {
+      "file": "01-senior-engineer-quantified.txt",
+      "expectedBand": "excellent",
+      "expectedRank": 1,
+      "ambiguous": false,
+      "notes": "Senior, cleanly sectioned, every bullet quantified with baseline and timeframe.",
+      "pair": null
+    },
+    {
+      "file": "02-senior-engineer-vague-duties.txt",
+      "expectedBand": "moderate",
+      "expectedRank": 6,
+      "ambiguous": false,
+      "notes": "Same seniority and structure as 01 but duty statements throughout; isolates impact evidence at corpus level.",
+      "pair": null
+    },
+    {
+      "file": "03-junior-analyst-quantified.txt",
+      "expectedBand": "strong",
+      "expectedRank": 2,
+      "ambiguous": false,
+      "notes": "Junior but well structured, complete and quantified.",
+      "pair": null
+    },
+    {
+      "file": "04-junior-analyst-sparse.txt",
+      "expectedBand": "weak",
+      "expectedRank": 13,
+      "ambiguous": false,
+      "notes": "Junior, no employers, no dates, generic duties, filler skills.",
+      "pair": null
+    },
+    {
+      "file": "05-collapsed-pdf-two-column.txt",
+      "expectedBand": "weak",
+      "expectedRank": 11,
+      "ambiguous": false,
+      "notes": "Two-column PDF text collapsed into one run-on line with the sidebar interleaved.",
+      "pair": null
+    },
+    {
+      "file": "06-ats-hostile-tables-glyphs.txt",
+      "expectedBand": "weak",
+      "expectedRank": 12,
+      "ambiguous": false,
+      "notes": "ASCII tables, decorative glyphs, page headers and footers, mixed date formats.",
+      "pair": null
+    },
+    {
+      "file": "07-near-empty.txt",
+      "expectedBand": "poor",
+      "expectedRank": 14,
+      "ambiguous": false,
+      "notes": "Floor case: a name and one sentence.",
+      "pair": null
+    },
+    {
+      "file": "08-midlevel-mixed-ambiguous.txt",
+      "expectedBand": "moderate",
+      "expectedRank": 9,
+      "ambiguous": true,
+      "notes": "Deliberately ambiguous: outcomes are hedged and the target role straddles ops and product support. Confidence should be measurably lower here.",
+      "pair": null
+    },
+    {
+      "file": "09-pair-impact-quantified.txt",
+      "expectedBand": "strong",
+      "expectedRank": 3,
+      "ambiguous": false,
+      "notes": "Adversarial pair A: quantified outcomes.",
+      "pair": {
+        "id": "impact",
+        "dimension": "impact_evidence",
+        "side": "high"
+      }
+    },
+    {
+      "file": "10-pair-impact-unquantified.txt",
+      "expectedBand": "moderate",
+      "expectedRank": 7,
+      "ambiguous": false,
+      "notes": "Adversarial pair A: identical except every figure removed. Only impact_evidence should move.",
+      "pair": {
+        "id": "impact",
+        "dimension": "impact_evidence",
+        "side": "low"
+      }
+    },
+    {
+      "file": "11-pair-structure-sectioned.txt",
+      "expectedBand": "strong",
+      "expectedRank": 4,
+      "ambiguous": false,
+      "notes": "Adversarial pair B: conventional headings and one role per block.",
+      "pair": {
+        "id": "structure",
+        "dimension": "ats_structure",
+        "side": "high"
+      }
+    },
+    {
+      "file": "12-pair-structure-collapsed.txt",
+      "expectedBand": "moderate",
+      "expectedRank": 8,
+      "ambiguous": false,
+      "notes": "Adversarial pair B: same words, headings and line breaks removed. Only ats_structure should move.",
+      "pair": {
+        "id": "structure",
+        "dimension": "ats_structure",
+        "side": "low"
+      }
+    },
+    {
+      "file": "13-pair-relevance-on-target.txt",
+      "expectedBand": "strong",
+      "expectedRank": 5,
+      "ambiguous": false,
+      "notes": "Adversarial pair C: FP&A header with FP&A experience.",
+      "pair": {
+        "id": "relevance",
+        "dimension": "role_relevance",
+        "side": "high"
+      }
+    },
+    {
+      "file": "14-pair-relevance-off-target.txt",
+      "expectedBand": "moderate",
+      "expectedRank": 10,
+      "ambiguous": false,
+      "notes": "Adversarial pair C: same header, education and quantification density, but hospitality experience. Only role_relevance should move.",
+      "pair": {
+        "id": "relevance",
+        "dimension": "role_relevance",
+        "side": "low"
+      }
+    },
+    {
+      "file": "15-career-changer-ambiguous.txt",
+      "expectedBand": "moderate",
+      "expectedRank": 9,
+      "ambiguous": true,
+      "notes": "Deliberately ambiguous on role relevance: strong teaching record, thin but real UX evidence. Confidence on role_relevance should be measurably lower.",
+      "pair": null
+    }
+  ]
+}

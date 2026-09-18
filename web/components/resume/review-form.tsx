@@ -20,6 +20,7 @@ type ReviewFormProps = {
   initialData: ParsedResume;
   status: string;
   parseError: string | null;
+  structureDegraded: boolean;
   rawText: string | null;
 };
 
@@ -28,6 +29,7 @@ export function ReviewForm({
   initialData,
   status,
   parseError,
+  structureDegraded,
   rawText,
 }: ReviewFormProps) {
   const [state, formAction, pending] = useActionState(saveParsedResume, initialState);
@@ -63,6 +65,13 @@ export function ReviewForm({
       {status === "failed" && parseError ? (
         <p className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           Parsing failed: {parseError}. You can correct fields below or re-upload.
+        </p>
+      ) : null}
+
+      {status === "parsed" && structureDegraded ? (
+        <p className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-foreground">
+          Automatic fill was limited for this file, so some fields may be
+          missing or incomplete. Please check everything below before saving.
         </p>
       ) : null}
 
