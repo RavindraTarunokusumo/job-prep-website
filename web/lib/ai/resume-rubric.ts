@@ -18,13 +18,15 @@ import type { ResumeReviewSectionScore } from "@/lib/validation/resume-review";
 export const RESUME_RUBRIC_LEVEL_COUNT = 5;
 
 /**
- * Vendor cap is 32k tokens for `state`. CV text is prose-like, so ~3.5 chars per
- * token is a safe floor; 90k characters stays well under the cap even in the
- * worst case and leaves headroom for the five questions. Truncation is
- * head-biased: contact details, summary and the most recent roles carry the most
+ * Vendor cap is 32k tokens for `state`. 3.5 chars/token is the average for clean
+ * prose, not a floor — symbol-dense CV text (collapsed tables, glyph bullets,
+ * the kind in the ATS-hostile fixtures) tokenizes nearer 2 chars/token, so the
+ * budget is set against that worst case: 60k chars stays under the cap even at
+ * 2 chars/token, with headroom for the five questions. Truncation is head-biased
+ * because contact details, summary and the most recent roles carry the most
  * signal for every dimension, so the tail is the right thing to lose.
  */
-const MAX_STATE_CHARS = 90_000;
+const MAX_STATE_CHARS = 60_000;
 
 export type ResumeRubricDimension = {
   id: string;
@@ -185,8 +187,21 @@ export function buildRubricState(cvText: string): string {
   return `${trimmed.slice(0, MAX_STATE_CHARS)}\n[truncated: CV exceeds the scoring input budget]`;
 }
 
+/**
+ * Legend keys are the level indices the vendor actually used, so the note is
+ * looked up against those rather than against an assumed 0-based range — a
+ * score just outside the legend must not silently pick a neighbouring level.
+ */
 function nearestLevelNote(answer: JevScoreAnswer): string | undefined {
-  const index = Math.round(answer.score);
+  const levels = Object.keys(answer.legend)
+    .map(Number)
+    .filter((n) => Number.isFinite(n));
+  if (levels.length === 0) {
+    return undefined;
+  }
+  const min = Math.min(...levels);
+  const max = Math.max(...levels);
+  const index = Math.min(Math.max(Math.round(answer.score), min), max);
   return answer.legend[String(index)];
 }
 
