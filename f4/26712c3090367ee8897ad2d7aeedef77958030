@@ -1,0 +1,5 @@
+Task: Specs for resume parser reliability fix and Jev rubric scoring
+Summary: Documented two proposed workstreams — (1) fix silent GLiNER->heuristic parser degradation surfaced by a stale Linux interpreter path in web/.env.local and a parseError render guarded on status==='failed'; (2) evaluate TypeSafe Jev's score primitive as a calibrated replacement for LLM-invented resume review scores, with a synthetic-CV corpus and pre-agreed acceptance criteria. No implementation.
+Docs: docs/specs/2026-09-18-resume-parser-reliability-fix.md, docs/specs/2026-09-18-jev-rubric-scoring.md, docs/specs/README.md, TODO.md
+TODO: Active work — Resume parser reliability fix; Jev rubric scoring
+Validation: docs-only change; no application code touched, so lint/typecheck/test/build not run
