@@ -1,0 +1,5 @@
+Task: Widen Jev retry classification and add a request timeout
+Summary: isRetryable now covers 5xx and rejected fetches alongside the documented 429/529, zod failures still fall through, and every request carries a 30s AbortSignal timeout. Raised in code review of PR #16.
+Docs: docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring — item 1
+Validation: npm run lint, npm run typecheck, npm test (305 passing), npm run build
