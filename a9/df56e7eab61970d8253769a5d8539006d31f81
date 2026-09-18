@@ -1,0 +1,5 @@
+Task: Jev rubric evaluation harness
+Summary: scripts/jev-rubric-eval.ts runs the synthetic corpus 3x per CV, reporting per-dimension level, confidence, distribution, latency and cost, plus aggregate sections for ordering, pair discrimination, calibration and stability. Wired as npm run eval:jev-rubric.
+Docs: docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring — item 4
+Validation: npm run lint, npm run typecheck, npm test; harness missing-key path exercised (exit code 1)
