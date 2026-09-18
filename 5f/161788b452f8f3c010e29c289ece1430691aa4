@@ -1,0 +1,5 @@
+Task: Collapse CLAUDE.md into a pointer
+Summary: Replace the duplicated CLAUDE.md contents with a single line directing agents to AGENTS.md, removing the drift between the two files.
+Docs: CLAUDE.md, AGENTS.md
+TODO: N/A (harness change, owner instruction)
+Validation: N/A (documentation only)
