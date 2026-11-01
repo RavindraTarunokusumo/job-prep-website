@@ -25,14 +25,14 @@
 
 ## Active work
 
-Two specs written 18 Sep 2026, neither implemented yet:
+- **Offline rule-based CV text & structure extraction** — spec `docs/specs/2026-11-01-rule-based-cv-extraction.md` (**Accepted**, supersedes `2026-09-18-resume-parser-reliability-fix.md`) · plan `docs/superpowers/plans/2026-11-01-rule-based-cv-extraction.md`
+  - [x] **CV.1** Spec (`7863ac5`), lightweight plan, and TODO setup
+  - [ ] **CV.2** Remove GLiNER sidecar (`scripts/gliner_resume_parse.py`, `web/lib/resume/parse-with-gliner.ts`, `web/app/actions/resume.ts`), upgrade coordinate-aware PDF line reconstruction in `web/lib/resume/extract-text.ts`, and update ADR-002 in `docs/architecture.md`
+  - [ ] **CV.3** Implement OpenResume-style feature-scoring CV structure parser and expanded gazetteers in `web/lib/resume/parse-structure.ts`
+  - [ ] **CV.4** Write sample CV corpus (`web/__tests__/fixtures/cvs/`), binary PDF/DOCX builders, end-to-end extraction tests, and CLI verification script (`web/scripts/test-cv-extraction.ts`)
 
-- **Resume parser reliability fix** — spec `docs/specs/2026-09-18-resume-parser-reliability-fix.md` (**Proposed**)
-  - [ ] Record `structureParser` on `ResumeDocument`; stop overloading `parseError`
-  - [ ] Surface heuristic-fallback degradation in the resume review UI
-  - [ ] Guard `isGlinerStructureEnabled()` on interpreter existence; platform-aware `resolvePythonBin()`
-  - [ ] Correct `web/.env.local` GLiNER path (or disable explicitly)
-  - [ ] Tests for all three parser states
+Other specs on file:
+
 - **Jev rubric scoring** — spec `docs/specs/2026-09-18-jev-rubric-scoring.md` (**Draft — blocked on TypeSafe API key**)
   - [ ] `lib/ai/jev.ts` System One client + telemetry reuse
   - [ ] `lib/ai/resume-rubric.ts` 5-dimension rubric + deterministic 0–100 mapping

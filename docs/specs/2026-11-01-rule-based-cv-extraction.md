@@ -2,7 +2,7 @@
 
 | Field | Value |
 |-------|-------|
-| **Status** | Proposed — awaiting acceptance |
+| **Status** | Accepted |
 | **Date** | 2026-11-01 |
 | **Branch** | `feat/rule-based-cv-extraction` |
 | **Supersedes** | `docs/specs/2026-09-18-resume-parser-reliability-fix.md`, ADR-002 GLiNER experimental path |
