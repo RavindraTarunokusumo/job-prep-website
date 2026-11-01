@@ -187,3 +187,33 @@ Workflow lessons above were folded into `AGENTS.md` / `CLAUDE.md`:
 
 - PR #14 merge commit `65fa7e2`; Post-PR archive `3450a3b` on main; Linear JOB-85…92 Done after merge verification.
 - Reflection commit follows on main (this section).
+
+## 2026-11-01 — Session closeout (workflow/harness only)
+
+### Tools & commands
+
+- **Node version resolution in non-interactive shells:** System `/usr/bin/node` is `v18.19.1`, whereas Next 16 / Vitest 4 require Node 20+. Non-interactive subshells must prepend `$HOME/.nvm/versions/node/$(ls $HOME/.nvm/versions/node | tail -n 1)/bin` to `PATH`.
+- **Git notes remote sync (`refs/notes/commits`):** Pushing `refs/notes/commits` from a new worktree fails with `fetch first` when remote notes exist from earlier sessions. Always run `git fetch origin refs/notes/commits:refs/notes/origin-commits && git notes merge -s cat_sort_uniq refs/notes/origin-commits` before `git push origin refs/notes/commits`.
+- **Subagent reuse (`invoke_subagent` + `send_message`):** Reusing the same implementer subagent across sequential tasks (`CV.2` → `CV.3` → `CV.4`) via `send_message` preserved worktree context and eliminated cold-start file re-reads, while the orchestrator independently ran the full `web/` suite and committed each task.
+- **GitHub Rulesets API (`gh api repos/.../rulesets`):** Configured active `main` branch protection requiring the `Web CI` check and blocking force-pushes/deletions, while setting `RepositoryRole` (`actor_id: 5`, Repository Admin) to `bypass_mode: "always"` so Post-PR/Reflection fast-forward commits to `main` continue to work without turning rulesets off.
+
+### Skills / review
+
+- Dedicated read-only `research` code-reviewer subagent caught a real `/g` regex `lastIndex` statefulness bug on `.test()` and stale `.env.example` comments prior to PR creation.
+
+### Recurring failure modes
+
+- Calling `.test()` on a global (`/g` or `/gi`) `RegExp` constant mutates `lastIndex` across calls and causes alternating false negatives. Keep `.test()` regexes non-global.
+- `git push origin refs/notes/commits` without fetching/merging `refs/notes/commits` first is rejected whenever remote notes were updated in prior PRs.
+
+### Worth improving (harness proposals)
+
+1. **Git notes fetch-merge rule in `AGENTS.md` / `CLAUDE.md`:** Update the Git notes section to include `git fetch origin refs/notes/commits:refs/notes/origin-commits && git notes merge -s cat_sort_uniq refs/notes/origin-commits` before `git push origin refs/notes/commits`.
+2. **NVM PATH note in `AGENTS.md` / `CLAUDE.md`:** Document that non-interactive shells on this host default to `/usr/bin/node` (v18) and should export the NVM Node 22 bin path before running `npm` commands in `web/`.
+3. **CI status check alignment:** Document that `Web CI` (`.github/workflows/ci.yml`) is now a required status check on `main` via GitHub Ruleset `main-branch-protection`.
+
+### Applied this session
+
+- PR #19 merged (`52dd84d`); PR #20 merged (`abdfa91`); Post-PR archive `efa5c04` on `main`.
+- Global communication rules configured under `~/.gemini/config/`.
+- Reflection committed to `main`; awaiting user confirmation to remove `.worktree/` directories and local feature branches.
