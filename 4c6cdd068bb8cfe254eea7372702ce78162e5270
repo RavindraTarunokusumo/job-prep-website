@@ -1,0 +1,5 @@
+Task: Accept rule-based CV extraction spec and add lightweight plan (CV.1)
+Summary: Mark spec Accepted, add lightweight plan contract, and log CV.1-CV.4 tasks in TODO.md
+Docs: docs/specs/2026-11-01-rule-based-cv-extraction.md, docs/superpowers/plans/2026-11-01-rule-based-cv-extraction.md, TODO.md
+TODO: Active work / CV.1
+Validation: manual review
