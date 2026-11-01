@@ -31,6 +31,10 @@
   - [x] **CV.3** Implement OpenResume-style feature-scoring CV structure parser and expanded gazetteers in `web/lib/resume/parse-structure.ts`
   - [x] **CV.4** Write sample CV corpus (`web/__tests__/fixtures/cvs/`), binary PDF/DOCX builders, end-to-end extraction tests, and CLI verification script (`web/scripts/test-cv-extraction.ts`)
 
+- **Repository CI/CD & branch hygiene**
+  - [x] **CI.1** Add GitHub Actions `Web CI` workflow (`.github/workflows/ci.yml`), Dependabot config (`.github/dependabot.yml`), and clean up `.pre-commit-config.yaml` (remove obsolete Python `ruff` hooks, add `check-added-large-files` and `detect-private-key`)
+  - [x] **CI.2** Configure GitHub repository settings (`delete_branch_on_merge`) and `main` branch protection ruleset requiring `Web CI` status checks with Repository Admin bypass for Post-PR/Reflection commits
+
 Other specs on file:
 
 - **Jev rubric scoring** — spec `docs/specs/2026-09-18-jev-rubric-scoring.md` (**Draft — blocked on TypeSafe API key**)
