@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web-ci:
+    name: Web CI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    env:
+      DATABASE_URL: "postgresql://postgres:postgres@localhost:5432/roleready?schema=public"
+      NEXT_PUBLIC_SUPABASE_URL: "https://example.supabase.co"
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: "anon-placeholder-key"
+      SUPABASE_SERVICE_ROLE_KEY: "service-role-placeholder-key"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate Prisma schema & generate client
+        run: |
+          npx prisma validate
+          npx prisma generate
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript typecheck
+        run: npm run typecheck
+
+      - name: Run Vitest unit & integration suite
+        run: npm test
+
+      - name: Run Next.js production build
+        run: npm run build
