@@ -29,7 +29,7 @@
   - [x] **CV.1** Spec (`7863ac5`), lightweight plan, and TODO setup
   - [x] **CV.2** Remove GLiNER sidecar (`scripts/gliner_resume_parse.py`, `web/lib/resume/parse-with-gliner.ts`, `web/app/actions/resume.ts`), upgrade coordinate-aware PDF line reconstruction in `web/lib/resume/extract-text.ts`, and update ADR-002 in `docs/architecture.md`
   - [x] **CV.3** Implement OpenResume-style feature-scoring CV structure parser and expanded gazetteers in `web/lib/resume/parse-structure.ts`
-  - [ ] **CV.4** Write sample CV corpus (`web/__tests__/fixtures/cvs/`), binary PDF/DOCX builders, end-to-end extraction tests, and CLI verification script (`web/scripts/test-cv-extraction.ts`)
+  - [x] **CV.4** Write sample CV corpus (`web/__tests__/fixtures/cvs/`), binary PDF/DOCX builders, end-to-end extraction tests, and CLI verification script (`web/scripts/test-cv-extraction.ts`)
 
 Other specs on file:
 

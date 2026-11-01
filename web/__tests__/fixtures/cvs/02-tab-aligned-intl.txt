@@ -1,0 +1,45 @@
+RAVINDRA ARIBOWO TARUNOKUSUMO
+ravindra.aribowo@example.id | +62 812-3456-7890 | Jakarta, Indonesia | linkedin.com/in/ravindra-aribowo
+
+EXECUTIVE SUMMARY
+Full-stack and machine learning engineer experienced in building scalable fintech and marketplace systems across Southeast Asia, combining distributed backend engineering with applied NLP.
+
+PROFESSIONAL EXPERIENCE
+Senior Backend Engineer    Jan 2022 – Present
+PT GoTo Gojek Tokopedia | Jakarta, Indonesia
+• Architected high-throughput merchant settlement service in Go and Kafka processing 2M+ daily transactions
+• Reduced checkout API tail latency by 35% through Redis cluster sharding and query optimization
+
+Software Engineer    Jul 2019 – Dec 2021
+Traveloka | Jakarta, Indonesia
+• Developed dynamic flight pricing and inventory caching microservices in TypeScript and PostgreSQL
+• Implemented automated anomaly detection alerts for payment gateway integrations
+
+Software Engineering Intern    May 2018 – Aug 2018
+Tokopedia | Jakarta, Indonesia
+• Built internal merchant analytics dashboard using React and RESTful Go endpoints
+
+ACADEMIC BACKGROUND
+Master of Science in Artificial Intelligence | Institut Teknologi Bandung
+2019 – 2021
+Thesis: Transformer-based Named Entity Recognition for Indonesian Financial Documents
+
+B.Sc. in Computer Science | Universitas Indonesia
+2015 – 2019
+GPA: 3.82/4.00, Dean's List
+
+CORE COMPETENCIES
+Programming: Go, TypeScript, Python, Java, SQL
+Infrastructure: Docker, Kubernetes, GCP, Kafka, Redis, PostgreSQL
+
+PROJECTS
+GarudaNLP | Python, PyTorch, FastAPI
+• Open-source Indonesian entity extraction toolkit for structured document parsing
+
+CERTIFICATIONS
+Google Cloud Professional Cloud Architect
+DeepLearning.AI TensorFlow Developer Certificate
+
+SPOKEN LANGUAGES
+Indonesian (Native)
+English (Fluent)

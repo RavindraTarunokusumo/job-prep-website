@@ -1,0 +1,40 @@
+Dr. Elena Rostova
+elena.rostova@example.org | +44 20 7946 0958 | Cambridge, United Kingdom | linkedin.com/in/elena-rostova
+
+PROFILE
+Quantitative researcher and machine learning scientist transitioning from academic computational biology to production fintech risk modeling and LLM evaluation.
+
+EMPLOYMENT HISTORY
+Lead Data Scientist at FinTech Solutions LLC
+Mar 2022 – Present
+- Designed real-time credit risk scoring ensembles in Python and LightGBM reducing default loss by 18%
+- Built automated model drift monitoring and feature store pipelines on Snowflake and Airflow
+
+Graduate Research Assistant — MIT Media Lab
+Sep 2018 – Feb 2022
+- Conducted statistical modeling and deep learning research on multimodal sensor time-series datasets
+- Co-authored 4 peer-reviewed publications in NeurIPS and ICML workshops
+
+QUALIFICATIONS
+Ph.D. in Computational Biology | University of Cambridge
+2018 – 2022
+Dissertation: Bayesian Graph Neural Networks for Protein Interaction Networks
+
+B.A. in Mathematics | Oxford University
+2014 – 2018
+Honors: First-Class Honours
+
+AREAS OF EXPERTISE
+Data Science & ML: Python, PyTorch, scikit-learn, LightGBM, Bayesian Statistics, Causal Inference
+Data Engineering: SQL (Snowflake, BigQuery), Apache Spark, dbt, Airflow, Docker
+
+NOTABLE PROJECTS
+CausalBench | Python, PyTorch, Pandas
+- Benchmark suite for evaluating causal discovery algorithms on financial time-series data
+
+CREDENTIALS
+Chartered Financial Data Scientist (CFDS)
+AWS Certified Machine Learning – Specialty
+
+LANGUAGE PROFICIENCY
+English (Fluent), Russian (Native), French (Intermediate)

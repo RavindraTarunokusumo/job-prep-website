@@ -102,7 +102,7 @@ const COMPANY_SUFFIX_RE =
   /\b(?:inc\.?|llc|ltd\.?|corp\.?|corporation|gmbh|pt|tbk|plc|llp|co\.?|company|technologies|technology|systems|solutions|labs?|laboratory|group|studios?|bank|partners|agency|holdings|ventures|enterprises|global|digital|media|health|healthcare|finance|financial|capital|motors|airlines|telecom|network|networks|foundation|association)\b/i;
 
 const INSTITUTION_KEYWORD_RE =
-  /\b(?:university|universitas|universität|université|institute|institut|college|school|academy|polytechnic|hochschule|eth|mit|stanford|berkeley|oxford|cambridge|caltech|harvard|princeton|yale|cornell|columbia|ucla|nyu|ucl|imperial|nus|ntu|itb|ugm|ui|sman)\b/i;
+  /\b(?:university|universitas|universität|université|institute|institut|college|school|academy|polytechnic|hochschule|eth|mit|stanford|caltech|harvard|princeton|yale|cornell|columbia|ucla|nyu|ucl|imperial|nus|ntu|itb|ugm|ui|sman)\b/i;
 
 const DEGREE_KEYWORD_RE =
   /(?:\b(?:b\.?s\.?c?\.?|b\.?a\.?|b\.?eng\.?|b\.?tech\.?|b\.?com\.?|m\.?s\.?c?\.?|m\.?a\.?|m\.?eng\.?|m\.?tech\.?|m\.?b\.?a\.?|ph\.?d\.?|d\.?phil\.?|m\.?d\.?|j\.?d\.?|bachelor(?:'?s)?|master(?:'?s)?|doctor(?:ate)?|associate(?:'?s)?|diploma|graduate\s+certificate|certificate|bootcamp|high\s+school|sarjana)\b)/i;
@@ -483,10 +483,11 @@ function splitSectionBlocks(
           (l) => isLikelyProseLine(l) || EDUCATION_DESCRIPTION_RE.test(l)
         );
         const nextLine = nextNonEmptyLine(i + 1, 1);
+        const nextIsContinuation =
+          isBulletLine(nextLine) || EDUCATION_DESCRIPTION_RE.test(nextLine);
         if (
-          currentHasBody ||
-          (currentHasDate && !isBulletLine(nextLine)) ||
-          current.length >= 2
+          !nextIsContinuation &&
+          (currentHasBody || (currentHasDate && current.length >= 1))
         ) {
           chunks.push(current);
           current = [];
@@ -512,7 +513,7 @@ function splitSectionBlocks(
 
       let shouldSplit = false;
 
-      if (!lineIsBullet) {
+      if (!lineIsBullet && !EDUCATION_DESCRIPTION_RE.test(line)) {
         if (currentHasDate && lineHasDate) {
           shouldSplit = true;
         } else if (
@@ -528,15 +529,10 @@ function splitSectionBlocks(
         ) {
           shouldSplit = true;
         } else if (
+          kind === "education" &&
           currentHasDate &&
-          !lineHasDate &&
-          !isLikelyProseLine(line) &&
-          !EDUCATION_DESCRIPTION_RE.test(line) &&
-          (line.includes("|") ||
-            hasDateRange(next1) ||
-            (kind === "education" &&
-              current.length >= 2 &&
-              (DEGREE_KEYWORD_RE.test(line) || INSTITUTION_KEYWORD_RE.test(line))))
+          current.length >= 2 &&
+          (DEGREE_KEYWORD_RE.test(line) || INSTITUTION_KEYWORD_RE.test(line))
         ) {
           shouldSplit = true;
         }

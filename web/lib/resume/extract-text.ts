@@ -254,7 +254,10 @@ async function extractPdfText(bytes: Buffer): Promise<string> {
 
 async function extractDocxText(bytes: Buffer): Promise<string> {
   const result = await mammoth.extractRawText({ buffer: bytes });
-  return normalizeExtractedText(result.value);
+  const collapsedParagraphs = result.value
+    .replace(/\r\n/g, "\n")
+    .replace(/\n\n/g, "\n");
+  return normalizeExtractedText(collapsedParagraphs);
 }
 
 export async function extractResumeText(
