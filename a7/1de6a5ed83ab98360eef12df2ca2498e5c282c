@@ -1,0 +1,5 @@
+Task: Add GitHub Actions Web CI, Dependabot, and pre-commit hygiene (CI.1)
+Summary: Add .github/workflows/ci.yml for lint/typecheck/test/build, .github/dependabot.yml for weekly grouped updates, and clean up .pre-commit-config.yaml
+Docs: TODO.md
+TODO: Active work / CI.1
+Validation: yaml syntax check, pre-commit config review
