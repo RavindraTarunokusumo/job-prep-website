@@ -1,0 +1,5 @@
+Task: Remove GLiNER sidecar and add coordinate-aware PDF line extraction (CV.2)
+Summary: Delete Python GLiNER sidecar and Node spawn helper, reconstruct PDF lines and column gaps from text item coordinates in extract-text.ts, and update ADR-002
+Docs: docs/architecture.md, TODO.md
+TODO: Active work / CV.2
+Validation: eslint, tsc --noEmit, vitest (40 passed, 263 tests)
