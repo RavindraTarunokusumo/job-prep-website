@@ -1,0 +1,5 @@
+Task: Write offline rule-based CV extraction spec
+Summary: Document coordinate-aware PDF line grouping, OpenResume-style feature scoring, GLiNER removal, and sample CV corpus testing
+Docs: docs/specs/2026-11-01-rule-based-cv-extraction.md
+TODO: Active work / Offline rule-based CV extraction
+Validation: manual self-review, baseline vitest 40 passed (263 tests)
