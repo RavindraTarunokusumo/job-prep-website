@@ -1,0 +1,5 @@
+Task: Implement feature-scoring CV structure parser (CV.3)
+Summary: Upgrade parseResumeStructure with OpenResume-style feature scoring, date range extraction, expanded section headers, and categorized skill parsing
+Docs: TODO.md
+TODO: Active work / CV.3
+Validation: eslint, tsc --noEmit, vitest (40 passed, 263 tests)
