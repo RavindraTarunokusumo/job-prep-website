@@ -1,0 +1,5 @@
+Task: Phase 5 spec + lightweight plan (JOB-9)
+Summary: Accepted Autopilot spec for cover letter and short application messages; plan tasks T1–T4; TODO/registry updates.
+Docs: docs/specs/2026-07-17-mvp-phase-5-cover-letter-messages.md, docs/superpowers/plans/2026-07-17-phase-5-cover-letter-messages.md, docs/specs/README.md, TODO.md
+TODO: Phase 5 tasks 5.1–5.4 logged
+Validation: docs-only commit; no code changes

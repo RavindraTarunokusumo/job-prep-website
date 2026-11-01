@@ -1,0 +1,5 @@
+Task: JOB-51 Role-based interview question generation
+Summary: OpenRouter question set generator and startInterviewSessionAction creating primary turns.
+Docs: N/A
+TODO: Phase 6 / 6.2 JOB-51
+Validation: web lint, typecheck, test, build (all pass)

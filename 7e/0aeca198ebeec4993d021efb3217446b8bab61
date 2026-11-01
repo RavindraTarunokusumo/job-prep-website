@@ -1,0 +1,5 @@
+Task: Merge main into JOB-13 branch
+Summary: Resolve conflicts after PR #8 merge — combine assessment + privacy models/docs.
+Docs: docs/database.md, docs/specs/README.md, TODO.md
+TODO: JOB-13 merge resolution
+Validation: pending full suite after generate

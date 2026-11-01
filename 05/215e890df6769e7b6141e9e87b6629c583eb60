@@ -1,0 +1,5 @@
+Task: PR #8 review fixes
+Summary: Fix export download reliability; confirm dialog before deletion request.
+Docs: N/A
+TODO: JOB-16 review follow-up
+Validation: web lint, typecheck, test, build

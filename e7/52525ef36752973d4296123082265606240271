@@ -1,0 +1,5 @@
+Task: JOB-88 gap interviews
+Summary: generateGapDrivenQuestions + buildRehearsalPlan from mappings.
+Docs: N/A
+TODO: JOB-88
+Validation: vitest gap-driven-interview

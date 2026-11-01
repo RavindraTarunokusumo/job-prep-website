@@ -1,0 +1,5 @@
+Task: JOB-72 Consent gates
+Summary: UserConsent model, acceptConsentAction, upload checkbox, requireAiConsent on AI actions, banners.
+Docs: docs/database.md
+TODO: JOB-16 / 16.2 JOB-72
+Validation: web lint, typecheck, test, build (all pass)

@@ -1,0 +1,5 @@
+Task: Skeptic gap closure round 2
+Summary: Fix fabricated interview score, match remap duplicates + unique, fair-use enforcement, AI usage userId, secure webhook, executable domain tests.
+Docs: N/A
+TODO: skeptic high bugs
+Validation: lint, typecheck, test 260, build

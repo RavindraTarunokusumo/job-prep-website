@@ -1,0 +1,5 @@
+Task: Surface parser degradation in the review UI
+Summary: ReviewForm takes a structureDegraded prop and renders a non-blocking user-facing notice when autofill ran on the heuristic parser despite GLiNER being configured.
+Docs: docs/specs/2026-09-18-resume-parser-reliability-fix.md
+TODO: Active work / Resume parser reliability fix — item 2
+Validation: npm run lint, npm run typecheck, npm test, npm run build

@@ -1,0 +1,5 @@
+Task: Prisma User and Profile models (JOB-19)
+Summary: Add User/Profile Prisma models and migration for onboarding data linked to Supabase auth user IDs.
+Docs: docs/specs/2026-07-15-mvp-phase-2-auth-onboarding.md
+TODO: Phase 2 / 2.2 JOB-19
+Validation: npm run lint, typecheck, test, build (web/)

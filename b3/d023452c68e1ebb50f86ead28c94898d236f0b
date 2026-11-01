@@ -1,0 +1,5 @@
+Task: Fix onboarding cookie write on page load
+Summary: Remove cookies().set from OnboardingPage Server Component; cookie sync stays in auth/onboarding server actions only.
+Docs: N/A
+TODO: Phase 2 / onboarding bugfix
+Validation: npm run lint, typecheck, test (web/)

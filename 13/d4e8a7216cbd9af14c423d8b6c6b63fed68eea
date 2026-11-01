@@ -1,0 +1,5 @@
+Task: JOB-84 CV editor versioning PDF
+Summary: Structured CV domain, rewrite guards, version lifecycle, PDF builder, /cv UI, tests.
+Docs: docs/specs/2026-07-26-job-81-84-workspace-evidence-progress-cv.md
+TODO: T4 — JOB-84 CV editor
+Validation: npm run lint, typecheck, test (cv-versioning-pdf), build

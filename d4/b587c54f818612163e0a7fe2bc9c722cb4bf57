@@ -1,0 +1,5 @@
+Task: Merge PR #9 into videos branch
+Summary: Resolve docs/database.md after interview feedback merge.
+Docs: docs/database.md
+TODO: Wave 2 PR #10
+Validation: conflict resolve

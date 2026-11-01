@@ -1,0 +1,5 @@
+Task: JOB-61/62 Assessment UI and scoring
+Summary: Practice UI, attempt actions, simple MCQ score summaries, practice-only disclaimers.
+Docs: N/A
+TODO: JOB-13 / 13.3-13.4
+Validation: web lint, typecheck, test, build (all pass)

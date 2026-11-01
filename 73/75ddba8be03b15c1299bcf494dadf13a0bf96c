@@ -1,0 +1,5 @@
+Task: Supabase Auth session handling (JOB-20)
+Summary: Wire @supabase/ssr clients, middleware protection, sign-up/sign-in/sign-out actions, and login/signup pages with User upsert.
+Docs: docs/specs/2026-07-15-mvp-phase-2-auth-onboarding.md
+TODO: Phase 2 / 2.3 JOB-20
+Validation: npm run lint, typecheck, test, build (web/)

@@ -1,0 +1,5 @@
+Task: JOB-67 Performance report data model
+Summary: Prisma PerformanceReport + validation schemas + tests + database docs.
+Docs: docs/database.md
+TODO: Phase 8c / 15.1 JOB-67
+Validation: web lint typecheck test build

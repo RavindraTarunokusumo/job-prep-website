@@ -1,0 +1,5 @@
+Task: Fix Prisma resumeDocument undefined; document storage ADR
+Summary: Versioned Prisma singleton recreates client when ResumeDocument delegate is missing; add architecture ADR-001 and database docs for Supabase Storage choice.
+Docs: docs/architecture.md, docs/database.md, docs/specs/2026-07-15-mvp-phase-3-cv-upload-parse.md
+TODO: Phase 3 / runtime bugfix + ADR
+Validation: prisma generate; npm run lint, typecheck, test; GET /resume 200

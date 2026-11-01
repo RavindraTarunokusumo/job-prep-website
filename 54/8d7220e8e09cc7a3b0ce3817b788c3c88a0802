@@ -1,0 +1,5 @@
+Task: JOB-85 domain helpers
+Summary: Ontology zod schemas and pure normalize/retrieval/snapshot helpers.
+Docs: docs/ontology.md
+TODO: JOB-85 85.3
+Validation: typecheck via subsequent full suite

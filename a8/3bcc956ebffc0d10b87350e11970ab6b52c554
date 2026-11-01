@@ -1,0 +1,5 @@
+Task: Post-PR archive Phase 2
+Summary: Archive Phase 2 TODO snapshot with merge tags, update active TODO for Phase 3, and add Phase 2 workflow insights.
+Docs: TODO.md, docs/insights.md, docs/iterations/archive/2026-07-15-phase-2-auth-onboarding.md
+TODO: Post-PR / Phase 2 archive
+Validation: N/A (docs only; main after PR #2 merge)

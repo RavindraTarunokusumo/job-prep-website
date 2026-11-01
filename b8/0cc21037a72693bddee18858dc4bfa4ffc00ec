@@ -1,0 +1,5 @@
+Task: Fix dashboard Base UI button warning
+Summary: Replace Button+Link render composition with Link + buttonVariants to avoid nativeButton console error on /dashboard.
+Docs: N/A
+TODO: N/A
+Validation: lint, typecheck

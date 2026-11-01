@@ -1,0 +1,5 @@
+Task: 5.4 JOB-45 Short recruiter/application message generator
+Summary: application-message AI, generateShortMessageAction, MessageEditor + workspace tabs, typed draft list.
+Docs: N/A
+TODO: Phase 5 / 5.4 JOB-45
+Validation: npm test (59), tsc --noEmit, npm run lint

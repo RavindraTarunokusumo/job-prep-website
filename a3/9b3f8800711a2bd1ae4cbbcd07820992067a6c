@@ -1,0 +1,5 @@
+Task: PR #10 review fix
+Summary: http(s)-only video URLs; safe form.reset after async create.
+Docs: N/A
+TODO: Wave 2 videos review
+Validation: suite green prior commit

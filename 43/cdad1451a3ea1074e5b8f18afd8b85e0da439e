@@ -1,0 +1,5 @@
+Task: Document web app run instructions
+Summary: Update root README with local npm scripts, stack note, and pointers to RoleReady reference and active Phase 0–1 spec.
+Docs: README.md
+TODO: Phase 0 / 0.6
+Validation: N/A (docs only)

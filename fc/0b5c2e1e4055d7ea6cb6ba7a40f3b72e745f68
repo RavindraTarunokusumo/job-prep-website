@@ -1,0 +1,5 @@
+Task: OpenRouter default + fallback models
+Summary: Set default OPENROUTER_MODEL to tencent/hy3:free and OPENROUTER_FALLBACK_MODEL to nvidia/nemotron-3-ultra-550b-a55b:free with generateObjectWithFallback for all Phase 4 AI calls.
+Docs: docs/architecture.md, docs/database.md, docs/specs/2026-07-16-mvp-phase-4-application-readiness.md, TODO.md
+TODO: Phase 4 AI models
+Validation: lint, typecheck, vitest 50

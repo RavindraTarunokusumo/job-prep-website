@@ -1,0 +1,5 @@
+Task: Document GLiNER interpreter configuration
+Summary: .env.example now states the platform-aware default interpreter path and what happens when it is missing. web/.env.local on this host already points at an existing venv, so no value change was needed.
+Docs: docs/specs/2026-09-18-resume-parser-reliability-fix.md
+TODO: Active work / Resume parser reliability fix — item 4
+Validation: npm run lint, npm run typecheck, npm test

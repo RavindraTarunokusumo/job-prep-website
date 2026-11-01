@@ -1,0 +1,5 @@
+Task: Jev System One client
+Summary: Add lib/ai/jev.ts with typed questions/answers, zod response validation, retry on 429/529, an injectable fetch seam, and reuse of recordAiUsageEvent; TypeSafe config added to lib/ai/config.ts and documented in .env.example.
+Docs: docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring — item 1
+Validation: npm run lint, npm run typecheck, npm test, npm run build

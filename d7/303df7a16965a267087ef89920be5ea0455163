@@ -1,0 +1,5 @@
+Task: JOB-73 Data export/deletion requests
+Summary: DataRequest model, export payload helper, Settings Your data section; no auto-delete of storage.
+Docs: docs/database.md
+TODO: JOB-16 / 16.3 JOB-73
+Validation: web lint, typecheck, test, build (all pass)

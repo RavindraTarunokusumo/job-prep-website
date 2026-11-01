@@ -1,0 +1,5 @@
+Task: Close the coverage gaps found in review
+Summary: New corpus-manifest test asserting disk/manifest agreement and rank-band consistency independently of any API key; new tests for the recordAiUsageEvent cost override including the zero-cost case; new retry-classification tests for 5xx, network failure, exhaustion and non-retried malformed payloads. Raised in code review of PR #16.
+Docs: docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring — items 1-4
+Validation: npm run lint, npm run typecheck, npm test (305 passing), npm run build

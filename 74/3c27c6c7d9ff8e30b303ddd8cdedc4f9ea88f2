@@ -1,0 +1,5 @@
+Task: Resume rubric scoring module
+Summary: Five weighted ordinal dimensions (30/20/20/15/15) asked in a single Jev request, with a pure linear ordinal-to-0-100 mapping, weighted-sum composition, head-biased state truncation under the vendor token cap, and confidence returned separately so the existing sectionScores schema is untouched.
+Docs: docs/specs/2026-09-18-jev-rubric-scoring.md
+TODO: Active work / Jev rubric scoring — item 2
+Validation: npm run lint, npm run typecheck, npm test, npm run build

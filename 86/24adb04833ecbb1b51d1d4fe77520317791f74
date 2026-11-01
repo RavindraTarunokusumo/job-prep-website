@@ -1,0 +1,5 @@
+Task: JOB-50 Mock interview session data model
+Summary: Add InterviewSession/InterviewTurn Prisma models, migration, zod validation, schema tests.
+Docs: docs/database.md
+TODO: Phase 6 / 6.1 JOB-50
+Validation: web lint, typecheck, test, build (all pass)

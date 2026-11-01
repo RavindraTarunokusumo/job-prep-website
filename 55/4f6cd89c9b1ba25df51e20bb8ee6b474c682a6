@@ -1,0 +1,5 @@
+Task: JOB-91 entitlements
+Summary: DEFAULT_PLANS, checkEntitlement, sprintPassWindow, webhook dedupe.
+Docs: N/A
+TODO: JOB-91
+Validation: vitest entitlements

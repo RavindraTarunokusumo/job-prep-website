@@ -1,0 +1,5 @@
+Task: 5.3 JOB-44 Cover letter editor UI
+Summary: Real /cover-letter page, DraftEditor/DraftList components, dashboard cover letter card.
+Docs: N/A
+TODO: Phase 5 / 5.3 JOB-44
+Validation: npm test (59), tsc --noEmit, npm run lint

@@ -1,0 +1,5 @@
+Task: JOB-59 Assessment practice data model
+Summary: Add AssessmentCategory/Question/Attempt/Answer models, migration, zod schemas, simple tests.
+Docs: docs/database.md
+TODO: JOB-13 / 13.1 JOB-59
+Validation: web lint, typecheck, test, build (all pass)

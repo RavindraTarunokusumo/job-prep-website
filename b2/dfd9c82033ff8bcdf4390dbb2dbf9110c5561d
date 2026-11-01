@@ -1,0 +1,5 @@
+Task: Parser-state unit tests
+Summary: Cover the three configured states (disabled, requested-but-missing interpreter, enabled) plus platform-aware path resolution and the warn-once guard.
+Docs: docs/specs/2026-09-18-resume-parser-reliability-fix.md
+TODO: Active work / Resume parser reliability fix — item 5
+Validation: npm run lint, npm run typecheck, npm test (272 passing), npm run build

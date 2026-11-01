@@ -1,0 +1,5 @@
+Task: Clear the autofill degradation notice after a manual save
+Summary: saveParsedResume records structureParser as "manual" so the review notice stops applying once the user has corrected and saved the fields. Raised in code review of PR #16.
+Docs: docs/specs/2026-09-18-resume-parser-reliability-fix.md
+TODO: Active work / Resume parser reliability fix — item 2
+Validation: npm run lint, npm run typecheck, npm test (305 passing), npm run build

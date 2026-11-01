@@ -1,0 +1,5 @@
+Task: Accept the resume parser reliability spec
+Summary: Record owner acceptance on the spec header now that the fix is implemented.
+Docs: docs/specs/2026-09-18-resume-parser-reliability-fix.md
+TODO: Active work / Resume parser reliability fix
+Validation: N/A (documentation only)

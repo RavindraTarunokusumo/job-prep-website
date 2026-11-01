@@ -1,0 +1,5 @@
+Task: Accept Phase 2 spec and gitignore env files
+Summary: Accept Phase 2 auth/onboarding spec, update TODO for active cycle, and add root .gitignore for .env/.env.local so secrets stay local.
+Docs: docs/specs/2026-07-15-mvp-phase-2-auth-onboarding.md, docs/specs/README.md, TODO.md, .gitignore
+TODO: Phase 2 / 2.0–2.1
+Validation: git check-ignore .env.local web/.env.local

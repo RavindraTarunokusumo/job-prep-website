@@ -1,0 +1,5 @@
+Task: JOB-81–84 shared Prisma models
+Summary: Added JobApplication, CareerEvidence, StarStory, CvDocument, CvVersion and migration.
+Docs: docs/specs/2026-07-26-job-81-84-workspace-evidence-progress-cv.md
+TODO: T1/T2/T4 Prisma models
+Validation: prisma generate

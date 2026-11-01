@@ -1,0 +1,5 @@
+Task: JOB-52 Text mock interview UI
+Summary: Interview page with session list, start form, submit/complete/abandon actions (no follow-up/feedback yet).
+Docs: N/A
+TODO: Phase 6 / 6.3 JOB-52
+Validation: web lint, typecheck, test, build (all pass)

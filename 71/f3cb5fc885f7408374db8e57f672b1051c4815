@@ -1,0 +1,5 @@
+Task: PR #13 review bugfixes
+Summary: Fixed CV editor state sync, verified description guard, PDF startY, transactional isCurrent, STAR evidence link gate.
+Docs: N/A
+TODO: T5 review reception
+Validation: npm run lint, typecheck, test (204), build
