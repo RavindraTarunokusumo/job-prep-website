@@ -1,0 +1,5 @@
+Task: Address code review findings
+Summary: Use non-global URL_TEST_RE in parseProjects, remove obsolete GLiNER vars from web/.env.example, and align fixture filenames in spec
+Docs: docs/specs/2026-11-01-rule-based-cv-extraction.md, web/.env.example
+TODO: Active work / CV.3-CV.4 review polish
+Validation: eslint, tsc --noEmit, vitest (41 passed, 273 tests)
