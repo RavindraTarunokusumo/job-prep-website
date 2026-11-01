@@ -74,6 +74,8 @@ const LINKEDIN_RE =
   /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[A-Za-z0-9_-]+\/?/i;
 const URL_RE =
   /(?:https?:\/\/[^\s|,;)]+|(?:www\.)?(?:github\.com|gitlab\.com)\/[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)?)/gi;
+const URL_TEST_RE =
+  /(?:https?:\/\/[^\s|,;)]+|(?:www\.)?(?:github\.com|gitlab\.com)\/[A-Za-z0-9_.-]+(?:\/[A-Za-z0-9_.-]+)?)/i;
 
 const MONTH_PATTERN =
   "(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\\.?";
@@ -917,7 +919,7 @@ function parseProjects(block: string): ParsedResume["projects"] {
         .map((p) => p.trim())
         .filter((p) => p.length > 0);
       project.name = parts[0];
-      if (parts[1] && !URL_RE.test(parts[1]) && !hasDateRange(parts[1])) {
+      if (parts[1] && !URL_TEST_RE.test(parts[1]) && !hasDateRange(parts[1])) {
         const techs = parts[1]
           .split(/[,;]/)
           .map((t) => t.trim())

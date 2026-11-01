@@ -104,10 +104,10 @@ Instead of relying solely on `extractText(pdf, { mergePages: true })`:
 
 1. **Sample CV Fixtures (`web/__tests__/fixtures/cvs/`):**
    - `01-chronological-swe.txt`: Standard chronological software engineer CV with pipe delimiters, categorized skills, projects, certifications, and languages.
-   - `02-tab-aligned-international.txt`: All-caps multi-token name (`RAVINDRA ARIBOWO TARUNOKUSUMO`), international phone/location (`Jakarta, Indonesia`), tab/space-aligned inline dates on role headers, `B.Sc. in Computer Science`, and multiple roles/degrees.
+   - `02-tab-aligned-intl.txt`: All-caps multi-token name (`RAVINDRA ARIBOWO TARUNOKUSUMO`), international phone/location (`Jakarta, Indonesia`), tab/space-aligned inline dates on role headers, `B.Sc. in Computer Science`, and multiple roles/degrees.
    - `03-collapsed-dense.txt`: Dense layout without blank lines between roles or pipe separators (`Company` on line 1, `Title` on line 2, `Date` on line 3, followed by bullets), testing feature-scoring disambiguation of title vs company.
-   - `04-academic-career-switcher.txt`: Alternative section headings (`Qualifications`, `Employment History`, `Core Competencies`, `Selected Projects`, `Credentials`), `M.S. in Data Science`, research & industry roles, and inline skills.
-   - `05-minimal-and-edge-cases.txt`: Single-role junior/intern CV with inline `Skills:` and `Languages:`, plus malformed/noise resilience.
+   - `04-academic-switcher.txt`: Alternative section headings (`Qualifications`, `Employment History`, `Core Competencies`, `Selected Projects`, `Credentials`), `M.S. in Data Science`, research & industry roles, and inline skills.
+   - `05-minimal-edge.txt`: Single-role junior/intern CV with inline `Skills:` and `Languages:`, plus malformed/noise resilience.
 2. **Real Binary PDF & DOCX Sample Generation & End-to-End Tests (`web/__tests__/resume-extract-and-parse.test.ts` + `web/scripts/test-cv-extraction.ts`):**
    - Deterministic helper that builds valid binary PDF (with positioned text operators `Td`/`Tj`/`Tm` testing coordinate line reconstruction and horizontal tab gaps) and valid binary DOCX (`.docx` zip with `word/document.xml` paragraphs) for sample CVs.
    - Unit and integration tests in Vitest verifying `extractResumeText(bytes, mimeType)` $\rightarrow$ `parseResumeStructure(rawText)` across all sample CVs.
