@@ -1,0 +1,5 @@
+Task: Add sample CV corpus, PDF/DOCX builders, and extraction benchmark (CV.4)
+Summary: Add 5 sample CVs, binary PDF/DOCX test generators, end-to-end Vitest suite, and CLI extraction benchmark script
+Docs: TODO.md
+TODO: Active work / CV.4
+Validation: eslint, tsc --noEmit, vitest (41 passed, 273 tests), next build, test-cv-extraction.ts (7/7 pass)
