@@ -1,0 +1,5 @@
+Task: Apply 2026-11-01 reflection harness updates
+Summary: Document git notes fetch/merge before push, NVM Node 22 PATH export in subshells, and main-branch-protection Web CI ruleset in AGENTS.md and CLAUDE.md
+Docs: AGENTS.md, CLAUDE.md
+TODO: Reflection harness update
+Validation: manual review
