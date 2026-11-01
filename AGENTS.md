@@ -68,8 +68,10 @@ Validation: <checks run, e.g., ruff, eslint, pytest, manual>
 1. Open the template (do not invent a different schema).
 2. Attach the note: `printf '%s\n' "$note" | git notes add -F - HEAD` (use `git notes add -f` only when intentionally rewriting a note).
 3. Verify: `git notes show HEAD`.
-4. Publish notes when pushing the branch or after rewriting notes on already-pushed commits:
+4. Publish notes when pushing the branch or after rewriting notes on already-pushed commits (always fetch and merge remote notes first to avoid non-fast-forward rejections):
    ```bash
+   git fetch origin refs/notes/commits:refs/notes/origin-commits
+   git notes merge -s cat_sort_uniq refs/notes/origin-commits
    git push origin HEAD
    git push origin refs/notes/commits
    ```
@@ -87,6 +89,8 @@ When using the Linear MCP for this team:
 ### Monorepo / `web/` conventions
 
 - Application code lives under `web/`. Run lint, typecheck, test, and build from `web/`.
+- Non-interactive shells on this host may resolve `/usr/bin/node` (v18), whereas Next 16 and Vitest 4 require Node 20+. Prepend the NVM Node 22 binary directory (`export PATH="$HOME/.nvm/versions/node/$(ls $HOME/.nvm/versions/node 2>/dev/null | tail -n 1)/bin:$PATH"`) before running `npm` or `npx` commands in subshells.
+- GitHub Ruleset `main-branch-protection` is active on `main`: feature branches must pass the `Web CI` GitHub Actions check (`.github/workflows/ci.yml`) and resolve review threads before merging; Repository Admin bypass is enabled for fast-forward Post-PR and Reflection commits to `main`.
 - Root pre-commit hooks for ESLint, TypeScript, and Prisma **must** execute in the `web/` context (e.g. `cd web && npx eslint --fix .`). A root `mirrors-eslint` hook will not load `web/eslint.config.mjs`.
 - If committing env templates, ensure `web/.gitignore` has `!.env.example` under any `.env*` ignore rule so `.env.example` is tracked.
 - Prefer Prisma major versions that match the schema style in-repo (currently Prisma 6-style `url = env("DATABASE_URL")` in `schema.prisma`). Do not silently upgrade to a major that removes that form without a coordinated config change.
