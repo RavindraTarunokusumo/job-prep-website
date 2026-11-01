@@ -1,0 +1,42 @@
+Jane Doe
+jane.doe@example.com | +1 555-010-2000 | London, UK
+https://linkedin.com/in/janedoe | https://github.com/janedoe
+
+PROFESSIONAL SUMMARY
+Product-minded Senior Software Engineer with 6+ years of experience designing high-throughput B2B SaaS platforms, distributed microservices, and cloud-native data pipelines.
+
+WORK EXPERIENCE
+Senior Software Engineer | Acme Corp | Remote
+Jan 2021 – Present
+- Led core API redesign in TypeScript and Go, reducing p99 latency by 40% across 15M daily requests
+- Architected event-driven billing reconciliation pipeline on Kafka and PostgreSQL
+- Mentored 4 junior engineers and established automated integration testing standards
+
+Software Engineer — Beta Ltd
+Jun 2018 – Dec 2020
+- Built multi-tenant RBAC authentication and real-time observability dashboards in React and Node.js
+- Automated zero-downtime database migrations and CI/CD deployment workflows on AWS
+
+EDUCATION
+B.S. Computer Science — State University
+2014 – 2018
+GPA: 3.85/4.0, Magna Cum Laude
+
+TECHNICAL SKILLS
+Languages: TypeScript, Python, Go, SQL (PostgreSQL, MySQL)
+Frameworks & Libraries: React, Next.js, Node.js, GraphQL
+Cloud & DevOps: AWS, Docker, Kubernetes, Terraform, GitHub Actions
+
+SELECTED PROJECTS
+Open Prep Tracker | TypeScript, Next.js, Prisma
+- Open-source application helping job seekers track applications and interview readiness
+
+Distributed Rate Limiter | Go, Redis, gRPC
+- Token-bucket rate limiting middleware supporting 50k req/sec across clustered nodes
+
+LICENSES & CERTIFICATIONS
+AWS Certified Solutions Architect – Associate
+Certified Kubernetes Application Developer (CKAD)
+
+LANGUAGES
+English (Native), Spanish (Conversational)

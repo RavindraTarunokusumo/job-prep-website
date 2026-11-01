@@ -86,61 +86,31 @@ Vercel Blob remains a valid future adapter if the team standardizes on Vercel-on
 - `web/lib/supabase/admin.ts`
 - `web/prisma/schema.prisma` → `ResumeDocument`
 
-### ADR-002: Resume structure (raw text → form fields) — heuristics default, GLiNER2 experimental
+### ADR-002: Resume structure (raw text → form fields) — coordinate-aware extraction + feature-scoring parser (GLiNER2 removed)
 
 | Field | Value |
 |-------|--------|
-| **Status** | Accepted (experimental GLiNER path) |
-| **Date** | 2026-07-15 |
-| **Refs** | [GLiNER2](https://github.com/fastino-ai/GLiNER2) |
+| **Status** | Accepted (supersedes experimental GLiNER2 path) |
+| **Date** | 2026-11-01 |
+| **Spec** | [2026-11-01-rule-based-cv-extraction.md](./specs/2026-11-01-rule-based-cv-extraction.md) |
 
 #### Context
 
-Industry resume pipelines use multi-stage **extract → section/entity structure → normalize → human review**. Heuristics alone fail on collapsed PDF text. GLiNER2 provides local CPU-friendly NER + `extract_json` schema extraction without an LLM API.
+Industry resume pipelines use multi-stage **extract → section/entity structure → normalize → human review**. Originally, an optional Python GLiNER2 sidecar (`scripts/gliner_resume_parse.py`, `web/lib/resume/parse-with-gliner.ts`) was introduced because naive line-based heuristics failed when `unpdf`'s default `extractText(..., { mergePages: true })` collapsed PDF lines or tab-aligned columns. However, the GLiNER2 sidecar required a local Python virtual environment (`.venv-gliner`), PyTorch CPU wheels, HuggingFace model weights, and cross-process spawning on every upload.
+
+Root-cause analysis showed that fixing PDF line reconstruction at the coordinate level and using an OpenResume-style feature-scoring parser eliminates the failure modes without any external Python/ML runtime.
 
 #### Decision
 
-1. **Always** extract and store `rawText` (deterministic PDF/DOCX tools).
-2. **Default** structure with heuristics (`parseResumeStructure`).
-3. **Optional test path:** `RESUME_STRUCTURE_PARSER=gliner` runs `scripts/gliner_resume_parse.py` via Python venv (`.venv-gliner`) using `fastino/gliner2-base-v1` `extract_json`, mapped into the same `ParsedResume` zod shape. On failure, fall back to heuristics and note in `parseError`.
+1. **Coordinate-aware text extraction (`web/lib/resume/extract-text.ts`):** Reconstruct visual lines from PDF $(x, y)$ text-item coordinates (`page.getTextContent()`), clustering items by baseline ($\Delta y \le 3\text{pt}$), inserting `" | "` on wide horizontal column/tab gaps ($\Delta x > 24\text{pt}$), and preserving paragraph breaks (`\n\n`). Fall back to `extractText(pdf, { mergePages: true })` only if coordinate items are empty.
+2. **Offline feature-scoring parser (`web/lib/resume/parse-structure.ts`):** Segment sections using expanded header dictionaries + inline section rescue, split subsections using date-range anchors and bullet transitions, and score candidate attributes for contact (supporting Title Case and `ALL CAPS` multi-token names, international phones/locations), experience (`title`, `company`, `location`, `startDate`, `endDate`, `description`), education (`institution`, `degree`, `field`, dates), and categorized skills.
+3. **Remove GLiNER2 sidecar:** Delete `scripts/gliner_resume_parse.py` and `web/lib/resume/parse-with-gliner.ts`; `processResumeDocument` calls `parseResumeStructure(extracted.text)` directly.
 4. User review/edit remains mandatory.
-
-#### Test findings (2026-07-15)
-
-On the user’s real CV (`CV.pdf`, ~2520 chars extracted):
-
-| | Heuristic | GLiNER2 `extract_json` |
-|--|-----------|-------------------------|
-| Contact name | often missing | filled (partial “Ravindra Aribowo”) |
-| Email / phone / location | partial | good |
-| Experience rows | **0** | **3 roles** (titles/companies present; bullets weak) |
-| Education | empty | **2 rows** (degrees/fields mostly good) |
-| Skills | empty | several skills filled |
-| Noise | — | occasional bad cert/lang list serialization (mitigated in mapper) |
-
-**Conclusion:** GLiNER2 is a clear upgrade for autofill vs pure rules on messy PDFs, but not perfect (missed last name token, thin job descriptions, some list-field quirks). Prefer GLiNER (or later LLM JSON) for structure quality; keep heuristics as offline fallback.
-
-#### Setup
-
-```bash
-python3 -m venv .venv-gliner
-.venv-gliner/bin/pip install torch --index-url https://download.pytorch.org/whl/cpu
-.venv-gliner/bin/pip install gliner2 transformers accelerate peft
-# In web/.env.local:
-RESUME_STRUCTURE_PARSER=gliner
-```
-
-CLI test:
-
-```bash
-.venv-gliner/bin/python scripts/gliner_resume_parse.py --file /path/to/raw.txt --no-raw-meta
-```
 
 #### Related code
 
-- `scripts/gliner_resume_parse.py`
-- `web/lib/resume/parse-with-gliner.ts`
-- `web/lib/resume/parse-structure.ts` (heuristic fallback)
+- `web/lib/resume/extract-text.ts` (`extractResumeText`, `reconstructPdfLinesFromItems`)
+- `web/lib/resume/parse-structure.ts` (`parseResumeStructure`)
 - `web/app/actions/resume.ts` (`processResumeDocument`)
 
 ### ADR-003: AI provider — OpenRouter via Vercel AI SDK

@@ -7,10 +7,6 @@ import { upsertUserFromAuth } from "@/lib/auth/upsert-user";
 import { extractResumeText } from "@/lib/resume/extract-text";
 import { parseResumeStructure } from "@/lib/resume/parse-structure";
 import {
-  isGlinerStructureEnabled,
-  parseResumeWithGliner,
-} from "@/lib/resume/parse-with-gliner";
-import {
   buildResumeStoragePath,
   downloadResumeFile,
   uploadResumeFile,
@@ -114,19 +110,7 @@ async function processResumeDocument(documentId: string, userId: string) {
       return;
     }
 
-    let parsedData = parseResumeStructure(extracted.text);
-    let structureNote: string | null = null;
-
-    // Optional GLiNER2 structure step (experimental). Falls back to heuristics.
-    if (isGlinerStructureEnabled()) {
-      const gliner = await parseResumeWithGliner(extracted.text);
-      if (gliner.ok) {
-        parsedData = gliner.data;
-        structureNote = null;
-      } else {
-        structureNote = `GLiNER structure failed (${gliner.error}); used heuristic parser.`;
-      }
-    }
+    const parsedData = parseResumeStructure(extracted.text);
 
     await prisma.resumeDocument.update({
       where: { id: documentId },
@@ -134,7 +118,7 @@ async function processResumeDocument(documentId: string, userId: string) {
         status: "parsed",
         rawText: extracted.text,
         parsedData,
-        parseError: structureNote,
+        parseError: null,
       },
     });
   } catch (error) {

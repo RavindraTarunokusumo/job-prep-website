@@ -1,0 +1,38 @@
+Marcus Vance
+marcus.vance@example.com | (415) 890-2341 | San Francisco, CA | github.com/mvance
+
+SUMMARY
+Systems and infrastructure engineer focused on high-reliability distributed storage, observability, and cloud cost optimization.
+
+EXPERIENCE
+Stripe
+Staff Software Engineer
+Jan 2022 - Present
+- Designed global ledger reconciliation pipeline handling multi-currency settlement with 99.999% accuracy
+- Led a team of 6 engineers migrating core merchant reporting services to Rust and Go
+Datadog
+Senior Software Engineer
+Jun 2019 - Dec 2021
+- Built high-cardinality distributed tracing ingestion service processing 800k spans/sec
+- Reduced S3 storage footprint by 28% via custom columnar compression
+Cloudflare Systems Inc
+Software Engineer
+Jul 2017 - May 2019
+- Implemented edge worker request routing and automated DDoS mitigation rules
+
+EDUCATION
+University of California, Berkeley
+Bachelor of Science in Electrical Engineering and Computer Sciences
+2013 - 2017
+
+SKILLS
+Rust, Go, C++, Python, TypeScript, Kafka, ClickHouse, Kubernetes, AWS, Linux Kernel Networking
+
+PROJECTS
+NanoTrace — Lightweight eBPF network packet profiler for Kubernetes clusters
+
+CERTIFICATIONS
+CKA (Certified Kubernetes Administrator)
+
+LANGUAGES
+English, German

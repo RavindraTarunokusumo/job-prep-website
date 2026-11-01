@@ -1,0 +1,20 @@
+Alex Rivera
+alex.rivera@university.edu | +1 (512) 555-0199 | Austin, TX
+
+OBJECTIVE
+Computer Science undergraduate seeking a full-time Junior Full Stack Developer role upon graduation.
+
+EXPERIENCE
+Software Engineering Intern | BrightPath Labs | Austin, TX
+05/2025 – 08/2025
+- Built responsive customer onboarding workflows in React, TypeScript, and Tailwind CSS
+- Wrote unit and end-to-end integration tests in Vitest and Playwright increasing coverage to 88%
+
+EDUCATION
+Bachelor of Science in Software Engineering | University of Texas at Austin
+Expected May 2026
+Relevant Coursework: Data Structures, Algorithms, Operating Systems, Database Management
+
+Skills: JavaScript, TypeScript, React, Node.js, Tailwind CSS, PostgreSQL, Git
+Certifications: Meta Front-End Developer Certificate
+Languages: English, Spanish
